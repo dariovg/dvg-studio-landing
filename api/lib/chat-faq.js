@@ -1,113 +1,81 @@
-/** Respuestas gratis — alineado con knowledge/empresa.md */
+/** Respuestas gratis — alineado con knowledge/empresa.md (sin claims legales) */
 const FAQ = [
   {
-    keys: ["precio", "cuesta", "coste", "cuanto", "cuánto", "tarifa", "planes", "euros", "inversion"],
+    keys: ["precio", "cuesta", "coste", "cuanto", "cuánto", "tarifa", "planes", "euros"],
     reply:
-      "Planes: Starter 199 €/mes, Pro 499 €/mes, Enterprise 2.499 €/mes. Anual -20%: 159 / 399 / 1.999 €/mes. Auditoría gratis.",
+      "Planes: Starter 199 €/mes, Pro 499 €/mes, Enterprise 2.499 €/mes. Anual -20%. Primera reunión gratis.",
   },
   {
     keys: ["starter", "basico", "básico", "empezar"],
     reply: "Starter: 199 €/mes, 1 agente, chat web + 1 canal, 10.000 interacciones/mes.",
   },
   {
-    keys: ["plan pro", "elegir pro", "pro "],
-    reply: "Pro: 499 €/mes, 5 agentes, todos los canales, 100.000 interacciones/mes, soporte 24/7.",
+    keys: ["plan pro", "elegir pro"],
+    reply: "Pro: 499 €/mes, 5 agentes, todos los canales, 100.000 interacciones/mes.",
   },
   {
     keys: ["enterprise", "empresarial"],
-    reply: "Enterprise: 2.499 €/mes, 20 agentes, CRM/ERP custom, account manager y SLA.",
+    reply: "Enterprise: 2.499 €/mes, 20 agentes, integraciones a medida. Consultar en reunión.",
   },
   {
     keys: ["anual", "descuento", "20%"],
     reply: "Anual -20%: Starter 159 €/mes, Pro 399 €/mes, Enterprise 1.999 €/mes.",
   },
   {
-    keys: ["interaccion", "interacción", "interacciones", "limite", "límite", "10k", "100k"],
-    reply: "1 interacción = 1 mensaje del cliente. Starter 10K/mes, Pro 100K/mes. Si te pasas, te avisamos y proponemos upgrade.",
+    keys: ["interaccion", "interacción", "interacciones"],
+    reply: "1 interacción = 1 mensaje del cliente. Límites según plan.",
   },
   {
-    keys: ["auditoria", "auditoría", "gratis", "prueba", "probar", "demo"],
-    reply: "Auditoría gratis 30-45 min, sin compromiso. contact@dvgstudio.com o botón en la web.",
+    keys: ["agendar", "cita", "reunion", "reunión", "reservar", "videollamada", "llamada"],
+    reply: "Escribe «agendar cita» y te pediré nombre, email, teléfono, fecha y hora. Reunión de 1 hora.",
   },
   {
-    keys: ["contacto", "email", "escribir", "hablar", "llamar", "instagram"],
-    reply: "contact@dvgstudio.com · @dvgstudio · Auditoría gratis en la web.",
+    keys: ["auditoria", "auditoría", "gratis", "prueba", "probar"],
+    reply: "Primera reunión de 1h gratuita sin compromiso. Escribe «agendar cita» o contact@dvgstudio.com",
   },
   {
-    keys: ["plazo", "tarda", "cuando", "cuándo", "semanas", "marcha"],
-    reply: "Primer agente en 2-4 semanas. Calibración 3 meses para medir ROI.",
+    keys: ["app", "apps", "web", "pagina", "página", "desarrollo", "crear web"],
+    reply: "Sí: apps y webs con IA integrada (chat y automatizaciones desde el primer día).",
   },
   {
-    keys: ["chatgpt", "chatbot", "diferencia", "openai", "gemini"],
-    reply: "No somos ChatGPT genérico ni chatbot de botones. Agentes con tu info, tono y canales reales.",
+    keys: ["contacto", "email", "escribir", "instagram"],
+    reply: "contact@dvgstudio.com · @dvgstudio · o «agendar cita» en este chat.",
   },
   {
-    keys: ["rgpd", "datos", "seguridad", "privacidad", "gdpr"],
-    reply: "RGPD, cifrado TLS, no vendemos datos. Contrato de tratamiento disponible.",
+    keys: ["chatgpt", "chatbot", "diferencia", "openai"],
+    reply: "No somos ChatGPT genérico ni chatbot de botones. Agentes configurados con tu negocio.",
   },
   {
     keys: ["whatsapp", "telegram", "canal", "instagram", "multicanal"],
-    reply: "WhatsApp, Telegram, email, web e Instagram desde un solo agente, 24/7.",
+    reply: "WhatsApp, Telegram, email, web e Instagram desde un solo agente.",
   },
   {
-    keys: ["catalogo", "catálogo", "stock", "shopify", "woocommerce", "producto"],
-    reply: "Conectamos catálogo CSV, Shopify o WooCommerce: el agente responde stock, precios y variantes en tiempo real.",
-  },
-  {
-    keys: ["clinica", "clínica", "dental", "salud", "belleza"],
-    reply: "En salud/belleza: agenda 24/7, recordatorios y FAQs. Patrón +20 citas/mes fuera de horario.",
-  },
-  {
-    keys: ["ecommerce", "tienda", "retail"],
-    reply: "E-commerce: respuesta instantánea a stock y envíos, menos abandono por dudas.",
-  },
-  {
-    keys: ["cotizacion", "cotización", "presupuesto", "b2b"],
-    reply: "B2B: cotizaciones de días a minutos. El comercial valida casos complejos.",
+    keys: ["catalogo", "catálogo", "stock", "shopify", "woocommerce"],
+    reply: "Catálogo conectado: CSV, Shopify o WooCommerce para stock, precios y variantes.",
   },
   {
     keys: ["empleado digital", "que es un", "qué es un", "como funciona", "cómo funciona"],
-    reply: "Agente IA que atiende, cotiza y agenda 24/7 con la info y tono de tu negocio.",
+    reply: "Agente IA que atiende, cotiza y agenda con la info de tu negocio.",
   },
   {
-    keys: ["contratar", "contratacion", "contratación", "proceso", "pasos"],
-    reply: "Auditoría → propuesta → configuración 2-4 sem → calibración 3 meses → revisión ROI.",
-  },
-  {
-    keys: ["soporte", "ayuda", "incidencia"],
-    reply: "Starter: email L-V 9-18h. Pro: 24/7. Enterprise: account manager.",
-  },
-  {
-    keys: ["cancelar", "permanencia", "baja"],
-    reply: "3 meses recomendados de calibración. Sin permanencia obligatoria tras periodo acordado.",
-  },
-  {
-    keys: ["equivoca", "error", "falla", "equivoc"],
-    reply: "Calibración continua y supervisión humana. El agente no firma contratos ni decisiones críticas solo.",
-  },
-  {
-    keys: ["idioma", "ingles", "inglés", "otro idioma"],
-    reply: "Español por defecto. Inglés y otros idiomas según necesidad.",
-  },
-  {
-    keys: ["crm", "hubspot", "holded", "zoho", "integra"],
-    reply: "Pro: integraciones estándar. Enterprise: CRM/ERP custom (HubSpot, Holded, Zoho — consultar caso).",
-  },
-  {
-    keys: ["tecnico", "técnico", "conocimientos", "instalar"],
+    keys: ["tecnico", "técnico", "conocimientos"],
     reply: "No necesitas conocimientos técnicos. DVG Studio configura todo.",
   },
   {
-    keys: ["cambiar plan", "cambio de plan", "escalar"],
-    reply: "Tras el periodo mínimo puedes escalar o bajar de plan sin penalización.",
+    keys: ["idioma", "ingles", "inglés"],
+    reply: "Español por defecto. Otros idiomas según proyecto.",
   },
   {
-    keys: ["slogan", "imparable", "hacia"],
-    reply: "Nuestro slogan: hacIA lo imparable — IA aplicada para que tu PYME no pare.",
+    keys: ["legal", "rgpd", "gdpr", "privacidad", "garantia", "garantía", "responsabilidad"],
+    reply: "Eso lo trata el equipo directamente. Escríbenos a contact@dvgstudio.com",
   },
   {
-    keys: ["hola", "buenas", "hey", "buenos"],
-    reply: "Hola. Soy IGNITE de DVG Studio — hacIA lo imparable. Pregúntame precios, servicios o empleados digitales.",
+    keys: ["slogan", "imparable"],
+    reply: "hacIA lo imparable — IA aplicada para tu PYME.",
+  },
+  {
+    keys: ["hola", "buenas", "hey"],
+    reply: "Hola. Soy IGNITE. Pregúntame servicios o escribe «agendar cita» para una reunión de 1h.",
   },
 ];
 

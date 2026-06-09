@@ -8,10 +8,10 @@ function prune() {
   }
 }
 
-export function checkRateLimit(ip, { perHour = 8, perDay = 25 } = {}) {
+export function checkRateLimit(ip, { perHour = 8, perDay = 25, prefix = "" } = {}) {
   prune();
   const now = Date.now();
-  const key = ip || "unknown";
+  const key = `${prefix}${ip || "unknown"}`;
   let b = buckets.get(key);
 
   if (!b) {

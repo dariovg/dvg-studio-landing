@@ -120,3 +120,20 @@ knowledge/empresa.md  Documento que lee el modelo
 2. Framework: **Other** — sin build
 3. Añade variables de entorno (arriba)
 4. Conecta dominio en Settings → Domains
+
+## Agendar citas (chat → 1 hora)
+
+El visitante escribe **«agendar cita»** en el chat. Se piden nombre, email, teléfono, fecha (DD/MM/AAAA) y hora (HH:MM).
+
+### Opción A — Email con AWS SES (recomendado ahora)
+
+1. Verifica `contact@dvgstudio.com` en AWS SES
+2. Variables Vercel: `BOOKING_NOTIFY_EMAIL`, `BOOKING_FROM_EMAIL`
+3. Recibes email y añades la cita a Calendario (Apple) a mano
+
+### Opción B — Google Calendar automático
+
+Cuando tengas Gmail/Google del negocio: OAuth refresh token + `GOOGLE_CALENDAR_ID`.
+Si sincronizas Google en el Mac, las citas aparecen en Calendario de Apple.
+
+Vercel no escribe en iCloud directamente.
