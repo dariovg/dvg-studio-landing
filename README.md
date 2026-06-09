@@ -12,6 +12,21 @@ python3 -m http.server 8080
 
 Luego visita http://localhost:8080
 
+## Chatbot IGNITE (IA 24/7)
+
+El widget llama a `/api/chat` (Vercel Serverless + AWS Bedrock Haiku).
+
+En Vercel → **Settings → Environment Variables**:
+
+| Variable | Valor |
+|----------|--------|
+| `AWS_ACCESS_KEY_ID` | Tu access key |
+| `AWS_SECRET_ACCESS_KEY` | Tu secret key |
+| `AWS_REGION` | `us-east-1` |
+| `BEDROCK_MODEL_ID` | `us.anthropic.claude-haiku-4-5-20251001-v1:0` |
+
+Sin estas variables el chat muestra mensaje de fallback (la web sigue funcionando).
+
 ## Despliegue en Vercel (recomendado)
 
 1. Entra en [vercel.com](https://vercel.com) → **Add New Project**

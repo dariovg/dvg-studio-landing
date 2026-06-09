@@ -3,1315 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DVG Studio - Empleados Digitales Autónomos 24/7 que transforman tu negocio. Hacemos creer a las PYMEs en sí mismas.">
-    <meta name="keywords" content="IA Agentica, Agentes IA, Automatización, Empleados Digitales, DVG Studio">
-    <title>DVG Studio - Empleados Digitales que Nunca se Rinden</title>
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #FF6B35;
-            --secondary: #004E89;
-            --accent: #F7931E;
-            --dark: #0A0E27;
-            --light: #F5F7FA;
-            --gray: #6C757D;
-            --success: #10B981;
-            --danger: #EF4444;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            overflow-x: hidden;
-        }
-
-        /* ===== HEADER ===== */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: linear-gradient(135deg, var(--dark) 0%, rgba(10, 14, 39, 0.95) 100%);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            letter-spacing: -1px;
-        }
-
-        .logo span {
-            color: var(--accent);
-        }
-
-        nav {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        .cta-button {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            color: white !important;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            border: none;
-            display: inline-block;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
-        }
-
-        /* ===== HERO ===== */
-        .hero {
-            margin-top: 60px;
-            background: linear-gradient(135deg, var(--dark) 0%, #1a1f3a 50%, var(--secondary) 100%);
-            color: white;
-            padding: 6rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 107, 53, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            left: -5%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0, 78, 137, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float 10s ease-in-out infinite reverse;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            font-weight: 900;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-            letter-spacing: -2px;
-            animation: slideUp 0.8s ease-out;
-        }
-
-        .hero h1 span {
-            color: var(--primary);
-            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
-        }
-
-        .hero .subtitle {
-            font-size: 1.3rem;
-            color: #ddd;
-            margin-bottom: 2rem;
-            animation: slideUp 0.8s ease-out 0.2s backwards;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            animation: slideUp 0.8s ease-out 0.4s backwards;
-            margin-bottom: 2rem;
-        }
-
-        .secondary-button {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-            display: inline-block;
-        }
-
-        .secondary-button:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            animation: slideUp 0.8s ease-out 0.6s backwards;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #aaa;
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* ===== MAIN SECTIONS ===== */
-        .section {
-            max-width: 1400px;
-            margin: 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 3rem;
-            color: var(--dark);
-        }
-
-        .section-title span {
-            color: var(--primary);
-        }
-
-        /* ===== SERVICES ===== */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .service-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-top: 4px solid var(--primary);
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
-        }
-
-        .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .service-card h3 {
-            font-size: 1.3rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .service-card p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .service-highlight {
-            padding: 0.75rem;
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1) 0%, rgba(247, 147, 30, 0.1) 100%);
-            border-left: 4px solid var(--primary);
-            border-radius: 5px;
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-
-        /* ===== CASE STUDIES ===== */
-        .case-studies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .case-study {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .case-study:hover {
-            transform: translateY(-5px);
-        }
-
-        .case-study-header {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .case-study-header h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .case-study-metric {
-            font-size: 2rem;
-            font-weight: 900;
-            margin-bottom: 0.5rem;
-        }
-
-        .case-study-industry {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-
-        .case-study-body {
-            padding: 2rem;
-        }
-
-        .case-study-body p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .case-study-details {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .detail-item {
-            padding: 1rem;
-            background: var(--light);
-            border-radius: 10px;
-            border-left: 4px solid var(--primary);
-        }
-
-        .detail-label {
-            font-size: 0.8rem;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .detail-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-
-        /* ===== TESTIMONIALS ===== */
-        .testimonials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .testimonial-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--primary);
-            transition: transform 0.3s;
-        }
-
-        .testimonial-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .testimonial-text {
-            color: #555;
-            margin-bottom: 1rem;
-            font-style: italic;
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-
-        .testimonial-author {
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .testimonial-role {
-            color: #999;
-            font-size: 0.85rem;
-        }
-
-        .rating {
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        /* ===== DEMO SECTION ===== */
-        .demo-container {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin: 2rem 0;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .demo-text h3 {
-            font-size: 1.5rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        .demo-text p {
-            color: #666;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-
-        .demo-screenshot {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-            background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
-            padding: 1.5rem;
-            color: white;
-        }
-
-        .chat-mockup {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .chat-message {
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            max-width: 80%;
-        }
-
-        .user-msg {
-            background: var(--primary);
-            align-self: flex-end;
-            color: white;
-        }
-
-        .ai-msg {
-            background: rgba(255, 255, 255, 0.2);
-            align-self: flex-start;
-            color: #ddd;
-        }
-
-        /* ===== PRICING ===== */
-        .pricing-container {
-            background: linear-gradient(135deg, var(--light) 0%, #E8EEF5 100%);
-            border-radius: 20px;
-            padding: 3rem 2rem;
-            margin: 3rem 0;
-        }
-
-        .pricing-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            align-items: center;
-        }
-
-        .toggle-switch {
-            width: 60px;
-            height: 30px;
-            background: #ddd;
-            border-radius: 15px;
-            position: relative;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .toggle-switch.active {
-            background: var(--primary);
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            background: white;
-            border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            transition: left 0.3s;
-        }
-
-        .toggle-switch.active::after {
-            left: 32px;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .pricing-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-            position: relative;
-            border: 2px solid transparent;
-        }
-
-        .pricing-card.featured {
-            border-color: var(--primary);
-            transform: scale(1.05);
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.2);
-        }
-
-        .pricing-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-        }
-
-        .pricing-card h3 {
-            font-size: 1.5rem;
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        .pricing-price {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .pricing-period {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 1rem;
-        }
-
-        .calibration-note {
-            background: rgba(255, 107, 53, 0.1);
-            border-left: 4px solid var(--primary);
-            padding: 1rem;
-            border-radius: 5px;
-            margin: 1rem 0;
-            font-size: 0.85rem;
-            color: #555;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin: 1.5rem 0;
-            text-align: left;
-        }
-
-        .pricing-features li {
-            padding: 0.7rem 0;
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .pricing-features li:last-child {
-            border-bottom: none;
-        }
-
-        .pricing-features li::before {
-            content: '✓';
-            color: var(--success);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-
-        /* ===== FAQ ===== */
-        .faq-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        details {
-            background: white;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        details:hover {
-            border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.1);
-        }
-
-        details[open] {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(0, 78, 137, 0.05) 100%);
-            border-color: var(--primary);
-        }
-
-        summary {
-            font-weight: 600;
-            color: var(--dark);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-
-        summary::marker {
-            color: var(--primary);
-        }
-
-        details p {
-            margin-top: 1rem;
-            color: #666;
-            line-height: 1.8;
-        }
-
-        /* ===== TRUST BADGES ===== */
-        .trust-badges {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .badge {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            text-align: center;
-        }
-
-        .badge-icon {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .badge-label {
-            font-size: 0.85rem;
-            color: #666;
-            font-weight: 600;
-        }
-
-        /* ===== LIVE CHAT WIDGET ===== */
-        .chat-widget {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 999;
-        }
-
-        .chat-button {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
-            transition: transform 0.3s;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            animation: pulse-btn 2s infinite;
-        }
-
-        @keyframes pulse-btn {
-            0%, 100% { box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3); }
-            50% { box-shadow: 0 10px 40px rgba(255, 107, 53, 0.6); }
-        }
-
-        .chat-button:hover {
-            transform: scale(1.1);
-        }
-
-        .chat-popup {
-            position: absolute;
-            bottom: 80px;
-            right: 0;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            width: 320px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .chat-popup.active {
-            display: block;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .chat-header h4 {
-            margin-bottom: 0.25rem;
-            font-size: 1rem;
-        }
-
-        .chat-body {
-            padding: 1.5rem;
-        }
-
-        .chat-body p {
-            color: #666;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .chat-actions {
-            display: grid;
-            gap: 0.5rem;
-        }
-
-        .chat-link {
-            display: block;
-            padding: 0.75rem 1rem;
-            background: var(--light);
-            border-radius: 8px;
-            text-decoration: none;
-            color: var(--primary);
-            font-weight: 600;
-            text-align: center;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .chat-link:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* ===== CTA SECTION ===== */
-        .cta-section {
-            background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-            margin: 4rem 0;
-            border-radius: 20px;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .cta-section p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: #ddd;
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            background: var(--dark);
-            color: #aaa;
-            padding: 3rem 2rem;
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(20px); }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            nav {
-                flex-direction: column;
-                gap: 0.5rem;
-                width: 100%;
-                text-align: center;
-            }
-
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-card.featured {
-                transform: scale(1);
-            }
-
-            .demo-container {
-                grid-template-columns: 1fr;
-            }
-
-            .chat-widget {
-                bottom: 1rem;
-                right: 1rem;
-            }
-
-            .chat-popup {
-                width: 280px;
-            }
-        }
-    </style>
+    <meta name="description" content="DVG Studio — Empleados digitales con IA agéntica para PYMEs. Agentes autónomos 24/7 en WhatsApp, web y más. Auditoría gratis.">
+    <title>DVG Studio — Empleados Digitales que Nunca se Rinden</title>
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
 
-    <!-- HEADER -->
+    <div class="scrolly-progress" aria-hidden="true"></div>
+
     <header>
         <div class="header-content">
             <a href="#" class="logo">🔥 DVG <span>STUDIO</span></a>
             <nav>
+                <a href="#historia">Cómo funciona</a>
                 <a href="#servicios">Servicios</a>
                 <a href="#casos">Casos</a>
-                <a href="#testimonios">Testimonios</a>
                 <a href="#pricing">Planes</a>
                 <a href="#faq">FAQ</a>
-                <a href="#" class="cta-button">Contacto</a>
+                <a href="#" class="cta-button" data-open-chat>Probar IGNITE</a>
             </nav>
         </div>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
-        <div class="hero-content">
+        <div class="hero-content reveal">
             <h1>Empleados Digitales que <span>Nunca se Rinden</span></h1>
-            <p class="subtitle">Agentes IA autónomos trabajando 24/7/365 en paralelo. Hacemos creer a las PYMEs en sí mismas. Les metemos luz en los ojos.</p>
-            
+            <p class="subtitle">Agentes de IA agéntica que trabajan en paralelo a tu equipo: captan leads, responden clientes y ejecutan tareas repetitivas — mientras tú te centras en crecer.</p>
             <div class="hero-buttons">
-                <button class="cta-button">Auditoría Gratis</button>
-                <a href="#demo" class="secondary-button">Ver Demo</a>
+                <button class="cta-button" data-open-chat>Hablar con IGNITE (IA 24/7)</button>
+                <a href="#historia" class="secondary-button">Ver cómo funciona</a>
             </div>
-
-            <div class="stats">
+            <div class="stats reveal">
                 <div class="stat">
                     <div class="stat-number">24/7</div>
-                    <div class="stat-label">Disponibilidad Total</div>
+                    <div class="stat-label">Operación continua</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number">-80%</div>
-                    <div class="stat-label">Costos Operacionales</div>
+                    <div class="stat-number">~70%</div>
+                    <div class="stat-label">Tareas repetitivas automatizables</div>
+                    <div class="stat-source">Est. sector servicios</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number">10x</div>
-                    <div class="stat-label">Productividad</div>
+                    <div class="stat-number">&lt;2 min</div>
+                    <div class="stat-label">Respuesta al cliente</div>
                 </div>
                 <div class="stat">
                     <div class="stat-number">3 meses</div>
-                    <div class="stat-label">ROI Garantizado</div>
+                    <div class="stat-label">Calibración + ROI medible</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SERVICES -->
+    <!-- Investigación / contexto mercado -->
+    <section class="section" id="mercado">
+        <h2 class="section-title reveal">Por qué las <span>PYMEs</span> apuestan por IA agéntica ahora</h2>
+        <p class="section-lead reveal">No es un chatbot de botones. Es un agente que entiende contexto, toma decisiones y actúa en tus canales reales.</p>
+        <div class="insights">
+            <div class="insight-card reveal">
+                <div class="insight-stat">78%</div>
+                <h3>Compran quien responde primero</h3>
+                <p>Los clientes eligen al negocio que les contesta antes. Un agente 24/7 no deja leads enfriarse por la noche o el fin de semana.</p>
+            </div>
+            <div class="insight-card reveal">
+                <div class="insight-stat">40h+</div>
+                <h3>Ahorro mensual en tareas manuales</h3>
+                <p>Cotizaciones, FAQs, agendamiento y seguimiento consumen horas que un empleado digital puede asumir sin nómina extra.</p>
+            </div>
+            <div class="insight-card reveal">
+                <div class="insight-stat">IA agéntica</div>
+                <h3>Más allá del chatbot clásico</h3>
+                <p>Los agentes modernos buscan información, ejecutan acciones (CRM, calendario, email) y aprenden de cada interacción con tu negocio.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scrollytelling -->
+    <section class="scrolly" id="historia" aria-label="Cómo trabaja tu empleado digital">
+        <div class="scrolly-sticky">
+            <div class="scrolly-panel">
+                <div class="scrolly-visual">
+                    <div class="scrolly-visual-inner" data-step="1">
+                        <div class="agent-avatar">🤖</div>
+                        <strong style="color:#fff;font-size:1.2rem">IGNITE</strong>
+                        <p class="agent-status" id="agentStatus">En espera…</p>
+                        <div class="chat-mockup" style="margin-top:1rem;width:100%;min-height:120px;font-size:.8rem">
+                            <div class="chat-message user-msg" style="font-size:.75rem">¿Tenéis disponibilidad?</div>
+                            <div class="chat-message ai-msg" style="font-size:.75rem" id="previewReply">…</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scrolly-text">
+                    <div class="scrolly-step active" data-step="1">
+                        <span class="step-tag">Paso 1</span>
+                        <h3>Llega un lead fuera de horario</h3>
+                        <p>Un cliente escribe por WhatsApp a las 23:00. Tu equipo duerme. El lead se enfría. Aquí empieza la historia.</p>
+                    </div>
+                    <div class="scrolly-step" data-step="2">
+                        <span class="step-tag">Paso 2</span>
+                        <h3>El agente responde al instante</h3>
+                        <p>IGNITE contesta en segundos con tu tono, tu información y sin plantillas robóticas. El cliente siente que hay alguien al otro lado.</p>
+                    </div>
+                    <div class="scrolly-step" data-step="3">
+                        <span class="step-tag">Paso 3</span>
+                        <h3>Califica y cotiza</h3>
+                        <p>Extrae datos, entiende la necesidad y genera una propuesta o deriva al comercial correcto. Lo que antes tardaba horas, ahora son minutos.</p>
+                    </div>
+                    <div class="scrolly-step" data-step="4">
+                        <span class="step-tag">Paso 4</span>
+                        <h3>Cierra o agenda</h3>
+                        <p>Reserva cita, confirma por email o pasa el lead caliente a tu CRM. Tú recibes un resumen cuando vuelves al trabajo.</p>
+                    </div>
+                    <div class="scrolly-step" data-step="5">
+                        <span class="step-tag">Resultado</span>
+                        <h3>Tu negocio nunca cierra</h3>
+                        <p>Mismo equipo humano, más capacidad. Sin contratar 3 personas más. Eso es un empleado digital de DVG Studio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section" id="servicios">
-        <h2 class="section-title">Por Qué <span>IA Agentica</span> de DVG Studio</h2>
-        
+        <h2 class="section-title reveal">Qué hace un <span>Empleado Digital</span></h2>
+        <p class="section-lead reveal">Personalizado para tu sector. Conectado a tus canales. Supervisado por ti.</p>
         <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">💼</div>
-                <h3>Empleados 24/7 sin Nómina</h3>
-                <p>Nuestros agentes trabajan sin descansos, vacaciones ni bajas. Un agente cuesta €199-€499/mes. Un empleado: €2,500+. ROI desde el día 1.</p>
-                <div class="service-highlight">💰 Ahorro garantizado: -80% costos</div>
+            <div class="service-card reveal">
+                <div class="service-icon">💬</div>
+                <h3>Atención multicanal 24/7</h3>
+                <p>WhatsApp, Telegram, web, email e Instagram desde un solo cerebro. Misma calidad de respuesta a cualquier hora.</p>
             </div>
-
-            <div class="service-card">
-                <div class="service-icon">📈</div>
-                <h3>Escalabilidad Real sin Límite</h3>
-                <p>Maneja 100 o 100K interacciones con el mismo precio. Crece sin sumar costos fijos. Tu agente es 10x más productivo sin tocar tu presupuesto.</p>
-                <div class="service-highlight">⚡ Resultado: 10x capacidad, mismo presupuesto</div>
+            <div class="service-card reveal">
+                <div class="service-icon">📋</div>
+                <h3>Cotizaciones automáticas</h3>
+                <p>Recoge requisitos, calcula y envía presupuestos en minutos. Tu equipo solo revisa excepciones.</p>
             </div>
-
-            <div class="service-card">
-                <div class="service-icon">🎯</div>
-                <h3>Precisión 99.98%</h3>
-                <p>Sin cansancio humano, sin errores tipográficos, sin olvidos. Cada cotización en 3 minutos. Cada cliente atendido al instante. Consistencia garantizada.</p>
-                <div class="service-highlight">✅ Confiabilidad extrema: 0 fallos operacionales</div>
+            <div class="service-card reveal">
+                <div class="service-icon">📅</div>
+                <h3>Agenda inteligente</h3>
+                <p>Confirma citas, envía recordatorios y reprograma sin intervención humana.</p>
             </div>
-
-            <div class="service-card">
+            <div class="service-card reveal">
+                <div class="service-icon">🔍</div>
+                <h3>Investigación y seguimiento</h3>
+                <p>Busca información de mercado, resume competencia y hace seguimiento de oportunidades.</p>
+            </div>
+            <div class="service-card reveal">
                 <div class="service-icon">🧠</div>
-                <h3>Inteligencia que Crece</h3>
-                <p>Nuestros agentes aprenden de cada interacción. Cada mes son más inteligentes, más rápidos, más efectivos. Mejoran automáticamente sin intervención tuya.</p>
-                <div class="service-highlight">🔄 Evolución: +5% eficiencia mensual garantida</div>
+                <h3>Aprende tu negocio</h3>
+                <p>Se entrena con tus documentos, FAQs y conversaciones. Mejora cada semana con supervisión humana.</p>
             </div>
-
-            <div class="service-card">
-                <div class="service-icon">🌍</div>
-                <h3>Omnichannel Integrado</h3>
-                <p>Un solo agente en WhatsApp, Email, Instagram, Telegram. Tu cliente contacta por donde quiera. El agente responde igual en todos lados, en varios idiomas.</p>
-                <div class="service-highlight">🗣️ Todos tus canales, 1 herramienta inteligente</div>
-            </div>
-
-            <div class="service-card">
-                <div class="service-icon">⏰</div>
-                <h3>Nunca Cierras</h3>
-                <p>Mientras duermes, vende. Mientras estás en vacaciones, atiende. 365 días al año sin parar. Tu competencia descansa. Tú no. +40% ingresos anuales.</p>
-                <div class="service-highlight">🚀 Ventaja competitiva: Operación continua 24/7</div>
+            <div class="service-card reveal">
+                <div class="service-icon">🌐</div>
+                <h3>Chat en tu web (como este)</h3>
+                <p>Integramos IGNITE en tu landing para resolver dudas de visitantes y captar leads cualificados.</p>
             </div>
         </div>
     </section>
 
-    <!-- DEMO SECTION -->
+    <section class="section reveal-scale" id="comparativa">
+        <h2 class="section-title">Empleado humano vs <span>Empleado Digital</span></h2>
+        <table class="compare-table reveal">
+            <thead>
+                <tr><th></th><th>Empleado tradicional</th><th>Empleado Digital DVG</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Coste mensual</td><td>~2.000–2.500 €</td><td class="win">Desde 199 €</td></tr>
+                <tr><td>Disponibilidad</td><td>8h/día, vacaciones</td><td class="win">24/7/365</td></tr>
+                <tr><td>Tiempo de respuesta</td><td>Horas</td><td class="win">Segundos</td></tr>
+                <tr><td>Escalado</td><td>+1 contratación</td><td class="win">Mismo coste, más volumen</td></tr>
+                <tr><td>Ideal para</td><td>Estrategia, relaciones</td><td class="win">Tareas repetitivas + primer contacto</td></tr>
+            </tbody>
+        </table>
+    </section>
+
     <section class="section" id="demo">
-        <h2 class="section-title">Cómo Funciona en <span>Tiempo Real</span></h2>
-        
-        <div class="demo-container">
-            <div class="demo-text">
-                <h3>IGNITE en Acción</h3>
-                <p>Nuestro asistente IA (IGNITE) es un ejemplo de lo que podemos hacer. Un agente que entiende contexto, resuelve problemas, y empodera a las personas.</p>
-                <p>Tus clientes interesados tendrán acceso a un agente igual de inteligente, personalizado para tu negocio.</p>
-                <p>Aquí ves a IGNITE respondiendo a una consulta. Así de natural. Así de rápido. Así de efectivo.</p>
-                <button class="cta-button" style="width: 100%; margin-top: 1rem;">Solicitar Demo Completa</button>
+        <h2 class="section-title reveal">Pruébalo ahora: <span>IGNITE</span></h2>
+        <p class="section-lead reveal">El mismo tipo de asistente que instalamos en tu web y canales. Haz una pregunta real.</p>
+        <div class="demo-container reveal">
+            <div>
+                <h3>Asistente IA en tu web</h3>
+                <p>Este chat usa inteligencia artificial para responder dudas sobre DVG Studio, planes y automatización.</p>
+                <p>Es la demostración en vivo de lo que tus clientes experimentarían en tu negocio.</p>
+                <button class="cta-button" data-open-chat>Abrir chat con IGNITE</button>
             </div>
-
-            <div class="demo-screenshot">
-                <div class="chat-mockup">
-                    <div class="chat-message user-msg">Hola, necesito saber cómo funciona un agente IA</div>
-                    <div class="chat-message ai-msg">🔥 Hola. Un agente IA es un empleado digital que trabaja 24/7. Toma decisiones, ejecuta tareas, y escala sin intervención tuya.</div>
-                    <div class="chat-message user-msg">¿Cuánto cuesta?</div>
-                    <div class="chat-message ai-msg">Depende de tus necesidades. Starter €199/mes (1 agente), Pro €499/mes (5 agentes), Enterprise €2,499/mes (20 agentes). 3 meses de garantía.</div>
-                    <div class="chat-message user-msg">¿Y si necesito más?</div>
-                    <div class="chat-message ai-msg">Hablamos. Cada negocio es diferente. Hacemos auditoría gratis. Sin compromiso. Solo resultados reales.</div>
-                </div>
+            <div class="chat-mockup">
+                <div class="chat-message user-msg">¿Cuánto cuesta un agente para mi pyme?</div>
+                <div class="chat-message ai-msg">Desde 199 €/mes el plan Starter con 1 agente. Hacemos auditoría gratis para ver si encaja contigo. ¿Qué sector es?</div>
+                <div class="chat-message user-msg">Tengo una clínica dental</div>
+                <div class="chat-message ai-msg">Perfecto: agenda 24/7, recordatorios y FAQs de tratamientos son lo que más ROI dan en salud. Te cuento más si quieres.</div>
             </div>
         </div>
     </section>
 
-    <!-- CASE STUDIES -->
     <section class="section" id="casos">
-        <h2 class="section-title">Resultados <span>Reales</span></h2>
-        
+        <h2 class="section-title reveal">Resultados <span>tipo</span> (sectores reales)</h2>
+        <p class="section-lead reveal">Casos representativos basados en patrones que vemos en PYMEs españolas. Cifras orientativas tras 3 meses de uso.</p>
         <div class="case-studies-grid">
-            <!-- Case 1 -->
-            <div class="case-study">
+            <div class="case-study reveal">
                 <div class="case-study-header">
-                    <div class="case-study-metric">+200 leads/mes</div>
-                    <h3>Captación Automatizada</h3>
-                    <div class="case-study-industry">E-commerce / WhatsApp Bot</div>
+                    <div class="case-study-metric">+30–50%</div>
+                    <h3>E-commerce / Retail</h3>
+                    <div class="case-study-industry">WhatsApp + web</div>
                 </div>
                 <div class="case-study-body">
-                    <p>Tienda online perdía clientes por falta de respuesta inmediata. Implementamos agente WhatsApp. Responde en 2 segundos. 24/7.</p>
+                    <p>Respuesta inmediata a consultas de stock y envío. Menos abandono de carrito por dudas sin resolver.</p>
                     <div class="case-study-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Leads Nuevos</div>
-                            <div class="detail-value">+200/mes</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Conversión</div>
-                            <div class="detail-value">15% → 28%</div>
-                        </div>
+                        <div><div class="detail-label">Leads recuperados</div><div class="detail-value">+30%</div></div>
+                        <div><div class="detail-label">Tiempo respuesta</div><div class="detail-value">&lt;30 seg</div></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Case 2 -->
-            <div class="case-study">
+            <div class="case-study reveal">
                 <div class="case-study-header">
-                    <div class="case-study-metric">48h → 3min</div>
-                    <h3>Procesos Acelerados</h3>
-                    <div class="case-study-industry">B2B / Procesamiento Automatizado</div>
+                    <div class="case-study-metric">48h → 5 min</div>
+                    <h3>B2B / Servicios</h3>
+                    <div class="case-study-industry">Cotizaciones</div>
                 </div>
                 <div class="case-study-body">
-                    <p>Empresa procesaba cotizaciones manualmente en 48 horas. Agente extrae datos, analiza y responde en 3 minutos. 100% automático.</p>
+                    <p>Cotizaciones que tardaban días pasan a minutos. El comercial solo valida casos complejos.</p>
                     <div class="case-study-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Tiempo Antes</div>
-                            <div class="detail-value">48 horas</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Tiempo Ahora</div>
-                            <div class="detail-value">3 minutos</div>
-                        </div>
+                        <div><div class="detail-label">Horas ahorradas</div><div class="detail-value">~20h/sem</div></div>
+                        <div><div class="detail-label">Conversión</div><div class="detail-value">+15%</div></div>
                     </div>
                 </div>
             </div>
-
-            <!-- Case 3 -->
-            <div class="case-study">
+            <div class="case-study reveal">
                 <div class="case-study-header">
-                    <div class="case-study-metric">Agenda 100% llena</div>
-                    <h3>Operación 24/7</h3>
-                    <div class="case-study-industry">Servicios / Agendamiento Inteligente</div>
+                    <div class="case-study-metric">+20 citas/mes</div>
+                    <h3>Salud / Belleza</h3>
+                    <div class="case-study-industry">Agendamiento</div>
                 </div>
                 <div class="case-study-body">
-                    <p>Empresa no podía atender fuera de horario. Agente 24/7 llena agenda automáticamente. Confirmaciones, recordatorios, reprogramación.</p>
+                    <p>Citas fuera de horario que antes se perdían. Recordatorios reducen no-shows.</p>
                     <div class="case-study-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Citas Extra</div>
-                            <div class="detail-value">+45/mes</div>
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Ingresos</div>
-                            <div class="detail-value">+€8,500/mes</div>
-                        </div>
+                        <div><div class="detail-label">Citas extra</div><div class="detail-value">+20/mes</div></div>
+                        <div><div class="detail-label">No-shows</div><div class="detail-value">-25%</div></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- TESTIMONIALS -->
-    <section class="section" id="testimonios">
-        <h2 class="section-title">Qué Dicen Nuestros <span>Clientes</span></h2>
-        
-        <div class="testimonials-grid">
-            <div class="testimonial-card">
-                <div class="rating">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"Implementé un agente y pasé de perder leads a capturar 200+ nuevos al mes. La inversión se recuperó en 3 semanas. Increíble."</p>
-                <div class="testimonial-author">Carlos M.</div>
-                <div class="testimonial-role">E-commerce, Barcelona</div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="rating">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"Nuestros procesos que tardaban 2 días ahora se hacen en minutos. El ROI fue instantáneo. DVG Studio es serio."</p>
-                <div class="testimonial-author">María L.</div>
-                <div class="testimonial-role">B2B Servicios, Madrid</div>
-            </div>
-
-            <div class="testimonial-card">
-                <div class="rating">⭐⭐⭐⭐⭐</div>
-                <p class="testimonial-text">"Finalmente puedo atender fuera de horario. Agenda llena 24/7. Los clientes están más felices. Ingresos +40% en 2 meses."</p>
-                <div class="testimonial-author">Juan P.</div>
-                <div class="testimonial-role">Asesoría, Valencia</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PRICING -->
     <section class="section" id="pricing">
-        <h2 class="section-title">Planes de <span>Inversión</span></h2>
-        
-        <div class="pricing-container">
+        <h2 class="section-title reveal">Planes de <span>Inversión</span></h2>
+        <div class="pricing-container reveal">
             <div class="pricing-toggle">
                 <span>Mensual</span>
                 <div class="toggle-switch" id="pricingToggle"></div>
                 <span>Anual (-20%)</span>
             </div>
-
             <div class="pricing-grid">
-                <!-- Starter -->
                 <div class="pricing-card">
-                    <div class="pricing-badge">🔥 STARTER</div>
-                    <h3>1 Empleado Digital</h3>
+                    <h3>Starter</h3>
                     <div class="pricing-price" id="price-starter">€199</div>
                     <div class="pricing-period">/mes</div>
-                    <div class="calibration-note">
-                        📅 <strong>3 meses mínimo</strong> para calibración óptima y garantía de ROI.
-                    </div>
                     <ul class="pricing-features">
-                        <li>1 Agente IA Autónomo</li>
-                        <li>Multicanal (WhatsApp, Email, etc)</li>
+                        <li>1 agente IA</li>
+                        <li>Chat web + 1 canal extra</li>
                         <li>Hasta 10K interacciones/mes</li>
-                        <li>Dashboard Control Básico</li>
-                        <li>Reportes Diarios</li>
-                        <li>Soporte Email</li>
+                        <li>Auditoría inicial incluida</li>
                     </ul>
-                    <button class="cta-button" style="width: 100%;">Comenzar Ahora</button>
+                    <button class="cta-button" style="width:100%" data-open-chat>Empezar</button>
                 </div>
-
-                <!-- Pro -->
                 <div class="pricing-card featured">
-                    <div class="pricing-badge">⭐ RECOMENDADO</div>
-                    <h3>5 Empleados Digitales</h3>
+                    <h3>Pro ⭐</h3>
                     <div class="pricing-price" id="price-pro">€499</div>
                     <div class="pricing-period">/mes</div>
-                    <div class="calibration-note">
-                        📅 <strong>3 meses garantizados</strong> con optimización mensual incluida.
-                    </div>
                     <ul class="pricing-features">
-                        <li>5 Agentes IA Especializados</li>
-                        <li>Todos los Canales</li>
+                        <li>5 agentes especializados</li>
+                        <li>Todos los canales</li>
                         <li>Hasta 100K interacciones/mes</li>
-                        <li>Dashboard Avanzado</li>
-                        <li>API Access</li>
-                        <li>Soporte 24/7 Prioritario</li>
+                        <li>Soporte prioritario 24/7</li>
                     </ul>
-                    <button class="cta-button" style="width: 100%;">Elegir Pro</button>
+                    <button class="cta-button" style="width:100%" data-open-chat>Elegir Pro</button>
                 </div>
-
-                <!-- Enterprise -->
                 <div class="pricing-card">
-                    <div class="pricing-badge">🚀 ENTERPRISE</div>
-                    <h3>20 Empleados Digitales</h3>
-                    <div class="pricing-price">€2,499</div>
+                    <h3>Enterprise</h3>
+                    <div class="pricing-price">€2.499</div>
                     <div class="pricing-period">/mes</div>
-                    <div class="calibration-note">
-                        📅 <strong>Solución escalada</strong> con infraestructura optimizada y soporte dedicado.
-                    </div>
                     <ul class="pricing-features">
-                        <li>20 Agentes IA Especializados</li>
-                        <li>Integraciones Personalizadas</li>
-                        <li>Hasta 1M interacciones/mes</li>
-                        <li>Machine Learning Personalizado</li>
-                        <li>Account Manager Dedicado</li>
-                        <li>SLA 99.99% Garantizado</li>
+                        <li>20 agentes + integraciones</li>
+                        <li>CRM, ERP, APIs custom</li>
+                        <li>Account manager dedicado</li>
+                        <li>SLA empresarial</li>
                     </ul>
-                    <button class="cta-button" style="width: 100%;">Solicitar Demo</button>
+                    <button class="cta-button" style="width:100%" data-open-chat>Solicitar demo</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ -->
     <section class="section" id="faq">
-        <h2 class="section-title">Preguntas <span>Frecuentes</span></h2>
-        
-        <div class="faq-container">
+        <h2 class="section-title reveal">Preguntas <span>Frecuentes</span></h2>
+        <div class="faq-container reveal">
             <details>
-                <summary>¿Qué es un Empleado Digital exactamente?</summary>
-                <p>Es un agente IA que trabaja 24/7 sin descanso. Toma decisiones, ejecuta tareas repetitivas, escala procesos. No es un chatbot tradicional: es un trabajador paralelo en tu operación. Aprende, mejora, y nunca falla.</p>
+                <summary>¿En qué se diferencia de un chatbot normal?</summary>
+                <p>Un chatbot clásico sigue un árbol de decisiones. Un empleado digital entiende contexto, usa herramientas (calendario, búsqueda, CRM) y puede actuar sin que pulses botones.</p>
             </details>
-
             <details>
-                <summary>¿Por qué 3 meses mínimo?</summary>
-                <p>Necesitamos calibrar el agente a tu negocio específico, entrenarle con tus datos, optimizar su performance. Los primeros 3 meses son críticos. Al final, garantizamos ROI o te devolvemos el dinero.</p>
+                <summary>¿El chat de esta web es el mismo que instalaríais?</summary>
+                <p>Sí. IGNITE es un ejemplo real. Lo personalizamos con la información de tu empresa, tono de marca y objetivos (ventas, soporte, agenda…).</p>
             </details>
-
             <details>
-                <summary>¿Cuándo veo resultados?</summary>
-                <p>Generalmente en 2-4 semanas. El agente comienza a procesar tareas, capturar leads, y ahorrar tiempo. A los 3 meses, tienes ROI medible. Algunos clientes lo ven en la primera semana.</p>
+                <summary>¿Mis datos están seguros (RGPD)?</summary>
+                <p>Trabajamos con infraestructura en la UE cuando es posible, cifrado en tránsito y contratos de tratamiento de datos. No vendemos ni compartimos información de clientes.</p>
             </details>
-
             <details>
-                <summary>¿Mis datos están seguros?</summary>
-                <p>Sí. Cumplimos RGPD, ISO 27001 Ready, cifrado AES-256 extremo. Tus datos no salen de nuestros servidores certificados. Auditorías externas anuales garantizadas. Confidencialidad absoluta.</p>
+                <summary>¿Cuánto tardáis en ponerlo en marcha?</summary>
+                <p>Primer agente operativo en 2–4 semanas según complejidad. Los primeros 3 meses son de calibración para afinar respuestas y medir ROI.</p>
             </details>
-
             <details>
-                <summary>¿Puedo cambiar de plan?</summary>
-                <p>Sí. Después de los 3 meses iniciales, puedes escalar a más agentes, cambiar a plan anual (-20%), o ajustar según necesidades. Cero penalizaciones. Flexibilidad total.</p>
-            </details>
-
-            <details>
-                <summary>¿Cómo sé si es para mí?</summary>
-                <p>Si tienes procesos repetitivos, pierdes leads, no puedes atender 24/7, o necesitas escalar sin sumar costos fijos: es para ti. Hacemos auditoría gratis. Sin compromiso. Mira si el ROI tiene sentido para tu negocio.</p>
+                <summary>¿Puedo probar antes de pagar?</summary>
+                <p>Ofrecemos auditoría gratuita: analizamos tus procesos y te decimos qué automatizar y qué retorno esperar. Sin compromiso.</p>
             </details>
         </div>
     </section>
 
-    <!-- TRUST BADGES -->
-    <section class="section">
-        <h2 class="section-title">Confianza y <span>Seguridad</span></h2>
-        
-        <div class="trust-badges">
-            <div class="badge">
-                <div class="badge-icon">🔒</div>
-                <div class="badge-label">RGPD Compliant</div>
-            </div>
-            <div class="badge">
-                <div class="badge-icon">🛡️</div>
-                <div class="badge-label">ISO 27001 Ready</div>
-            </div>
-            <div class="badge">
-                <div class="badge-icon">🔐</div>
-                <div class="badge-label">AES-256 Cifrado</div>
-            </div>
-            <div class="badge">
-                <div class="badge-icon">✅</div>
-                <div class="badge-label">ROI Garantizado</div>
-            </div>
-        </div>
+    <section class="cta-section reveal">
+        <h2>¿Listo para tu primer empleado digital?</h2>
+        <p>Habla con IGNITE ahora o solicita auditoría gratis. Sin letra pequeña.</p>
+        <button class="cta-button" data-open-chat>Hablar con IGNITE — IA 24/7</button>
     </section>
 
-    <!-- CTA SECTION -->
-    <section class="cta-section">
-        <h2>¿Listo para tu Primer Empleado Digital?</h2>
-        <p>No esperes más. Tus competidores ya están automatizando. Una auditoría gratis te mostrará exactamente cuánto dinero estás dejando sobre la mesa.</p>
-        <button class="cta-button">Solicitar Auditoría Gratis</button>
-    </section>
-
-    <!-- FOOTER -->
     <footer>
-        <p>&copy; 2024 DVG Studio. Todos los derechos reservados. | Haciendo que las PYMEs crean en sí mismas. 🔥</p>
+        <p>© 2026 DVG Studio. Empleados digitales para PYMEs que creen en sí mismas. 🔥</p>
     </footer>
 
-    <!-- LIVE CHAT WIDGET -->
-    <div class="chat-widget">
-        <button class="chat-button" id="chatButton">💬</button>
-        <div class="chat-popup" id="chatPopup">
-            <div class="chat-header">
-                <h4>🤖 IGNITE - Tu Asistente IA</h4>
-                <p style="font-size: 0.8rem; margin-top: 0.25rem;">Resolvemos dudas al instante</p>
-            </div>
-            <div class="chat-body">
-                <p>Hola 👋 Soy IGNITE. ¿Preguntas sobre Empleados Digitales? Estoy aquí para ayudarte.</p>
-                <div class="chat-actions">
-                    <a href="https://wa.me/tu_numero?text=Hola%20DVG%20Studio%20%F0%9F%94%A5%20Tengo%20dudas%20sobre%20los%20agentes%20IA" class="chat-link">💬 WhatsApp</a>
-                    <a href="https://instagram.com/dvgstudio" class="chat-link">📸 Instagram</a>
+    <!-- Chatbot IA -->
+    <div class="ignite-chat" id="igniteChat">
+        <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat con IGNITE">
+            <div class="chat-panel-header">
+                <div>
+                    <h4>🔥 IGNITE — IA 24/7</h4>
+                    <p>Asistente de DVG Studio</p>
                 </div>
+                <button class="chat-close" id="chatClose" aria-label="Cerrar">×</button>
             </div>
+            <div class="chat-messages" id="chatMessages"></div>
+            <form class="chat-form" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Pregunta sobre empleados digitales…" autocomplete="off" maxlength="500">
+                <button type="submit" id="chatSend" aria-label="Enviar">➤</button>
+            </form>
         </div>
+        <button class="chat-toggle" id="chatToggle" aria-expanded="false" aria-label="Abrir chat">💬</button>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <script src="/js/scroll.js"></script>
     <script>
-        // Chat Widget Toggle
-        const chatButton = document.getElementById('chatButton');
-        const chatPopup = document.getElementById('chatPopup');
-
-        chatButton.addEventListener('click', function() {
-            chatPopup.classList.toggle('active');
+        const previews = ['…esperando mensaje','¡Hola! ¿En qué puedo ayudarte?','Te preparo una cotización','Cita confirmada ✓','Lead cerrado 🎉'];
+        const statuses = ['En espera…','Respondiendo…','Cotizando…','Agendando…','¡Misión cumplida!'];
+        document.querySelectorAll('.scrolly-step').forEach((step, i) => {
+            step.addEventListener('transitionend', () => {});
         });
+        const obs = new MutationObserver(() => {
+            const active = document.querySelector('.scrolly-step.active');
+            if (!active) return;
+            const idx = [...document.querySelectorAll('.scrolly-step')].indexOf(active);
+            const pr = document.getElementById('previewReply');
+            const st = document.getElementById('agentStatus');
+            if (pr) pr.textContent = previews[idx] || previews[0];
+            if (st) st.textContent = statuses[idx] || statuses[0];
+        });
+        document.querySelectorAll('.scrolly-step').forEach(s => obs.observe(s, {attributes:true,attributeFilter:['class']}));
 
-        // Pricing Toggle (Mensual/Anual)
-        const pricingToggle = document.getElementById('pricingToggle');
-        const priceStarter = document.getElementById('price-starter');
-        const pricePro = document.getElementById('price-pro');
-
-        pricingToggle.addEventListener('click', function() {
+        document.getElementById('pricingToggle')?.addEventListener('click', function() {
             this.classList.toggle('active');
-            if (this.classList.contains('active')) {
-                priceStarter.textContent = '€159.20';
-                pricePro.textContent = '€399.20';
-                document.querySelectorAll('.pricing-period').forEach(p => {
-                    p.textContent = '/mes (facturado anualmente)';
-                });
-            } else {
-                priceStarter.textContent = '€199';
-                pricePro.textContent = '€499';
-                document.querySelectorAll('.pricing-period').forEach(p => {
-                    p.textContent = '/mes';
-                });
-            }
-        });
-
-        // Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
+            const annual = this.classList.contains('active');
+            document.getElementById('price-starter').textContent = annual ? '€159' : '€199';
+            document.getElementById('price-pro').textContent = annual ? '€399' : '€499';
+            document.querySelectorAll('.pricing-period').forEach(p => {
+                p.textContent = annual ? '/mes (anual)' : '/mes';
             });
         });
-
-        // CTA Button Interactions
-        document.querySelectorAll('.cta-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                if (this.textContent.includes('Auditoría') || this.textContent.includes('Demo')) {
-                    e.preventDefault();
-                    alert('¡Gracias por tu interés! 🔥\n\nNos pondremos en contacto en breve.\n\n📧 contact@dvgstudio.com\n💬 WhatsApp: +34 XXX XXX XXX');
-                }
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth'}); }
             });
         });
     </script>
+    <script src="/js/chat.js"></script>
 </body>
 </html>
