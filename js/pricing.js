@@ -17,6 +17,12 @@
       const monthly = Number(el.dataset.priceMonthly);
       const annualPrice = Number(el.dataset.priceAnnual);
       el.textContent = formatEuro(annual ? annualPrice : monthly);
+
+      const saveEl = el.parentElement?.querySelector(".pricing-save");
+      if (saveEl) {
+        const saved = (monthly - annualPrice) * 12;
+        saveEl.textContent = annual && saved > 0 ? `Ahorras ${formatEuro(saved)}/año` : "";
+      }
     });
 
     document.querySelectorAll(".pricing-period").forEach((p) => {
@@ -24,10 +30,7 @@
     });
   }
 
-  toggle.addEventListener("click", () => {
-    setPricing(!toggle.classList.contains("active"));
-  });
-
+  toggle.addEventListener("click", () => setPricing(!toggle.classList.contains("active")));
   toggle.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
@@ -35,7 +38,7 @@
     }
   });
 
-  const annualLabel = toggle.parentElement?.querySelector("span:last-child");
-  annualLabel?.addEventListener("click", () => setPricing(true));
-  toggle.parentElement?.querySelector("span:first-child")?.addEventListener("click", () => setPricing(false));
+  const wrap = toggle.parentElement;
+  wrap?.querySelector("span:first-child")?.addEventListener("click", () => setPricing(false));
+  wrap?.querySelector("span:last-child")?.addEventListener("click", () => setPricing(true));
 })();

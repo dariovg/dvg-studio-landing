@@ -1,98 +1,113 @@
-/** Respuestas gratis (sin Bedrock) — mantener alineado con knowledge/empresa.md */
+/** Respuestas gratis — alineado con knowledge/empresa.md */
 const FAQ = [
   {
-    keys: ["precio", "cuesta", "coste", "cuanto", "cuánto", "tarifa", "plan", "planes", "euros"],
+    keys: ["precio", "cuesta", "coste", "cuanto", "cuánto", "tarifa", "planes", "euros", "inversion"],
     reply:
-      "Planes: Starter 199 €/mes, Pro 499 €/mes, Enterprise 2.499 €/mes. Descuento 20% en facturación anual. Auditoría gratis sin compromiso.",
+      "Planes: Starter 199 €/mes, Pro 499 €/mes, Enterprise 2.499 €/mes. Anual -20%: 159 / 399 / 1.999 €/mes. Auditoría gratis.",
   },
   {
     keys: ["starter", "basico", "básico", "empezar"],
-    reply:
-      "Starter: 199 €/mes, 1 agente, chat web + 1 canal extra, hasta 10.000 interacciones/mes.",
+    reply: "Starter: 199 €/mes, 1 agente, chat web + 1 canal, 10.000 interacciones/mes.",
   },
   {
-    keys: ["pro", "profesional"],
-    reply:
-      "Pro: 499 €/mes, 5 agentes, todos los canales, 100.000 interacciones/mes, soporte prioritario 24/7.",
+    keys: ["plan pro", "elegir pro", "pro "],
+    reply: "Pro: 499 €/mes, 5 agentes, todos los canales, 100.000 interacciones/mes, soporte 24/7.",
   },
   {
-    keys: ["enterprise", "empresarial", "crm", "erp", "integracion", "integración"],
-    reply:
-      "Enterprise: 2.499 €/mes, 20 agentes, integraciones CRM/ERP custom, account manager y SLA.",
+    keys: ["enterprise", "empresarial"],
+    reply: "Enterprise: 2.499 €/mes, 20 agentes, CRM/ERP custom, account manager y SLA.",
   },
   {
     keys: ["anual", "descuento", "20%"],
-    reply:
-      "Facturación anual con 20% dto.: Starter 159 €/mes, Pro 399 €/mes, Enterprise 1.999 €/mes.",
+    reply: "Anual -20%: Starter 159 €/mes, Pro 399 €/mes, Enterprise 1.999 €/mes.",
+  },
+  {
+    keys: ["interaccion", "interacción", "interacciones", "limite", "límite", "10k", "100k"],
+    reply: "1 interacción = 1 mensaje del cliente. Starter 10K/mes, Pro 100K/mes. Si te pasas, te avisamos y proponemos upgrade.",
   },
   {
     keys: ["auditoria", "auditoría", "gratis", "prueba", "probar", "demo"],
-    reply:
-      "Auditoría gratuita 30–45 min: revisamos procesos, qué automatizar y ROI estimado. Sin compromiso. contact@dvgstudio.com",
+    reply: "Auditoría gratis 30-45 min, sin compromiso. contact@dvgstudio.com o botón en la web.",
   },
   {
     keys: ["contacto", "email", "escribir", "hablar", "llamar", "instagram"],
-    reply: "contact@dvgstudio.com · Instagram @dvgstudio · Auditoría gratis desde la web.",
+    reply: "contact@dvgstudio.com · @dvgstudio · Auditoría gratis en la web.",
   },
   {
-    keys: ["plazo", "tarda", "cuando", "cuándo", "semanas", "tiempo", "marcha"],
-    reply: "Primer agente en 2–4 semanas. Calibración recomendada 3 meses para medir ROI.",
+    keys: ["plazo", "tarda", "cuando", "cuándo", "semanas", "marcha"],
+    reply: "Primer agente en 2-4 semanas. Calibración 3 meses para medir ROI.",
   },
   {
-    keys: ["chatbot", "diferencia", "chatgpt", "openai", "gemini"],
-    reply:
-      "No somos un chatbot de botones ni ChatGPT genérico. Agentes con tu info, tu tono y tus canales reales.",
+    keys: ["chatgpt", "chatbot", "diferencia", "openai", "gemini"],
+    reply: "No somos ChatGPT genérico ni chatbot de botones. Agentes con tu info, tono y canales reales.",
   },
   {
     keys: ["rgpd", "datos", "seguridad", "privacidad", "gdpr"],
-    reply: "RGPD, cifrado en tránsito, no vendemos datos. Contrato de tratamiento disponible.",
+    reply: "RGPD, cifrado TLS, no vendemos datos. Contrato de tratamiento disponible.",
   },
   {
     keys: ["whatsapp", "telegram", "canal", "instagram", "multicanal"],
     reply: "WhatsApp, Telegram, email, web e Instagram desde un solo agente, 24/7.",
   },
   {
-    keys: ["clinica", "clínica", "dental", "salud", "belleza", "peluqueria", "peluquería"],
-    reply: "En salud/belleza: agenda 24/7, recordatorios y FAQs. Patrón habitual +20 citas/mes.",
+    keys: ["catalogo", "catálogo", "stock", "shopify", "woocommerce", "producto"],
+    reply: "Conectamos catálogo CSV, Shopify o WooCommerce: el agente responde stock, precios y variantes en tiempo real.",
   },
   {
-    keys: ["ecommerce", "tienda", "retail", "online"],
+    keys: ["clinica", "clínica", "dental", "salud", "belleza"],
+    reply: "En salud/belleza: agenda 24/7, recordatorios y FAQs. Patrón +20 citas/mes fuera de horario.",
+  },
+  {
+    keys: ["ecommerce", "tienda", "retail"],
     reply: "E-commerce: respuesta instantánea a stock y envíos, menos abandono por dudas.",
   },
   {
-    keys: ["b2b", "cotizacion", "cotización", "presupuesto"],
-    reply: "B2B: cotizaciones de días a minutos. El comercial solo valida casos complejos.",
+    keys: ["cotizacion", "cotización", "presupuesto", "b2b"],
+    reply: "B2B: cotizaciones de días a minutos. El comercial valida casos complejos.",
   },
   {
-    keys: ["empleado digital", "agente", "que es", "qué es", "como funciona", "cómo funciona"],
-    reply:
-      "Un empleado digital es un agente IA que atiende clientes, cotiza y agenda 24/7 con el tono e info de tu negocio.",
+    keys: ["empleado digital", "que es un", "qué es un", "como funciona", "cómo funciona"],
+    reply: "Agente IA que atiende, cotiza y agenda 24/7 con la info y tono de tu negocio.",
   },
   {
     keys: ["contratar", "contratacion", "contratación", "proceso", "pasos"],
-    reply:
-      "Proceso: auditoría gratis → propuesta → configuración 2–4 sem → calibración 3 meses → revisión ROI.",
+    reply: "Auditoría → propuesta → configuración 2-4 sem → calibración 3 meses → revisión ROI.",
   },
   {
     keys: ["soporte", "ayuda", "incidencia"],
-    reply: "Starter: email L–V 9–18h. Pro: 24/7 prioritario. Enterprise: account manager dedicado.",
+    reply: "Starter: email L-V 9-18h. Pro: 24/7. Enterprise: account manager.",
   },
   {
-    keys: ["cancelar", "permanencia", "baja", "contrato"],
-    reply: "Mínimo recomendado 3 meses de calibración. Sin permanencia obligatoria tras el periodo acordado.",
+    keys: ["cancelar", "permanencia", "baja"],
+    reply: "3 meses recomendados de calibración. Sin permanencia obligatoria tras periodo acordado.",
+  },
+  {
+    keys: ["equivoca", "error", "falla", "equivoc"],
+    reply: "Calibración continua y supervisión humana. El agente no firma contratos ni decisiones críticas solo.",
+  },
+  {
+    keys: ["idioma", "ingles", "inglés", "otro idioma"],
+    reply: "Español por defecto. Inglés y otros idiomas según necesidad.",
+  },
+  {
+    keys: ["crm", "hubspot", "holded", "zoho", "integra"],
+    reply: "Pro: integraciones estándar. Enterprise: CRM/ERP custom (HubSpot, Holded, Zoho — consultar caso).",
   },
   {
     keys: ["tecnico", "técnico", "conocimientos", "instalar"],
-    reply: "No necesitas conocimientos técnicos. DVG Studio configura e integra todo.",
+    reply: "No necesitas conocimientos técnicos. DVG Studio configura todo.",
+  },
+  {
+    keys: ["cambiar plan", "cambio de plan", "escalar"],
+    reply: "Tras el periodo mínimo puedes escalar o bajar de plan sin penalización.",
+  },
+  {
+    keys: ["slogan", "imparable", "hacia"],
+    reply: "Nuestro slogan: hacIA lo imparable — IA aplicada para que tu PYME no pare.",
   },
   {
     keys: ["hola", "buenas", "hey", "buenos"],
-    reply:
-      "Hola. Soy el asistente de DVG Studio — hacIA lo imparable. Pregúntame sobre precios, servicios o empleados digitales.",
-  },
-  {
-    keys: ["slogan", "imparable", "hacia", "hacia lo", "marca"],
-    reply: "Nuestro slogan es hacIA lo imparable: IA aplicada para que tu PYME sea imparable.",
+    reply: "Hola. Soy IGNITE de DVG Studio — hacIA lo imparable. Pregúntame precios, servicios o empleados digitales.",
   },
 ];
 

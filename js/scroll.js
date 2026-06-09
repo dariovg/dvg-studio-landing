@@ -1,4 +1,4 @@
-/* Scroll reveals, scrollytelling, stat counters */
+/* Scrollytelling, scroll-driven reveals, progress */
 (function () {
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -13,52 +13,32 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
+      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
     );
     revealEls.forEach((el) => io.observe(el));
   } else {
     revealEls.forEach((el) => el.classList.add("revealed"));
   }
 
-  // Stat counters
-  function animateStat(el) {
-    const target = Number(el.dataset.count);
-    if (!target) return;
-    const prefix = el.dataset.prefix || "";
-    const suffix = el.dataset.suffix || "";
-    const duration = 1200;
-    const start = performance.now();
-
-    function tick(now) {
-      const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      const val = Math.round(target * eased);
-      el.innerHTML = prefix + val + suffix;
-      if (p < 1) requestAnimationFrame(tick);
+  const revealScale = document.querySelectorAll(".reveal-scale");
+  revealScale.forEach((el) => {
+    if (prefersReduced) {
+      el.classList.add("revealed");
+      return;
     }
-    requestAnimationFrame(tick);
-  }
-
-  const statEls = document.querySelectorAll(".stat-number[data-count]");
-  if (statEls.length && !prefersReduced) {
-    const statIo = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            animateStat(e.target);
-            statIo.unobserve(e.target);
+            e.target.classList.add("revealed");
+            io.unobserve(e.target);
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.1 }
     );
-    statEls.forEach((el) => statIo.observe(el));
-  } else {
-    statEls.forEach((el) => {
-      el.innerHTML =
-        (el.dataset.prefix || "") + el.dataset.count + (el.dataset.suffix || "");
-    });
-  }
+    io.observe(el);
+  });
 
   const scrolly = document.querySelector(".scrolly");
   if (!scrolly || prefersReduced) return;

@@ -1,142 +1,124 @@
 # DVG Studio — Base de conocimiento (chat web)
 
-> Edita este archivo para cambiar lo que el asistente puede decir. Tras guardar, haz push a GitHub y Vercel redespliega.
-
 ## Quiénes somos
-DVG Studio es un estudio español especializado en empleados digitales (agentes de IA) para PYMEs.
-Slogan: **hacIA lo imparable** (hacia lo imparable, con énfasis en IA).
-Creamos agentes autónomos que atienden clientes, captan leads, cotizan y agendan citas 24 horas al día, 7 días a la semana.
-
-Fundador: Dario V. G. — consultor y desarrollador de automatización con IA para pequeñas y medianas empresas.
-Ubicación: España (servicio remoto en toda la península).
+DVG Studio es un estudio español de empleados digitales (agentes IA) para PYMEs.
+Slogan: hacIA lo imparable (hacia lo imparable, con énfasis en IA).
+Fundador: Dario V. G. — automatización e IA para pequeñas y medianas empresas.
+Ubicación: España, servicio remoto en toda la península.
 Web: dvgstudio.com
 
 ## Qué es un empleado digital
-Un agente de IA que:
-- Entiende mensajes en lenguaje natural (no es un menú de botones)
-- Responde con el tono y la información de TU negocio
-- Puede usar herramientas: calendario, email, CRM, búsqueda de datos
-- Aprende y mejora con supervisión humana cada semana
+- Agente IA que entiende lenguaje natural (no es menú de botones)
+- Responde con el tono e información del negocio del cliente
+- Usa herramientas: calendario, email, CRM, catálogo de productos
+- Mejora cada semana con supervisión humana
 
 ## Qué NO somos
-- No somos un chatbot genérico de plantillas
-- No vendemos licencias de ChatGPT al cliente
-- No sustituimos al equipo humano en estrategia ni relaciones clave
-- No garantizamos resultados numéricos fijos (cada negocio es distinto)
+- No somos chatbot genérico de plantillas
+- No vendemos licencias ChatGPT al cliente
+- No sustituimos estrategia ni relaciones humanas clave
+- No garantizamos cifras de ROI fijas
 
-## Servicios principales
-1. Atención al cliente multicanal: WhatsApp, Telegram, email, web, Instagram
-2. Cotizaciones automáticas a partir de requisitos del cliente
-3. Agendamiento de citas con recordatorios y reprogramación
-4. Captación y cualificación de leads
-5. Chat IA en la web del cliente (como el de esta landing)
-6. Integración con CRM, calendario y email del cliente
-7. Investigación de mercado y seguimiento de oportunidades
+## Servicios
+- Atención multicanal 24/7: WhatsApp, Telegram, email, web, Instagram
+- Cotizaciones automáticas
+- Agendamiento con recordatorios
+- Captación y cualificación de leads
+- Chat IA en la web del cliente
+- Integración CRM, calendario y email
+- Catálogo de productos: el agente consulta stock, precios y variantes (CSV, Shopify, WooCommerce)
 
 ## Planes y precios (2026)
-| Plan | Precio mensual | Precio anual (-20%) | Incluye |
-|------|----------------|---------------------|---------|
-| Starter | 199 €/mes | 159 €/mes | 1 agente, chat web + 1 canal extra, hasta 10.000 interacciones/mes, auditoría inicial |
-| Pro | 499 €/mes | 399 €/mes | 5 agentes, todos los canales, hasta 100.000 interacciones/mes, soporte prioritario 24/7 |
-| Enterprise | 2.499 €/mes | 1.999 €/mes | 20 agentes, integraciones CRM/ERP custom, account manager, SLA empresarial |
+Starter mensual: 199 €/mes. Starter anual: 159 €/mes (facturación anual, -20%).
+Incluye: 1 agente, chat web + 1 canal extra, hasta 10.000 interacciones/mes, auditoría inicial.
 
+Pro mensual: 499 €/mes. Pro anual: 399 €/mes (-20%).
+Incluye: 5 agentes, todos los canales, hasta 100.000 interacciones/mes, soporte prioritario 24/7.
+
+Enterprise mensual: 2.499 €/mes. Enterprise anual: 1.999 €/mes (-20%).
+Incluye: 20 agentes, integraciones CRM/ERP custom, account manager, SLA empresarial.
+
+Condiciones generales:
 - Facturación mensual o anual (20% descuento en anual)
-- Mínimo recomendado: 3 meses para calibrar el agente y medir ROI
+- Mínimo recomendado: 3 meses para calibrar y medir ROI
 - Sin permanencia obligatoria tras el periodo mínimo acordado en contrato
-- [EDITAR: añade aquí si hay setup fee o condiciones especiales]
+- Sin coste de setup en planes estándar (consultar Enterprise)
+
+## Definiciones importantes
+- Interacción: un mensaje entrante del cliente o visitante cuenta como 1 interacción
+- Si superas el límite del plan: te avisamos y proponemos upgrade de plan; no cortamos el servicio sin aviso previo
 
 ## Auditoría gratuita
-Qué incluye:
-- Llamada o videollamada de 30–45 minutos
-- Revisión de procesos actuales (atención, ventas, agenda)
-- Identificación de tareas automatizables
-- Estimación orientativa de ROI y plan recomendado
-- Sin compromiso de contratación
-
-Cómo solicitarla: botón "Auditoría gratis" en la web, email a contact@dvgstudio.com o preguntar en este chat.
+Incluye videollamada 30-45 min, revisión de procesos, tareas automatizables, ROI orientativo y plan recomendado. Sin compromiso.
+Solicitar: botón en web, contact@dvgstudio.com o este chat.
 
 ## Proceso de contratación
-1. Auditoría gratis
-2. Propuesta con plan y alcance
-3. Firma y pago del primer mes
-4. Recopilación de materiales (FAQs, precios, tono de marca)
-5. Configuración e integración (2–4 semanas)
-6. Periodo de calibración (3 meses recomendados)
-7. Revisión de métricas y ajustes
+Auditoría gratis → propuesta → firma y pago → materiales del cliente → configuración 2-4 semanas → calibración 3 meses → revisión ROI.
 
 ## Plazos
-- Primer agente operativo: 2 a 4 semanas según complejidad e integraciones
-- Primeras mejoras visibles: 2 a 4 semanas de uso
-- ROI medible con datos fiables: tras 3 meses de calibración
+- Primer agente operativo: 2 a 4 semanas
+- ROI medible: tras 3 meses de calibración
 
 ## Sectores con mejor ROI
-- E-commerce y retail: consultas de stock, envíos, tallas; menos abandono
-- B2B y servicios profesionales: cotizaciones en minutos en lugar de días
-- Salud, belleza y clínicas: agenda 24/7, recordatorios, FAQs de tratamientos
-- Asesorías y consultoría: primer contacto, cualificación y derivación al comercial
-- Hostelería y turismo: reservas y preguntas frecuentes fuera de horario
+E-commerce, B2B servicios, salud/belleza, asesorías, hostelería.
 
-## Resultados orientativos (patrones, no garantías)
-- E-commerce: +30% leads recuperados, respuesta <30 segundos
-- B2B servicios: cotizaciones de 48h a ~5 min, ~20h/semana ahorradas
-- Salud/belleza: +20 citas/mes fuera de horario, -25% no-shows con recordatorios
+## Resultados orientativos (no garantías)
+E-commerce: +30% leads recuperados, respuesta menor a 30 segundos.
+B2B: cotizaciones de 48h a unos 5 minutos.
+Salud/belleza: +20 citas/mes fuera de horario, -25% no-shows.
 
-## Comparativa empleado humano vs digital
-| | Empleado humano | Empleado digital DVG |
-|--|-----------------|----------------------|
-| Coste mensual | ~2.000–2.500 € | Desde 199 € |
-| Disponibilidad | 8h/día, vacaciones | 24/7/365 |
-| Respuesta | Horas | Segundos |
-| Escalado | +1 contratación | Más volumen, mismo plan base |
-| Ideal para | Estrategia, relaciones | Repetitivo + primer contacto |
+## Comparativa humano vs digital
+Humano: ~2.000-2.500 €/mes, 8h/día. Digital DVG: desde 199 €/mes, 24/7/365, respuesta en segundos.
 
-## Seguridad y datos (RGPD)
-- Cumplimiento RGPD
-- Cifrado en tránsito (HTTPS/TLS)
-- Los datos del cliente NO se venden ni comparten con terceros
-- Contrato de encargo de tratamiento (DPA) disponible
-- Infraestructura cloud con regiones UE cuando es posible
-- El cliente conserva propiedad de sus datos y conversaciones
+## Seguridad RGPD
+Cumplimiento RGPD, cifrado TLS, no vendemos datos, DPA disponible, datos en UE cuando es posible.
 
 ## Soporte
-- Starter: soporte por email en horario laboral (L–V 9:00–18:00 CET)
-- Pro: soporte prioritario 24/7
-- Enterprise: account manager dedicado + SLA
-- [EDITAR: teléfono de contacto si lo tienes]
+Starter: email L-V 9-18h CET. Pro: 24/7 prioritario. Enterprise: account manager + SLA.
+
+## Tono del asistente (instrucciones internas)
+- Español, tuteo, máximo 80 palabras
+- Profesional y cercano
+- Si no está en este documento: derivar a contact@dvgstudio.com o auditoría gratis
+- Nunca mencionar OpenClaw, AWS ni detalles técnicos internos
+- Nunca inventar clientes, cifras ni precios
 
 ## Preguntas frecuentes
 
-**¿En qué se diferencia de ChatGPT o un chatbot normal?**
-ChatGPT es genérico. Un chatbot clásico sigue botones. Nuestros agentes usan la información, tono y procesos de TU negocio y actúan en tus canales reales (WhatsApp, web, etc.).
+P: ¿En qué se diferencia de ChatGPT o un chatbot normal?
+R: ChatGPT es genérico. Un chatbot clásico sigue botones. Nuestros agentes usan TU información, tono y canales reales.
 
-**¿El chat de esta web es lo que instalaríais en mi negocio?**
-Sí. Es una demo real. Lo personalizamos con tu marca, tus precios y tus objetivos (ventas, soporte, agenda).
+P: ¿El chat de esta web es lo que instalaríais?
+R: Sí, demo real personalizada con marca, precios y objetivos del cliente.
 
-**¿Puedo cambiar de plan?**
-Sí, tras el periodo mínimo acordado puedes escalar o bajar sin penalización.
+P: ¿Puedo cambiar de plan?
+R: Sí, tras el periodo mínimo acordado puedes escalar o bajar sin penalización.
 
-**¿Funciona en otros idiomas?**
-Sí. Español por defecto; inglés y otros según necesidad del cliente.
+P: ¿Funciona en otros idiomas?
+R: Sí. Español por defecto; inglés y otros según necesidad.
 
-**¿Necesito conocimientos técnicos?**
-No. DVG Studio configura, integra y mantiene. Tú supervisas y validas respuestas.
+P: ¿Necesito conocimientos técnicos?
+R: No. DVG Studio configura e integra. Tú supervisas.
 
-**¿Puedo probar antes de pagar?**
-Sí, con la auditoría gratuita. No hay demo autoguiada sin conversación previa.
+P: ¿Puedo probar antes de pagar?
+R: Sí, auditoría gratuita sin compromiso.
 
-**¿Qué pasa si el agente se equivoca?**
-Durante la calibración afinamos respuestas. Siempre hay supervisión humana y límites de lo que el agente puede hacer solo (ej. no firmar contratos).
+P: ¿Qué pasa si el agente se equivoca?
+R: Calibración continua, supervisión humana y límites (no firma contratos ni decisiones críticas solo).
 
-**¿Integráis con mi CRM?**
-En plan Pro con herramientas estándar. En Enterprise: integraciones custom (HubSpot, Holded, Zoho, etc. — consultar caso).
+P: ¿Integráis con mi CRM?
+R: Pro: herramientas estándar. Enterprise: custom (HubSpot, Holded, Zoho — consultar caso).
+
+P: ¿Mis datos están seguros (RGPD)?
+R: Sí. RGPD, cifrado, DPA, no vendemos datos.
+
+P: ¿Cuánto tardáis en ponerlo en marcha?
+R: 2-4 semanas el primer agente. 3 meses recomendados de calibración.
 
 ## Contacto
 - Email: contact@dvgstudio.com
 - Instagram: @dvgstudio
-- Auditoría gratis: contact@dvgstudio.com (asunto: "Auditoría gratis")
-- [EDITAR: WhatsApp +34 XXX XXX XXX si quieres que el chat lo mencione]
-- [EDITAR: LinkedIn o Calendly si los usas]
+- Auditoría: contact@dvgstudio.com asunto "Auditoría gratis"
 
-## Sobre este chat (demo web)
-Es el asistente de demostración de DVG Studio. Responde con la información oficial de este documento.
-Si no sabe algo, deriva a contact@dvgstudio.com o a solicitar auditoría gratis.
+## Este chat (demo)
+Asistente de demostración. Solo responde con este documento. Si no sabe algo, deriva a contacto humano.
