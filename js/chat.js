@@ -1,4 +1,4 @@
-/* IGNITE — chatbot IA 24/7 */
+/* Chat web DVG Studio */
 (function () {
   const widget = document.getElementById("igniteChat");
   if (!widget) return;
@@ -8,16 +8,24 @@
   const closeBtn = document.getElementById("chatClose");
   const form = document.getElementById("chatForm");
   const input = document.getElementById("chatInput");
+  const hp = document.getElementById("chatHp");
   const messages = document.getElementById("chatMessages");
   const sendBtn = document.getElementById("chatSend");
 
+  const siteKey = widget.dataset.siteKey || "";
+  const pageLoad = Date.now();
+
   let history = [];
   let busy = false;
+  let lastSend = 0;
+  let msgCount = 0;
+  const MAX_MSGS = 8;
+  const COOLDOWN_MS = 5000;
 
   const welcome = {
     role: "assistant",
     content:
-      "Hola, soy IGNITE 🔥 Asistente IA de DVG Studio. Pregúntame sobre empleados digitales, precios, plazos o cómo automatizar tu negocio. Estoy aquí 24/7.",
+      "Hola. Soy el asistente de DVG Studio. Pregúntame sobre precios, servicios o cómo funciona un empleado digital. Solo uso información oficial de la empresa.",
   };
 
   function openChat() {
@@ -47,7 +55,7 @@
     const div = document.createElement("div");
     div.className = "chat-msg assistant typing";
     div.id = "chatTyping";
-    div.textContent = "IGNITE está escribiendo…";
+    div.textContent = "Escribiendo…";
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
   }
@@ -58,6 +66,16 @@
 
   async function sendMessage(text) {
     if (busy || !text.trim()) return;
+    if (msgCount >= MAX_MSGS) {
+      appendMsg("Límite de esta sesión. Escríbenos a contact@dvgstudio.com", "assistant");
+      return;
+    }
+    const now = Date.now();
+    if (now - lastSend < COOLDOWN_MS) return;
+    if (now - pageLoad < 3000) return;
+
+    lastSend = now;
+    msgCount += 1;
     busy = true;
     sendBtn.disabled = true;
     appendMsg(text.trim(), "user");
@@ -68,19 +86,29 @@
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text.trim(), history }),
+        headers: {
+          "Content-Type": "application/json",
+          "X-DVG-Chat": "1",
+        },
+        body: JSON.stringify({
+          message: text.trim(),
+          history,
+          _k: siteKey,
+          _hp: hp?.value || "",
+          _ts: Date.now(),
+          _boot: pageLoad,
+        }),
       });
       const data = await res.json();
       removeTyping();
       const reply = data.reply || data.error || "Sin respuesta.";
       appendMsg(reply, "assistant");
       history.push({ role: "assistant", content: reply });
-      if (history.length > 20) history = history.slice(-20);
+      if (history.length > 12) history = history.slice(-12);
     } catch {
       removeTyping();
       appendMsg(
-        "No pude conectar con el asistente. Escríbenos por WhatsApp o solicita auditoría gratis.",
+        "No pude conectar. Escríbenos a contact@dvgstudio.com o solicita auditoría gratis.",
         "assistant"
       );
     } finally {

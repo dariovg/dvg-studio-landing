@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DVG Studio — Empleados digitales con IA agéntica para PYMEs. Agentes autónomos 24/7 en WhatsApp, web y más. Auditoría gratis.">
-    <title>DVG Studio — Empleados Digitales que Nunca se Rinden</title>
+    <meta name="description" content="DVG Studio — hacIA lo imparable. Empleados digitales con IA para PYMEs. Auditoría gratis.">
+    <title>DVG Studio — hacIA lo imparable</title>
+    <link rel="icon" href="/assets/logo-dvg-studio.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -13,83 +17,138 @@
 
     <header>
         <div class="header-content">
-            <a href="#" class="logo">🔥 DVG <span>STUDIO</span></a>
+            <a href="#" class="logo" aria-label="DVG Studio — hacIA lo imparable">
+                <img src="/assets/logo-dvg-studio.png" alt="DVG Studio — hacIA lo imparable" class="logo-img" width="240" height="56">
+            </a>
             <nav>
                 <a href="#historia">Cómo funciona</a>
                 <a href="#servicios">Servicios</a>
                 <a href="#casos">Casos</a>
                 <a href="#pricing">Planes</a>
                 <a href="#faq">FAQ</a>
-                <a href="#" class="cta-button" data-open-chat>Probar IGNITE</a>
+                <a href="mailto:contact@dvgstudio.com?subject=Auditor%C3%ADa%20gratis" class="cta-button">Auditoría gratis</a>
             </nav>
         </div>
     </header>
 
     <section class="hero">
-        <div class="hero-content reveal">
-            <h1>Empleados Digitales que <span>Nunca se Rinden</span></h1>
-            <p class="subtitle">Agentes de IA agéntica que trabajan en paralelo a tu equipo: captan leads, responden clientes y ejecutan tareas repetitivas — mientras tú te centras en crecer.</p>
-            <div class="hero-buttons">
-                <button class="cta-button" data-open-chat>Hablar con IGNITE (IA 24/7)</button>
-                <a href="#historia" class="secondary-button">Ver cómo funciona</a>
+        <div class="hero-grid">
+            <div class="hero-copy reveal">
+                <h1>Empleados digitales que <span>nunca se rinden</span></h1>
+                <p class="subtitle">Agentes de IA que captan leads, responden clientes y automatizan tareas repetitivas — mientras tu equipo se centra en crecer.</p>
+                <div class="hero-buttons">
+                    <a href="mailto:contact@dvgstudio.com?subject=Auditor%C3%ADa%20gratis" class="cta-button">Solicitar auditoría gratis</a>
+                    <button type="button" class="secondary-button" data-open-chat>Probar demo del chat</button>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Operación continua</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="70" data-suffix="%">0</div>
+                        <div class="stat-label">Tareas repetitivas automatizables</div>
+                        <div class="stat-source">Est. sector servicios</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="2" data-prefix="&lt;">0</div>
+                        <div class="stat-label">Minutos de respuesta</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" data-count="3">0</div>
+                        <div class="stat-label">Meses para ROI medible</div>
+                    </div>
+                </div>
             </div>
-            <div class="stats reveal">
-                <div class="stat">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Operación continua</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">~70%</div>
-                    <div class="stat-label">Tareas repetitivas automatizables</div>
-                    <div class="stat-source">Est. sector servicios</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">&lt;2 min</div>
-                    <div class="stat-label">Respuesta al cliente</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">3 meses</div>
-                    <div class="stat-label">Calibración + ROI medible</div>
+            <div class="hero-mockup reveal">
+                <div class="product-mockup">
+                    <div class="mockup-bar"><span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span></div>
+                    <div class="mockup-header">
+                        <div class="mockup-avatar">IA</div>
+                        <div>
+                            <strong>Asistente DVG Studio</strong>
+                            <span>En línea · Responde al instante</span>
+                        </div>
+                    </div>
+                    <div class="mockup-body">
+                        <div class="mock-bubble user">¿Cuánto cuesta para una clínica dental?</div>
+                        <div class="mock-bubble ai">Desde 199 €/mes el plan Starter. En salud, la agenda 24/7 suele ser lo que más ROI da. ¿Quieres auditoría gratis?</div>
+                        <div class="mock-bubble user">Sí, me interesa</div>
+                        <div class="mock-bubble ai">Perfecto. Escríbenos a contact@dvgstudio.com y agendamos 30 min sin compromiso.</div>
+                    </div>
+                    <div class="mockup-input"><span>Escribe tu pregunta…</span><div class="mockup-send"></div></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Investigación / contexto mercado -->
+    <div class="trust-bar">
+        <div class="trust-inner">
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                RGPD
+            </div>
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Auditoría gratis
+            </div>
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Sin permanencia tras periodo mínimo
+            </div>
+            <div class="trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Respuesta en segundos
+            </div>
+        </div>
+    </div>
+
     <section class="section" id="mercado">
-        <h2 class="section-title reveal">Por qué las <span>PYMEs</span> apuestan por IA agéntica ahora</h2>
-        <p class="section-lead reveal">No es un chatbot de botones. Es un agente que entiende contexto, toma decisiones y actúa en tus canales reales.</p>
+        <h2 class="section-title reveal">Por qué las <span>PYMEs</span> apuestan por IA agéntica</h2>
+        <p class="section-lead reveal">No es un menú de botones. Es un agente que entiende contexto, toma decisiones y actúa en tus canales reales.</p>
         <div class="insights">
             <div class="insight-card reveal">
                 <div class="insight-stat">78%</div>
                 <h3>Compran quien responde primero</h3>
-                <p>Los clientes eligen al negocio que les contesta antes. Un agente 24/7 no deja leads enfriarse por la noche o el fin de semana.</p>
+                <p>Un agente 24/7 no deja leads enfriarse por la noche ni el fin de semana.</p>
             </div>
             <div class="insight-card reveal">
                 <div class="insight-stat">40h+</div>
-                <h3>Ahorro mensual en tareas manuales</h3>
-                <p>Cotizaciones, FAQs, agendamiento y seguimiento consumen horas que un empleado digital puede asumir sin nómina extra.</p>
+                <h3>Ahorro en tareas manuales</h3>
+                <p>Cotizaciones, FAQs y agendamiento consumen horas que un empleado digital puede asumir.</p>
             </div>
             <div class="insight-card reveal">
                 <div class="insight-stat">IA agéntica</div>
-                <h3>Más allá del chatbot clásico</h3>
-                <p>Los agentes modernos buscan información, ejecutan acciones (CRM, calendario, email) y aprenden de cada interacción con tu negocio.</p>
+                <h3>Más allá del chatbot</h3>
+                <p>Busca información, ejecuta acciones en CRM y calendario, y aprende de cada interacción.</p>
             </div>
         </div>
     </section>
 
-    <!-- Scrollytelling -->
+    <section class="section-alt">
+        <div class="section-inner testimonial-block reveal">
+            <blockquote class="testimonial-quote">Montamos el primer agente en tres semanas. Lo que antes tardaba un día en cotizar, ahora son minutos. El equipo humano se quedó para lo importante.</blockquote>
+            <div class="testimonial-author">
+                <div class="author-avatar">DV</div>
+                <div class="author-info">
+                    <strong>Dario V. G.</strong>
+                    <span>Fundador, DVG Studio</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="scrolly" id="historia" aria-label="Cómo trabaja tu empleado digital">
         <div class="scrolly-sticky">
             <div class="scrolly-panel">
                 <div class="scrolly-visual">
                     <div class="scrolly-visual-inner" data-step="1">
-                        <div class="agent-avatar">🤖</div>
-                        <strong style="color:#fff;font-size:1.2rem">IGNITE</strong>
-                        <p class="agent-status" id="agentStatus">En espera…</p>
-                        <div class="chat-mockup" style="margin-top:1rem;width:100%;min-height:120px;font-size:.8rem">
+                        <div class="agent-badge">IA</div>
+                        <strong style="color:#fff;font-size:1.05rem">Empleado digital</strong>
+                        <p class="agent-status" id="agentStatus">En espera</p>
+                        <div class="chat-mockup" style="margin-top:1rem;width:100%;font-size:.78rem;background:transparent;padding:0;min-height:auto">
                             <div class="chat-message user-msg" style="font-size:.75rem">¿Tenéis disponibilidad?</div>
-                            <div class="chat-message ai-msg" style="font-size:.75rem" id="previewReply">…</div>
+                            <div class="chat-message ai-msg" style="font-size:.75rem;background:#fff;color:#1a2332" id="previewReply">…</div>
                         </div>
                     </div>
                 </div>
@@ -97,27 +156,27 @@
                     <div class="scrolly-step active" data-step="1">
                         <span class="step-tag">Paso 1</span>
                         <h3>Llega un lead fuera de horario</h3>
-                        <p>Un cliente escribe por WhatsApp a las 23:00. Tu equipo duerme. El lead se enfría. Aquí empieza la historia.</p>
+                        <p>Un cliente escribe a las 23:00. Tu equipo duerme. El lead se enfría.</p>
                     </div>
                     <div class="scrolly-step" data-step="2">
                         <span class="step-tag">Paso 2</span>
                         <h3>El agente responde al instante</h3>
-                        <p>IGNITE contesta en segundos con tu tono, tu información y sin plantillas robóticas. El cliente siente que hay alguien al otro lado.</p>
+                        <p>Contestan en segundos con tu tono y tu información. Sin plantillas robóticas.</p>
                     </div>
                     <div class="scrolly-step" data-step="3">
                         <span class="step-tag">Paso 3</span>
                         <h3>Califica y cotiza</h3>
-                        <p>Extrae datos, entiende la necesidad y genera una propuesta o deriva al comercial correcto. Lo que antes tardaba horas, ahora son minutos.</p>
+                        <p>Extrae datos, entiende la necesidad y genera propuesta o deriva al comercial.</p>
                     </div>
                     <div class="scrolly-step" data-step="4">
                         <span class="step-tag">Paso 4</span>
                         <h3>Cierra o agenda</h3>
-                        <p>Reserva cita, confirma por email o pasa el lead caliente a tu CRM. Tú recibes un resumen cuando vuelves al trabajo.</p>
+                        <p>Reserva cita, confirma por email o pasa el lead a tu CRM. Tú recibes el resumen.</p>
                     </div>
                     <div class="scrolly-step" data-step="5">
                         <span class="step-tag">Resultado</span>
                         <h3>Tu negocio nunca cierra</h3>
-                        <p>Mismo equipo humano, más capacidad. Sin contratar 3 personas más. Eso es un empleado digital de DVG Studio.</p>
+                        <p>Mismo equipo humano, más capacidad. Sin contratar tres personas más.</p>
                     </div>
                 </div>
             </div>
@@ -125,120 +184,130 @@
     </section>
 
     <section class="section" id="servicios">
-        <h2 class="section-title reveal">Qué hace un <span>Empleado Digital</span></h2>
+        <h2 class="section-title reveal">Qué hace un <span>empleado digital</span></h2>
         <p class="section-lead reveal">Personalizado para tu sector. Conectado a tus canales. Supervisado por ti.</p>
         <div class="services-grid">
             <div class="service-card reveal">
-                <div class="service-icon">💬</div>
+                <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
                 <h3>Atención multicanal 24/7</h3>
-                <p>WhatsApp, Telegram, web, email e Instagram desde un solo cerebro. Misma calidad de respuesta a cualquier hora.</p>
+                <p>WhatsApp, Telegram, web, email e Instagram desde un solo cerebro.</p>
             </div>
             <div class="service-card reveal">
-                <div class="service-icon">📋</div>
+                <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
                 <h3>Cotizaciones automáticas</h3>
-                <p>Recoge requisitos, calcula y envía presupuestos en minutos. Tu equipo solo revisa excepciones.</p>
+                <p>Recoge requisitos, calcula y envía presupuestos en minutos.</p>
             </div>
             <div class="service-card reveal">
-                <div class="service-icon">📅</div>
+                <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
                 <h3>Agenda inteligente</h3>
                 <p>Confirma citas, envía recordatorios y reprograma sin intervención humana.</p>
             </div>
             <div class="service-card reveal">
-                <div class="service-icon">🔍</div>
+                <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
                 <h3>Investigación y seguimiento</h3>
-                <p>Busca información de mercado, resume competencia y hace seguimiento de oportunidades.</p>
+                <p>Resume competencia y hace seguimiento de oportunidades.</p>
             </div>
             <div class="service-card reveal">
-                <div class="service-icon">🧠</div>
+                <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z"/></svg></div>
                 <h3>Aprende tu negocio</h3>
-                <p>Se entrena con tus documentos, FAQs y conversaciones. Mejora cada semana con supervisión humana.</p>
+                <p>Se entrena con tus documentos y FAQs. Mejora cada semana.</p>
             </div>
             <div class="service-card reveal">
-                <div class="service-icon">🌐</div>
-                <h3>Chat en tu web (como este)</h3>
-                <p>Integramos IGNITE en tu landing para resolver dudas de visitantes y captar leads cualificados.</p>
+                <div class="service-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+                <h3>Chat en tu web</h3>
+                <p>Como el de esta página: resuelve dudas y captura leads cualificados.</p>
             </div>
         </div>
     </section>
 
-    <section class="section reveal-scale" id="comparativa">
-        <h2 class="section-title">Empleado humano vs <span>Empleado Digital</span></h2>
-        <table class="compare-table reveal">
-            <thead>
-                <tr><th></th><th>Empleado tradicional</th><th>Empleado Digital DVG</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>Coste mensual</td><td>~2.000–2.500 €</td><td class="win">Desde 199 €</td></tr>
-                <tr><td>Disponibilidad</td><td>8h/día, vacaciones</td><td class="win">24/7/365</td></tr>
-                <tr><td>Tiempo de respuesta</td><td>Horas</td><td class="win">Segundos</td></tr>
-                <tr><td>Escalado</td><td>+1 contratación</td><td class="win">Mismo coste, más volumen</td></tr>
-                <tr><td>Ideal para</td><td>Estrategia, relaciones</td><td class="win">Tareas repetitivas + primer contacto</td></tr>
-            </tbody>
-        </table>
+    <section class="section-alt">
+        <div class="section-inner" id="comparativa">
+            <h2 class="section-title reveal">Empleado humano vs <span>empleado digital</span></h2>
+            <table class="compare-table reveal">
+                <thead>
+                    <tr><th></th><th>Empleado tradicional</th><th>Empleado Digital DVG</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Coste mensual</td><td>~2.000–2.500 €</td><td class="win">Desde 199 €</td></tr>
+                    <tr><td>Disponibilidad</td><td>8h/día, vacaciones</td><td class="win">24/7/365</td></tr>
+                    <tr><td>Tiempo de respuesta</td><td>Horas</td><td class="win">Segundos</td></tr>
+                    <tr><td>Escalado</td><td>+1 contratación</td><td class="win">Más volumen, mismo plan</td></tr>
+                    <tr><td>Ideal para</td><td>Estrategia, relaciones</td><td class="win">Repetitivo + primer contacto</td></tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <section class="section" id="demo">
-        <h2 class="section-title reveal">Pruébalo ahora: <span>IGNITE</span></h2>
-        <p class="section-lead reveal">El mismo tipo de asistente que instalamos en tu web y canales. Haz una pregunta real.</p>
+        <h2 class="section-title reveal">Pruébalo <span>ahora</span></h2>
+        <p class="section-lead reveal">El mismo tipo de asistente que instalamos en tu web. Haz una pregunta real.</p>
         <div class="demo-container reveal">
             <div>
-                <h3>Asistente IA en tu web</h3>
-                <p>Este chat usa inteligencia artificial para responder dudas sobre DVG Studio, planes y automatización.</p>
-                <p>Es la demostración en vivo de lo que tus clientes experimentarían en tu negocio.</p>
-                <button class="cta-button" data-open-chat>Abrir chat con IGNITE</button>
+                <h3 style="font-family:var(--font-display);margin-bottom:.75rem">Asistente IA en tu web</h3>
+                <p style="color:var(--gray);margin-bottom:.75rem">Responde dudas sobre planes, servicios y automatización usando solo información oficial de DVG Studio.</p>
+                <a href="mailto:contact@dvgstudio.com?subject=Auditor%C3%ADa%20gratis" class="cta-button">Auditoría gratis</a>
+                <button type="button" class="secondary-button dark" data-open-chat style="margin-left:.5rem">Abrir demo chat</button>
             </div>
             <div class="chat-mockup">
                 <div class="chat-message user-msg">¿Cuánto cuesta un agente para mi pyme?</div>
-                <div class="chat-message ai-msg">Desde 199 €/mes el plan Starter con 1 agente. Hacemos auditoría gratis para ver si encaja contigo. ¿Qué sector es?</div>
+                <div class="chat-message ai-msg">Desde 199 €/mes el plan Starter. Hacemos auditoría gratis para ver si encaja. ¿Qué sector es?</div>
                 <div class="chat-message user-msg">Tengo una clínica dental</div>
-                <div class="chat-message ai-msg">Perfecto: agenda 24/7, recordatorios y FAQs de tratamientos son lo que más ROI dan en salud. Te cuento más si quieres.</div>
+                <div class="chat-message ai-msg">En salud, agenda 24/7 y recordatorios suelen dar el mejor ROI. Te cuento más si quieres.</div>
             </div>
         </div>
     </section>
 
-    <section class="section" id="casos">
-        <h2 class="section-title reveal">Resultados <span>tipo</span> (sectores reales)</h2>
-        <p class="section-lead reveal">Casos representativos basados en patrones que vemos en PYMEs españolas. Cifras orientativas tras 3 meses de uso.</p>
-        <div class="case-studies-grid">
-            <div class="case-study reveal">
-                <div class="case-study-header">
-                    <div class="case-study-metric">+30–50%</div>
-                    <h3>E-commerce / Retail</h3>
-                    <div class="case-study-industry">WhatsApp + web</div>
-                </div>
-                <div class="case-study-body">
-                    <p>Respuesta inmediata a consultas de stock y envío. Menos abandono de carrito por dudas sin resolver.</p>
-                    <div class="case-study-details">
-                        <div><div class="detail-label">Leads recuperados</div><div class="detail-value">+30%</div></div>
-                        <div><div class="detail-label">Tiempo respuesta</div><div class="detail-value">&lt;30 seg</div></div>
+    <section class="section-alt">
+        <div class="section-inner" id="casos">
+            <h2 class="section-title reveal">Resultados por <span>sector</span></h2>
+            <p class="section-lead reveal">Patrones orientativos tras 3 meses de uso en PYMEs españolas.</p>
+            <div class="sector-tags reveal">
+                <div class="sector-tag"><div class="sector-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg></div>Retail</div>
+                <div class="sector-tag"><div class="sector-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>B2B</div>
+                <div class="sector-tag"><div class="sector-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>Salud</div>
+                <div class="sector-tag"><div class="sector-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>Asesorías</div>
+            </div>
+            <div class="case-studies-grid">
+                <div class="case-study reveal">
+                    <div class="case-study-header">
+                        <div class="case-study-metric">+30–50%</div>
+                        <h3>E-commerce / Retail</h3>
+                        <div class="case-study-industry">WhatsApp + web</div>
+                    </div>
+                    <div class="case-study-body">
+                        <p>Respuesta inmediata a stock y envíos. Menos abandono por dudas sin resolver.</p>
+                        <div class="case-study-details">
+                            <div><div class="detail-label">Leads recuperados</div><div class="detail-value">+30%</div></div>
+                            <div><div class="detail-label">Tiempo respuesta</div><div class="detail-value">&lt;30 seg</div></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="case-study reveal">
-                <div class="case-study-header">
-                    <div class="case-study-metric">48h → 5 min</div>
-                    <h3>B2B / Servicios</h3>
-                    <div class="case-study-industry">Cotizaciones</div>
-                </div>
-                <div class="case-study-body">
-                    <p>Cotizaciones que tardaban días pasan a minutos. El comercial solo valida casos complejos.</p>
-                    <div class="case-study-details">
-                        <div><div class="detail-label">Horas ahorradas</div><div class="detail-value">~20h/sem</div></div>
-                        <div><div class="detail-label">Conversión</div><div class="detail-value">+15%</div></div>
+                <div class="case-study reveal">
+                    <div class="case-study-header">
+                        <div class="case-study-metric">48h → 5 min</div>
+                        <h3>B2B / Servicios</h3>
+                        <div class="case-study-industry">Cotizaciones</div>
+                    </div>
+                    <div class="case-study-body">
+                        <p>Cotizaciones que tardaban días pasan a minutos. El comercial valida excepciones.</p>
+                        <div class="case-study-details">
+                            <div><div class="detail-label">Horas ahorradas</div><div class="detail-value">~20h/sem</div></div>
+                            <div><div class="detail-label">Conversión</div><div class="detail-value">+15%</div></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="case-study reveal">
-                <div class="case-study-header">
-                    <div class="case-study-metric">+20 citas/mes</div>
-                    <h3>Salud / Belleza</h3>
-                    <div class="case-study-industry">Agendamiento</div>
-                </div>
-                <div class="case-study-body">
-                    <p>Citas fuera de horario que antes se perdían. Recordatorios reducen no-shows.</p>
-                    <div class="case-study-details">
-                        <div><div class="detail-label">Citas extra</div><div class="detail-value">+20/mes</div></div>
-                        <div><div class="detail-label">No-shows</div><div class="detail-value">-25%</div></div>
+                <div class="case-study reveal">
+                    <div class="case-study-header">
+                        <div class="case-study-metric">+20 citas/mes</div>
+                        <h3>Salud / Belleza</h3>
+                        <div class="case-study-industry">Agendamiento</div>
+                    </div>
+                    <div class="case-study-body">
+                        <p>Citas fuera de horario que antes se perdían. Recordatorios reducen no-shows.</p>
+                        <div class="case-study-details">
+                            <div><div class="detail-label">Citas extra</div><div class="detail-value">+20/mes</div></div>
+                            <div><div class="detail-label">No-shows</div><div class="detail-value">-25%</div></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -246,17 +315,17 @@
     </section>
 
     <section class="section" id="pricing">
-        <h2 class="section-title reveal">Planes de <span>Inversión</span></h2>
+        <h2 class="section-title reveal">Planes de <span>inversión</span></h2>
         <div class="pricing-container reveal">
             <div class="pricing-toggle">
                 <span>Mensual</span>
-                <div class="toggle-switch" id="pricingToggle"></div>
+                <div class="toggle-switch" id="pricingToggle" role="switch" aria-checked="false" tabindex="0"></div>
                 <span>Anual (-20%)</span>
             </div>
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <h3>Starter</h3>
-                    <div class="pricing-price" id="price-starter">€199</div>
+                    <div class="pricing-price" id="price-starter" data-price-monthly="199" data-price-annual="159">€199</div>
                     <div class="pricing-period">/mes</div>
                     <ul class="pricing-features">
                         <li>1 agente IA</li>
@@ -264,11 +333,11 @@
                         <li>Hasta 10K interacciones/mes</li>
                         <li>Auditoría inicial incluida</li>
                     </ul>
-                    <button class="cta-button" style="width:100%" data-open-chat>Empezar</button>
+                    <a href="mailto:contact@dvgstudio.com?subject=Plan%20Starter" class="cta-button">Empezar</a>
                 </div>
                 <div class="pricing-card featured">
-                    <h3>Pro ⭐</h3>
-                    <div class="pricing-price" id="price-pro">€499</div>
+                    <h3>Pro</h3>
+                    <div class="pricing-price" id="price-pro" data-price-monthly="499" data-price-annual="399">€499</div>
                     <div class="pricing-period">/mes</div>
                     <ul class="pricing-features">
                         <li>5 agentes especializados</li>
@@ -276,11 +345,11 @@
                         <li>Hasta 100K interacciones/mes</li>
                         <li>Soporte prioritario 24/7</li>
                     </ul>
-                    <button class="cta-button" style="width:100%" data-open-chat>Elegir Pro</button>
+                    <a href="mailto:contact@dvgstudio.com?subject=Plan%20Pro" class="cta-button">Elegir Pro</a>
                 </div>
                 <div class="pricing-card">
                     <h3>Enterprise</h3>
-                    <div class="pricing-price">€2.499</div>
+                    <div class="pricing-price" id="price-enterprise" data-price-monthly="2499" data-price-annual="1999">€2.499</div>
                     <div class="pricing-period">/mes</div>
                     <ul class="pricing-features">
                         <li>20 agentes + integraciones</li>
@@ -288,74 +357,94 @@
                         <li>Account manager dedicado</li>
                         <li>SLA empresarial</li>
                     </ul>
-                    <button class="cta-button" style="width:100%" data-open-chat>Solicitar demo</button>
+                    <a href="mailto:contact@dvgstudio.com?subject=Plan%20Enterprise" class="cta-button">Solicitar demo</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section" id="faq">
-        <h2 class="section-title reveal">Preguntas <span>Frecuentes</span></h2>
-        <div class="faq-container reveal">
-            <details>
-                <summary>¿En qué se diferencia de un chatbot normal?</summary>
-                <p>Un chatbot clásico sigue un árbol de decisiones. Un empleado digital entiende contexto, usa herramientas (calendario, búsqueda, CRM) y puede actuar sin que pulses botones.</p>
-            </details>
-            <details>
-                <summary>¿El chat de esta web es el mismo que instalaríais?</summary>
-                <p>Sí. IGNITE es un ejemplo real. Lo personalizamos con la información de tu empresa, tono de marca y objetivos (ventas, soporte, agenda…).</p>
-            </details>
-            <details>
-                <summary>¿Mis datos están seguros (RGPD)?</summary>
-                <p>Trabajamos con infraestructura en la UE cuando es posible, cifrado en tránsito y contratos de tratamiento de datos. No vendemos ni compartimos información de clientes.</p>
-            </details>
-            <details>
-                <summary>¿Cuánto tardáis en ponerlo en marcha?</summary>
-                <p>Primer agente operativo en 2–4 semanas según complejidad. Los primeros 3 meses son de calibración para afinar respuestas y medir ROI.</p>
-            </details>
-            <details>
-                <summary>¿Puedo probar antes de pagar?</summary>
-                <p>Ofrecemos auditoría gratuita: analizamos tus procesos y te decimos qué automatizar y qué retorno esperar. Sin compromiso.</p>
-            </details>
+    <section class="section-alt">
+        <div class="section-inner" id="faq">
+            <h2 class="section-title reveal">Preguntas <span>frecuentes</span></h2>
+            <div class="faq-container reveal">
+                <details>
+                    <summary>¿En qué se diferencia de un chatbot normal?</summary>
+                    <p>Un chatbot clásico sigue un árbol de decisiones. Un empleado digital entiende contexto, usa herramientas y actúa sin botones.</p>
+                </details>
+                <details>
+                    <summary>¿El chat de esta web es el mismo que instalaríais?</summary>
+                    <p>Sí. Lo personalizamos con la información de tu empresa, tono de marca y objetivos.</p>
+                </details>
+                <details>
+                    <summary>¿Mis datos están seguros (RGPD)?</summary>
+                    <p>Cifrado en tránsito, contratos de tratamiento de datos. No vendemos ni compartimos información de clientes.</p>
+                </details>
+                <details>
+                    <summary>¿Cuánto tardáis en ponerlo en marcha?</summary>
+                    <p>Primer agente operativo en 2–4 semanas. Los primeros 3 meses son de calibración para medir ROI.</p>
+                </details>
+                <details>
+                    <summary>¿Puedo probar antes de pagar?</summary>
+                    <p>Sí: auditoría gratuita sin compromiso. Analizamos procesos y estimamos retorno.</p>
+                </details>
+            </div>
         </div>
     </section>
 
     <section class="cta-section reveal">
         <h2>¿Listo para tu primer empleado digital?</h2>
-        <p>Habla con IGNITE ahora o solicita auditoría gratis. Sin letra pequeña.</p>
-        <button class="cta-button" data-open-chat>Hablar con IGNITE — IA 24/7</button>
+        <p>Solicita auditoría gratis o prueba el chat demo. Sin letra pequeña.</p>
+        <div class="cta-buttons">
+            <a href="mailto:contact@dvgstudio.com?subject=Auditor%C3%ADa%20gratis" class="cta-button">Auditoría gratis</a>
+            <button type="button" class="cta-button outline" data-open-chat>Probar demo chat</button>
+        </div>
     </section>
 
     <footer>
-        <p>© 2026 DVG Studio. Empleados digitales para PYMEs que creen en sí mismas. 🔥</p>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="/assets/logo-dvg-studio.png" alt="DVG Studio" class="footer-logo" width="200" height="48">
+                <p>
+                    <strong>hac<span class="brand-ia">IA</span> lo imparable</strong>
+                    Empleados digitales para PYMEs · España
+                </p>
+            </div>
+            <div class="footer-links">
+                <a href="mailto:contact@dvgstudio.com">contact@dvgstudio.com</a>
+                <a href="#pricing">Planes</a>
+                <a href="#faq">FAQ</a>
+            </div>
+        </div>
+        <p style="text-align:center;margin-top:1.5rem;font-size:.8rem">© 2026 DVG Studio</p>
     </footer>
 
-    <!-- Chatbot IA -->
-    <div class="ignite-chat" id="igniteChat">
-        <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat con IGNITE">
+    <div class="ignite-chat" id="igniteChat" data-site-key="dvg-studio-chat-2026">
+        <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat con asistente DVG Studio">
             <div class="chat-panel-header">
                 <div>
-                    <h4>🔥 IGNITE — IA 24/7</h4>
-                    <p>Asistente de DVG Studio</p>
+                    <h4>Asistente DVG Studio</h4>
+                    <p>hac<span class="brand-ia">IA</span> lo imparable</p>
                 </div>
                 <button class="chat-close" id="chatClose" aria-label="Cerrar">×</button>
             </div>
             <div class="chat-messages" id="chatMessages"></div>
             <form class="chat-form" id="chatForm">
-                <input type="text" id="chatInput" placeholder="Pregunta sobre empleados digitales…" autocomplete="off" maxlength="500">
-                <button type="submit" id="chatSend" aria-label="Enviar">➤</button>
+                <input type="text" class="hp-field" id="chatHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input type="text" id="chatInput" placeholder="Pregunta sobre precios o servicios…" autocomplete="off" maxlength="250">
+                <button type="submit" id="chatSend" aria-label="Enviar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </button>
             </form>
         </div>
-        <button class="chat-toggle" id="chatToggle" aria-expanded="false" aria-label="Abrir chat">💬</button>
+        <button class="chat-toggle" id="chatToggle" aria-expanded="false" aria-label="Abrir chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </button>
     </div>
 
     <script src="/js/scroll.js"></script>
     <script>
-        const previews = ['…esperando mensaje','¡Hola! ¿En qué puedo ayudarte?','Te preparo una cotización','Cita confirmada ✓','Lead cerrado 🎉'];
-        const statuses = ['En espera…','Respondiendo…','Cotizando…','Agendando…','¡Misión cumplida!'];
-        document.querySelectorAll('.scrolly-step').forEach((step, i) => {
-            step.addEventListener('transitionend', () => {});
-        });
+        const previews = ['Esperando mensaje…','Hola, ¿en qué puedo ayudarte?','Preparando cotización…','Cita confirmada','Lead cualificado'];
+        const statuses = ['En espera','Respondiendo','Cotizando','Agendando','Completado'];
         const obs = new MutationObserver(() => {
             const active = document.querySelector('.scrolly-step.active');
             if (!active) return;
@@ -367,15 +456,6 @@
         });
         document.querySelectorAll('.scrolly-step').forEach(s => obs.observe(s, {attributes:true,attributeFilter:['class']}));
 
-        document.getElementById('pricingToggle')?.addEventListener('click', function() {
-            this.classList.toggle('active');
-            const annual = this.classList.contains('active');
-            document.getElementById('price-starter').textContent = annual ? '€159' : '€199';
-            document.getElementById('price-pro').textContent = annual ? '€399' : '€499';
-            document.querySelectorAll('.pricing-period').forEach(p => {
-                p.textContent = annual ? '/mes (anual)' : '/mes';
-            });
-        });
         document.querySelectorAll('a[href^="#"]').forEach(a => {
             a.addEventListener('click', e => {
                 const t = document.querySelector(a.getAttribute('href'));
@@ -383,6 +463,7 @@
             });
         });
     </script>
+    <script src="/js/pricing.js"></script>
     <script src="/js/chat.js"></script>
 </body>
 </html>

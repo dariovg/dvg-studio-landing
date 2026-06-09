@@ -1,70 +1,145 @@
+import fs from "fs";
+import path from "path";
 import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
+import { matchFaq } from "./lib/chat-faq.js";
+import { checkRateLimit, canCallBedrock, recordBedrockCall } from "./lib/rate-limit.js";
+import {
+  clientIp,
+  validateOrigin,
+  validateSiteKey,
+  validateHoneypot,
+  validateTiming,
+  validateUserAgent,
+  validateMessage,
+  isRepeatedMessage,
+  sanitizeHistory,
+} from "./lib/chat-security.js";
 
-const SYSTEM = `Eres IGNITE, asistente comercial de DVG Studio (España).
-Respondes en español, tono cercano y profesional, como un empleado digital que inspira confianza.
+let knowledgeCache = "";
 
-DVG Studio crea empleados digitales (agentes IA autónomos) para PYMEs:
-- Trabajan 24/7 en WhatsApp, Telegram, email, web
-- Automatizan atención al cliente, leads, cotizaciones y agendas
-- Planes: Starter €199/mes (1 agente), Pro €499/mes (5 agentes), Enterprise €2.499/mes (20 agentes)
-- Auditoría gratuita sin compromiso
-- Mínimo recomendado 3 meses para calibrar el agente al negocio
+function loadKnowledge() {
+  if (knowledgeCache) return knowledgeCache;
+  const file = path.join(process.cwd(), "knowledge", "empresa.md");
+  knowledgeCache = fs.readFileSync(file, "utf8");
+  return knowledgeCache;
+}
 
-Sé conciso (máx. 120 palabras). Si no sabes algo, invita a solicitar auditoría gratis o contact@dvgstudio.com.
-No inventes datos técnicos ni casos de clientes específicos.`;
+function buildSystem(knowledge) {
+  return `Asistente web de DVG Studio. Español, máximo 80 palabras, tono profesional y cercano.
+
+REGLAS:
+1. Responde SOLO con el DOCUMENTO.
+2. Si no está en el documento: "No tengo esa información. Escríbenos a contact@dvgstudio.com o solicita auditoría gratis."
+3. No inventes datos, precios ni casos de clientes.
+4. No hables de OpenClaw, AWS ni detalles técnicos internos.
+
+--- DOCUMENTO ---
+${knowledge}
+--- FIN ---`;
+}
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-DVG-Chat");
 
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
-  const region = process.env.AWS_REGION || "us-east-1";
-  const modelId =
-    process.env.BEDROCK_MODEL_ID ||
-    "us.anthropic.claude-haiku-4-5-20251001-v1:0";
+  if (!validateOrigin(req)) {
+    return res.status(403).json({ reply: "Acceso no permitido." });
+  }
 
-  if (!process.env.AWS_ACCESS_KEY_ID && !process.env.AWS_PROFILE) {
-    return res.status(503).json({
-      error: "Chat no configurado",
-      reply:
-        "El asistente IA se está activando. Mientras tanto, escríbenos por WhatsApp o solicita auditoría gratis.",
+  if (!validateUserAgent(req)) {
+    return res.status(403).json({ reply: "Acceso no permitido." });
+  }
+
+  const ip = clientIp(req);
+  const limit = checkRateLimit(ip, {
+    perHour: Number(process.env.CHAT_LIMIT_HOUR) || 6,
+    perDay: Number(process.env.CHAT_LIMIT_DAY) || 20,
+  });
+
+  if (!limit.ok) {
+    return res.status(429).json({
+      reply: "Has hecho muchas preguntas. Escríbenos a contact@dvgstudio.com.",
     });
   }
 
-  const { message, history = [] } = req.body || {};
-  if (!message || typeof message !== "string" || message.length > 2000) {
+  const body = req.body || {};
+
+  if (!validateSiteKey(body) || !validateHoneypot(body) || !validateTiming(body)) {
+    return res.status(403).json({ reply: "Solicitud no válida." });
+  }
+
+  const { message, history = [] } = body;
+  if (!message || typeof message !== "string" || message.length > 250) {
     return res.status(400).json({ error: "Mensaje inválido" });
   }
 
+  const trimmed = message.trim();
+
+  if (!validateMessage(trimmed) || isRepeatedMessage(ip, trimmed)) {
+    return res.status(400).json({
+      reply: "No pude procesar ese mensaje. Reformúlalo o escribe a contact@dvgstudio.com",
+    });
+  }
+
+  const faqReply = matchFaq(trimmed);
+  if (faqReply) {
+    return res.status(200).json({ reply: faqReply, source: "faq" });
+  }
+
+  if (!process.env.AWS_ACCESS_KEY_ID) {
+    return res.status(200).json({
+      reply:
+        "No tengo esa respuesta aquí. Escríbenos a contact@dvgstudio.com o pregunta por precios, planes o auditoría gratis.",
+    });
+  }
+
+  const maxBedrock = Number(process.env.CHAT_BEDROCK_DAILY_MAX) || 100;
+  if (!canCallBedrock(maxBedrock)) {
+    return res.status(200).json({
+      reply: "Hoy el asistente automático está al límite. Escríbenos a contact@dvgstudio.com.",
+    });
+  }
+
+  const region = process.env.AWS_REGION || "us-east-1";
+  const modelId = process.env.BEDROCK_MODEL_ID || "amazon.nova-lite-v1:0";
+  const safeHistory = sanitizeHistory(history);
+
   const messages = [
-    ...history.slice(-8).map((m) => ({
+    ...safeHistory.map((m) => ({
       role: m.role === "user" ? "user" : "assistant",
-      content: [{ text: String(m.content).slice(0, 2000) }],
+      content: [{ text: m.content }],
     })),
-    { role: "user", content: [{ text: message.slice(0, 2000) }] },
+    { role: "user", content: [{ text: trimmed }] },
   ];
 
   try {
+    recordBedrockCall();
+    const knowledge = loadKnowledge();
     const client = new BedrockRuntimeClient({ region });
-    const cmd = new ConverseCommand({
-      modelId,
-      system: [{ text: SYSTEM }],
-      messages,
-      inferenceConfig: { maxTokens: 512, temperature: 0.4 },
-    });
-    const out = await client.send(cmd);
+    const out = await client.send(
+      new ConverseCommand({
+        modelId,
+        system: [{ text: buildSystem(knowledge) }],
+        messages,
+        inferenceConfig: { maxTokens: 100, temperature: 0.1 },
+      })
+    );
     const reply =
       out.output?.message?.content?.map((c) => c.text).join("") ||
-      "No pude generar respuesta. Intenta de nuevo.";
-    return res.status(200).json({ reply });
+      "No pude responder. contact@dvgstudio.com";
+    return res.status(200).json({ reply, source: "bedrock" });
   } catch (err) {
-    console.error("Bedrock error:", err);
-    return res.status(500).json({
-      error: "Error del asistente",
-      reply: "Hubo un problema técnico. Prueba en unos segundos o contáctanos directamente.",
+    console.error("Bedrock:", err.message);
+    return res.status(200).json({
+      reply: "Error temporal. contact@dvgstudio.com o pregunta por precios/planes.",
     });
   }
 }

@@ -1,56 +1,122 @@
 # DVG Studio — Landing Page
 
-Landing page estática para **DVG Studio**: empleados digitales autónomos 24/7 para PYMEs.
+Landing + chat IA con Bedrock Nova Lite y documento de conocimiento.
 
-## Ver en local
+## Activar el modelo en el chat (paso a paso)
 
-Abre `index.html` en el navegador, o sirve la carpeta:
+### 1. AWS — activar Nova Lite
 
-```bash
-python3 -m http.server 8080
+1. Consola AWS → **Bedrock** → **Model access**
+2. Activa **Amazon Nova Lite**
+3. Región: `us-east-1`
+
+### 2. AWS — usuario IAM para el chat
+
+Crea un usuario (o usa el existente) con política mínima:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": ["bedrock:InvokeModel", "bedrock:Converse"],
+    "Resource": [
+      "arn:aws:bedrock:us-east-1::foundation-model/amazon.nova-lite-v1:0",
+      "arn:aws:bedrock:*::foundation-model/amazon.nova*"
+    ]
+  }]
+}
 ```
 
-Luego visita http://localhost:8080
+Genera **Access Key** + **Secret Key**.
 
-## Chatbot IGNITE (IA 24/7)
+### 3. AWS — presupuesto (anti-sorpresas)
 
-El widget llama a `/api/chat` (Vercel Serverless + AWS Bedrock Haiku).
+1. **Billing** → **Budgets** → Create budget
+2. Cost budget: **10 USD/mes**
+3. Alerta al 80% y 100%
 
-En Vercel → **Settings → Environment Variables**:
+### 4. Vercel — variables de entorno
 
-| Variable | Valor |
-|----------|--------|
-| `AWS_ACCESS_KEY_ID` | Tu access key |
-| `AWS_SECRET_ACCESS_KEY` | Tu secret key |
-| `AWS_REGION` | `us-east-1` |
-| `BEDROCK_MODEL_ID` | `us.anthropic.claude-haiku-4-5-20251001-v1:0` |
+En el proyecto → **Settings → Environment Variables**:
 
-Sin estas variables el chat muestra mensaje de fallback (la web sigue funcionando).
+| Variable | Valor | Obligatorio |
+|----------|--------|-------------|
+| `AWS_ACCESS_KEY_ID` | Tu access key | Sí |
+| `AWS_SECRET_ACCESS_KEY` | Tu secret key | Sí |
+| `AWS_REGION` | `us-east-1` | Sí |
+| `BEDROCK_MODEL_ID` | `amazon.nova-lite-v1:0` | Sí |
+| `CHAT_SITE_KEY` | Misma clave que `data-site-key` en `index.html` | Recomendado |
+| `CHAT_ALLOWED_ORIGINS` | `https://tudominio.com,https://www.tudominio.com` | Recomendado |
+| `CHAT_LIMIT_HOUR` | `6` | Opcional |
+| `CHAT_LIMIT_DAY` | `20` | Opcional |
+| `CHAT_BEDROCK_DAILY_MAX` | `100` | Opcional |
 
-## Despliegue en Vercel (recomendado)
+Tras guardar → **Redeploy**.
 
-1. Entra en [vercel.com](https://vercel.com) → **Add New Project**
-2. Importa el repo: `dariovg/dvg-studio-landing`
-3. Framework: **Other** — sin build command, sin install command
-4. **Deploy**
+### 5. Probar
 
-### Conectar tu dominio
+1. Abre la web, espera 3 segundos, abre el chat
+2. Pregunta: "¿Cuánto cuesta el plan Pro?" → debería responder (FAQ, 0 €)
+3. Pregunta algo raro no en FAQ → Nova Lite responde con `empresa.md`
 
-1. En el proyecto → **Settings → Domains**
-2. Añade tu dominio (ej. `dvgstudio.com` y `www.dvgstudio.com`)
-3. Vercel te da los registros DNS — cópialos en donde compraste el dominio:
-   - Si el dominio está **en Vercel**: se configura solo
-   - Si está en **otro registrador** (GoDaddy, Namecheap, etc.): añade el registro `A` o `CNAME` que indique Vercel
+## Completar la base de conocimiento
 
-En unos minutos quedará en `https://tudominio.com`.
+Edita **`knowledge/empresa.md`**. El chat solo dice lo que hay ahí.
 
-## Otros hosts
+### Bloques que debes personalizar
 
-Compatible con GitHub Pages, Netlify o cualquier hosting estático.
+Busca `[EDITAR:` en el archivo y rellena:
 
-## Contenido
+- Teléfono / WhatsApp de contacto
+- Setup fee o condiciones especiales de precio
+- Horario de soporte exacto si difiere
+- LinkedIn, Calendly u otros enlaces
+- Casos reales de clientes (cuando los tengas)
 
-- Hero, servicios, casos de uso, testimonios
-- Planes y precios (toggle mensual/anual)
-- FAQ, badges de confianza
-- Widget de chat (WhatsApp / Instagram)
+### Qué añadir para mejores respuestas
+
+| Sección | Ejemplo |
+|---------|---------|
+| Servicios concretos | "Instalamos chat en WordPress, Shopify…" |
+| Objeciones | "¿Y si el cliente quiere hablar con una persona?" |
+| Integraciones | "Holded, HubSpot, Google Calendar…" |
+| Tono de marca | "Cercano pero profesional, tuteo, sin tecnicismos" |
+| Límites | "No hacemos desarrollo web ni diseño gráfico" |
+
+Tras editar: `git push` → Vercel redespliega en ~1 min.
+
+## Seguridad del chat (capas activas)
+
+| Capa | Qué hace |
+|------|----------|
+| FAQ local | ~80% preguntas sin llamar a AWS (0 €) |
+| Nova Lite | Modelo barato cuando sí hace falta IA |
+| Límite IP | 6/hora, 20/día por visitante |
+| Tope global | 100 llamadas Bedrock/día en todo el sitio |
+| Honeypot | Campo oculto anti-bots |
+| Site key | Clave en HTML + Vercel (`CHAT_SITE_KEY`) |
+| Origen | Solo dominios en `CHAT_ALLOWED_ORIGINS` |
+| Anti-spam | Sin URLs múltiples, sin mensajes repetidos |
+| Cliente | 5 s entre mensajes, máx. 8 por sesión |
+
+**Importante:** cambia `data-site-key` en `index.html` y `CHAT_SITE_KEY` en Vercel por una clave aleatoria larga.
+
+## Estructura
+
+```
+index.html          Landing
+css/main.css        Estilos
+js/chat.js          Widget chat
+js/scroll.js        Animaciones
+api/chat.js         API Bedrock
+api/lib/            FAQ, rate-limit, seguridad
+knowledge/empresa.md  Documento que lee el modelo
+```
+
+## Despliegue en Vercel
+
+1. Importa `dariovg/dvg-studio-landing`
+2. Framework: **Other** — sin build
+3. Añade variables de entorno (arriba)
+4. Conecta dominio en Settings → Domains

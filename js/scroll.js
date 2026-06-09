@@ -1,8 +1,7 @@
-/* Scrollytelling, scroll-driven reveals, progress */
+/* Scroll reveals, scrollytelling, stat counters */
 (function () {
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // Reveal on scroll
   const revealEls = document.querySelectorAll(".reveal");
   if (revealEls.length && !prefersReduced) {
     const io = new IntersectionObserver(
@@ -14,14 +13,53 @@
           }
         });
       },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }
     );
     revealEls.forEach((el) => io.observe(el));
   } else {
     revealEls.forEach((el) => el.classList.add("revealed"));
   }
 
-  // Scrollytelling steps
+  // Stat counters
+  function animateStat(el) {
+    const target = Number(el.dataset.count);
+    if (!target) return;
+    const prefix = el.dataset.prefix || "";
+    const suffix = el.dataset.suffix || "";
+    const duration = 1200;
+    const start = performance.now();
+
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = Math.round(target * eased);
+      el.innerHTML = prefix + val + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const statEls = document.querySelectorAll(".stat-number[data-count]");
+  if (statEls.length && !prefersReduced) {
+    const statIo = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            animateStat(e.target);
+            statIo.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+    statEls.forEach((el) => statIo.observe(el));
+  } else {
+    statEls.forEach((el) => {
+      el.innerHTML =
+        (el.dataset.prefix || "") + el.dataset.count + (el.dataset.suffix || "");
+    });
+  }
+
   const scrolly = document.querySelector(".scrolly");
   if (!scrolly || prefersReduced) return;
 
@@ -38,10 +76,7 @@
 
     if (progress) progress.style.width = `${pct * 100}%`;
 
-    const stepIndex = Math.min(
-      steps.length - 1,
-      Math.floor(pct * steps.length)
-    );
+    const stepIndex = Math.min(steps.length - 1, Math.floor(pct * steps.length));
     steps.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
     if (visual) visual.dataset.step = String(stepIndex + 1);
   };
@@ -49,7 +84,6 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  // Header shrink
   const header = document.querySelector("header");
   if (header) {
     window.addEventListener(
