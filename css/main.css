@@ -8,8 +8,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;l
 header{position:fixed;top:0;width:100%;z-index:1000;background:rgba(10,14,39,.92);backdrop-filter:blur(12px);transition:box-shadow .3s}
 header.scrolled{box-shadow:0 4px 24px rgba(0,0,0,.35)}
 .header-content{max-width:1400px;margin:0 auto;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;gap:1rem}
-.logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0}
-.logo-img{height:52px;width:auto;max-width:min(280px,55vw);object-fit:contain;display:block}
+.logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0;padding:.15rem 0}
+.logo-img{
+  height:52px;width:auto;max-width:min(280px,55vw);object-fit:contain;display:block;
+  filter:drop-shadow(0 1px 8px rgba(255,107,53,.18));
+  transition:filter .25s,transform .25s;
+}
+.logo:hover .logo-img{filter:drop-shadow(0 2px 14px rgba(255,107,53,.32));transform:translateY(-1px)}
 .brand-ia{font-weight:900;color:var(--accent)}
 nav{display:flex;gap:1.25rem;align-items:center;flex-wrap:wrap}
 nav a{color:#fff;text-decoration:none;font-weight:500;font-size:.95rem}
@@ -128,6 +133,37 @@ nav a:hover{color:var(--primary)}
 .pricing-features{list-style:none;text-align:left;margin:1.5rem 0}
 .pricing-features li{padding:.4rem 0;border-bottom:1px solid #f0f0f0;font-size:.9rem}
 .pricing-features li::before{content:'✓ ';color:var(--success)}
+.pricing-container{max-width:1200px;margin:0 auto}
+
+.product-banner{
+  margin-top:2.5rem;display:grid;grid-template-columns:auto 1fr auto;gap:2rem;align-items:center;
+  background:#fff;border-radius:16px;padding:2rem 2.25rem;box-shadow:0 6px 24px rgba(0,0,0,.06);
+  border-top:2px solid transparent;border-left:4px solid var(--primary);
+  transition:transform .3s,box-shadow .3s,border-top-color .3s;
+}
+.product-banner:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,0,0,.08);border-top-color:var(--primary)}
+.product-banner-icon{
+  width:72px;height:72px;border-radius:18px;display:flex;align-items:center;justify-content:center;
+  font-size:2rem;background:linear-gradient(145deg,rgba(255,107,53,.12),rgba(0,78,137,.1));
+  border:1px solid rgba(255,107,53,.2);flex-shrink:0;
+}
+.product-banner-tag{
+  display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--primary);background:rgba(255,107,53,.12);padding:.2rem .55rem;border-radius:20px;margin-bottom:.5rem;
+}
+.product-banner-body h3{font-size:clamp(1.25rem,2.5vw,1.6rem);color:var(--dark);margin-bottom:.5rem;line-height:1.25}
+.product-banner-body h3 span{color:var(--primary)}
+.product-banner-body p{color:var(--gray);font-size:.95rem;max-width:720px;margin-bottom:1rem}
+.product-banner-features{
+  list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.35rem 1.5rem;
+}
+.product-banner-features li{font-size:.9rem;color:var(--dark);padding:.2rem 0}
+.product-banner-features li::before{content:'✓ ';color:var(--success);font-weight:700}
+.product-banner-action{display:flex;flex-direction:column;gap:.75rem;align-items:stretch;min-width:200px}
+.product-banner-chat{
+  border-color:var(--secondary);color:var(--dark);background:#fff;font-size:.9rem;padding:.65rem 1.2rem;text-align:center;
+}
+.product-banner-chat:hover{background:var(--secondary);color:#fff;border-color:var(--secondary)}
 
 /* FAQ */
 .faq-container{max-width:800px;margin:0 auto}
@@ -145,7 +181,10 @@ details p{margin-top:.75rem;color:var(--gray)}
 footer{background:var(--dark);color:#888;padding:2rem;font-size:.9rem}
 .footer-inner{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem}
 .footer-brand{display:flex;align-items:center;gap:1rem}
-.footer-logo{height:44px;width:auto;max-width:200px;object-fit:contain}
+.footer-logo{
+  height:44px;width:auto;max-width:200px;object-fit:contain;
+  filter:drop-shadow(0 1px 6px rgba(255,107,53,.15));
+}
 .footer-brand strong{color:#fff;display:block}
 .footer-links a{color:#aaa;text-decoration:none;margin-left:1rem}
 .footer-links a:hover{color:var(--primary)}
@@ -181,5 +220,9 @@ footer{background:var(--dark);color:#888;padding:2rem;font-size:.9rem}
   .scrolly-step{opacity:1;transform:none;border-left-color:var(--primary)}
   .demo-container{grid-template-columns:1fr}
   .pricing-card.featured{transform:none}
+  .product-banner{grid-template-columns:1fr;text-align:center;padding:1.75rem 1.5rem}
+  .product-banner-icon{margin:0 auto}
+  .product-banner-features{grid-template-columns:1fr;text-align:left}
+  .product-banner-action{width:100%;max-width:320px;margin:0 auto}
   .footer-inner{flex-direction:column;text-align:center}
 }
