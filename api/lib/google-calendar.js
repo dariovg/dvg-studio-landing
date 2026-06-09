@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 
+/** Cuenta Google de NEGOCIO (distinta del correo de avisos). OAuth refresh token de esa cuenta. */
 export function calendarConfigured() {
   return !!(
     process.env.GOOGLE_CLIENT_ID &&
@@ -42,22 +43,35 @@ export async function createBookingEvent({ name, email, phone, date, time, notes
   const calendar = google.calendar({ version: "v3", auth });
   const tz = process.env.BOOKING_TIMEZONE || "Europe/Madrid";
 
+  const attendees = [{ email }];
+  const calendarOwner = process.env.BOOKING_CALENDAR_EMAIL;
+  if (calendarOwner && calendarOwner !== email) {
+    attendees.push({ email: calendarOwner });
+  }
+
   const event = await calendar.events.insert({
     calendarId: process.env.GOOGLE_CALENDAR_ID,
+    sendUpdates: "all",
     requestBody: {
       summary: `DVG Studio — ${name}`,
       description: [
-        `Nombre: ${name}`,
+        `Cliente: ${name}`,
         `Email: ${email}`,
         `Teléfono: ${phone || "—"}`,
         notes ? `Notas: ${notes}` : "",
-        "Solicitud desde chat web (1h)",
+        "Reserva 1h desde chat web",
       ].join("\n"),
       start: { dateTime: parsed.startStr, timeZone: tz },
       end: { dateTime: parsed.endStr, timeZone: tz },
-      attendees: [{ email }],
+      attendees,
     },
   });
 
-  return { ok: true, eventId: event.data.id, htmlLink: event.data.htmlLink };
+  return {
+    ok: true,
+    provider: "google",
+    eventId: event.data.id,
+    htmlLink: event.data.htmlLink,
+    calendarLabel: process.env.BOOKING_CALENDAR_EMAIL || "Google Calendar",
+  };
 }

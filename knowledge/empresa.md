@@ -41,7 +41,7 @@ Agendar: escribir «agendar cita» en este chat o contact@dvgstudio.com
 ## Agendar cita por chat
 El visitante puede escribir «agendar cita» y el chat pedirá: nombre, email, teléfono, fecha (DD/MM/AAAA), hora (HH:MM), notas opcionales.
 Duración de la reunión: 1 hora.
-Tras confirmar, se registra la solicitud y el equipo confirma por email.
+Tras confirmar, se crea la cita en el calendario del equipo y llega un aviso al correo de contacto del negocio.
 
 ## Proceso habitual
 Reunión inicial → propuesta → configuración según alcance → calibración → revisión.

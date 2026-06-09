@@ -7,7 +7,8 @@ import {
   validateTiming,
   validateUserAgent,
 } from "./lib/chat-security.js";
-import { calendarConfigured, createBookingEvent } from "./lib/google-calendar.js";
+import { icloudConfigured, createBookingEvent as createIcloudEvent } from "./lib/icloud-calendar.js";
+import { calendarConfigured, createBookingEvent as createGoogleEvent } from "./lib/google-calendar.js";
 import { notifyBookingByEmail } from "./lib/booking-notify.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,6 +21,16 @@ function validBooking(b) {
   if (!b?.time || !/^\d{1,2}:\d{2}$/.test(b.time)) return false;
   if (b.notes && b.notes.length > 300) return false;
   return true;
+}
+
+async function createCalendarBooking(booking) {
+  if (icloudConfigured()) {
+    return createIcloudEvent(booking);
+  }
+  if (calendarConfigured()) {
+    return createGoogleEvent(booking);
+  }
+  return null;
 }
 
 export default async function handler(req, res) {
@@ -65,32 +76,40 @@ export default async function handler(req, res) {
   }
 
   try {
-    let calendarLink = null;
+    let calendarResult = null;
 
-    if (calendarConfigured()) {
-      const created = await createBookingEvent(booking);
-      if (created.ok) {
-        calendarLink = created.htmlLink;
+    if (icloudConfigured() || calendarConfigured()) {
+      calendarResult = await createCalendarBooking(booking);
+      if (calendarResult && !calendarResult.ok) {
+        console.error("Calendar:", calendarResult.error);
+        calendarResult = null;
       }
     }
 
-    try {
-      await notifyBookingByEmail(booking);
-    } catch (e) {
-      console.error("SES notify:", e.message);
+    const notifyResult = await notifyBookingByEmail(booking, calendarResult);
+    if (!notifyResult.ok) {
+      console.error("Notify:", notifyResult.reason);
     }
 
-    if (calendarLink) {
+    if (calendarResult?.ok) {
       return res.status(200).json({
         ok: true,
-        message: `Cita reservada el ${booking.date} a las ${booking.time} (1h). Te llegará confirmación a ${booking.email}.`,
+        message: `Cita reservada el ${booking.date} a las ${booking.time} (1h). Te confirmamos a ${booking.email}.`,
         calendar: true,
+      });
+    }
+
+    if (notifyResult.ok) {
+      return res.status(200).json({
+        ok: true,
+        message: `Solicitud recibida para el ${booking.date} a las ${booking.time}. Te confirmamos por email pronto.`,
+        calendar: false,
       });
     }
 
     return res.status(200).json({
       ok: true,
-      message: `Solicitud recibida para el ${booking.date} a las ${booking.time}. Te confirmamos por email en breve.`,
+      message: `Datos recibidos. Si no tienes confirmación, escribe a contact@dvgstudio.com`,
       calendar: false,
     });
   } catch (err) {

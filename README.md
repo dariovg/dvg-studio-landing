@@ -121,19 +121,26 @@ knowledge/empresa.md  Documento que lee el modelo
 3. Añade variables de entorno (arriba)
 4. Conecta dominio en Settings → Domains
 
-## Agendar citas (chat → 1 hora)
+## Agendar citas — avisos empresa, reservas Apple personal
 
-El visitante escribe **«agendar cita»** en el chat. Se piden nombre, email, teléfono, fecha (DD/MM/AAAA) y hora (HH:MM).
+| Qué | Variable | Ejemplo |
+|-----|----------|---------|
+| **Avisos** (correo empresa) | `BOOKING_NOTIFY_EMAIL` | `contact@dvgstudio.com` |
+| **Remitente** (verificado en SES) | `BOOKING_FROM_EMAIL` | `contact@dvgstudio.com` |
+| **Calendario** (Apple personal) | `ICLOUD_CALENDAR_EMAIL` + `ICLOUD_APP_PASSWORD` | tu `@icloud.com` |
 
-### Opción A — Email con AWS SES (recomendado ahora)
+1. Cliente escribe **«agendar cita»** en el chat
+2. Se crea evento **1h** en tu **Calendario de Apple** (iCloud)
+3. Te llega un **aviso al correo de empresa**
 
-1. Verifica `contact@dvgstudio.com` en AWS SES
-2. Variables Vercel: `BOOKING_NOTIFY_EMAIL`, `BOOKING_FROM_EMAIL`
-3. Recibes email y añades la cita a Calendario (Apple) a mano
+Guía detallada: `scripts/setup-booking.md`
 
-### Opción B — Google Calendar automático
+### Variables en Vercel
 
-Cuando tengas Gmail/Google del negocio: OAuth refresh token + `GOOGLE_CALENDAR_ID`.
-Si sincronizas Google en el Mac, las citas aparecen en Calendario de Apple.
-
-Vercel no escribe en iCloud directamente.
+```
+BOOKING_NOTIFY_EMAIL=contact@dvgstudio.com
+BOOKING_FROM_EMAIL=contact@dvgstudio.com
+ICLOUD_CALENDAR_EMAIL=tu-personal@icloud.com
+ICLOUD_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+BOOKING_TIMEZONE=Europe/Madrid
+```
