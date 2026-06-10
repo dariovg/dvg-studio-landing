@@ -27,7 +27,11 @@ const FAQ = [
   },
   {
     keys: ["agendar", "cita", "reunion", "reunión", "reservar", "videollamada", "llamada"],
-    reply: "Escribe «agendar cita» y te pediré nombre, email, teléfono, fecha y hora. Reunión de 1 hora.",
+    reply: "Escribe «agendar cita» y te pediré tus datos. Compruebo huecos en todos tus calendarios (1h).",
+  },
+  {
+    keys: ["hueco", "huecos", "disponib", "horarios", "libre"],
+    reply: "Pregunta: «disponibilidad DD/MM/AAAA» o «¿hay hueco el 15/06/2026 a las 10:00?»",
   },
   {
     keys: ["auditoria", "auditoría", "gratis", "prueba", "probar"],

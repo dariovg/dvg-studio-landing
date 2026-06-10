@@ -9,8 +9,15 @@ ICLOUD_CALENDAR_NAME=DVG Studio
 BOOKING_TIMEZONE=Europe/Madrid
 ```
 
-`ICLOUD_CALENDAR_NAME` elige el calendario de Apple (por defecto busca **DVG Studio**).
-Si no existe, créalo en la app Calendario del iPhone/Mac antes de agendar.
+`ICLOUD_CALENDAR_NAME` elige dónde se **crean** las citas (por defecto **DVG Studio**).
+La **disponibilidad** se comprueba en **todos** tus calendarios iCloud (si tienes cita en Quedada, ese hueco no se ofrece).
+
+Horario laboral (opcional):
+```
+BOOKING_HOURS_START=9
+BOOKING_HOURS_END=18
+BOOKING_DURATION_MINUTES=60
+```
 
 Si tu Apple ID es Gmail, el sistema **prueba también** `tu@icloud.com` y `tu@me.com` automáticamente.
 

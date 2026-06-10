@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import { createDAVClient } from "tsdav";
+import { parseBookingDateTime } from "./booking-utils.js";
 
 const SKIP_CALENDAR = /inbox|notification|tasks|archive|birthdays|holidays|recyclebin/i;
 const DEPRIORITIZE = /quedada|meetup|social/i;
@@ -32,25 +33,9 @@ export function icloudConfigured() {
 }
 
 function parseDateTime(dateStr, timeStr) {
-  const dm = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  const tm = timeStr.match(/^(\d{1,2}):(\d{2})$/);
-  if (!dm || !tm) return null;
-  const day = Number(dm[1]);
-  const month = Number(dm[2]);
-  const year = Number(dm[3]);
-  const hour = Number(tm[1]);
-  const min = Number(tm[2]);
-  if (month < 1 || month > 12 || day < 1 || day > 31 || hour > 23 || min > 59) {
-    return null;
-  }
-  const pad = (n) => String(n).padStart(2, "0");
-  const start = `${year}${pad(month)}${pad(day)}T${pad(hour)}${pad(min)}00`;
-  const endHour = hour + 1;
-  const end =
-    endHour > 23
-      ? `${year}${pad(month)}${pad(day)}T235900`
-      : `${year}${pad(month)}${pad(day)}T${pad(endHour)}${pad(min)}00`;
-  return { start, end };
+  const p = parseBookingDateTime(dateStr, timeStr);
+  if (!p) return null;
+  return { start: p.start, end: p.end };
 }
 
 function icsEscape(text) {
@@ -131,7 +116,7 @@ function scoreCalendar(c) {
   return s;
 }
 
-async function connectIcloud() {
+export async function connectIcloud() {
   const pass = password();
   if (!pass) throw new Error("Falta ICLOUD_APP_PASSWORD");
 

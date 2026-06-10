@@ -38,10 +38,16 @@
   let bookData = {};
 
   const welcome =
-    "Hola. Soy IGNITE de DVG Studio. Pregúntame precios, servicios o empleados digitales.\n\nSi quieres una reunión de 1h, escribe: agendar cita";
+    "Hola. Soy IGNITE de DVG Studio. Pregúntame precios, servicios o empleados digitales.\n\nReunión 1h: «agendar cita»\nHuecos libres: «disponibilidad 12/06/2026»";
 
   const BOOK_TRIGGERS =
     /agendar|cita|reunion|reunión|videollamada|llamada|auditor[ií]a|reservar|calendar/i;
+
+  const AVAIL_TRIGGERS =
+    /hueco|huecos|disponib|libre|horarios|tienes.*cita|hay.*cita|tengo.*cita/i;
+
+  const DATE_RE = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/;
+  const TIME_RE = /(\d{1,2}:\d{2})/;
 
   function openChat() {
     panel.classList.add("open");
@@ -99,6 +105,70 @@
     appendMsg("Agendamiento cancelado. ¿En qué más puedo ayudarte?", "assistant");
   }
 
+  async function apiPost(url, payload) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-DVG-Chat": "1" },
+      body: JSON.stringify({
+        ...payload,
+        _k: siteKey,
+        _hp: hp?.value || "",
+        _ts: Date.now(),
+        _boot: pageLoad,
+      }),
+    });
+    return { res, data: await res.json() };
+  }
+
+  async function fetchAvailability(date, time, query) {
+    const { data } = await apiPost("/api/availability", { date, time, query });
+    return data;
+  }
+
+  async function queryAvailability(text) {
+    busy = true;
+    sendBtn.disabled = true;
+    appendTyping();
+    try {
+      const dateM = text.match(DATE_RE);
+      const timeM = text.match(TIME_RE);
+      if (!dateM) {
+        removeTyping();
+        appendMsg(
+          "Indica la fecha en formato DD/MM/AAAA. Ejemplo: «disponibilidad 15/06/2026» o «¿hay hueco el 15/06/2026 a las 10:00?»",
+          "assistant"
+        );
+        return;
+      }
+      const date = dateM[1].replace(/-/g, "/");
+      const time = timeM ? timeM[1] : "";
+      const data = await fetchAvailability(date, time, text);
+      removeTyping();
+      appendMsg(data.message || data.error || "Sin respuesta.", "assistant");
+      if (!time && data.slots?.length) {
+        appendMsg("Escribe «agendar cita» y elige uno de esos horarios.", "assistant");
+      }
+    } catch {
+      removeTyping();
+      appendMsg("No pude consultar el calendario. Prueba más tarde.", "assistant");
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  async function checkTimeSlot(date, time) {
+    const data = await fetchAvailability(date, time);
+    if (data.configured === false) return { ok: true };
+    if (data.available) return { ok: true };
+    const alts =
+      data.alternatives?.join(", ") ||
+      data.slots?.slice(0, 5).join(", ") ||
+      "ninguno ese día";
+    return { ok: false, message: data.message, alts };
+  }
+
   function validateBookField(step, text) {
     const t = text.trim();
     if (step === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return false;
@@ -114,21 +184,16 @@
     sendBtn.disabled = true;
     appendTyping();
     try {
-      const res = await fetch("/api/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-DVG-Chat": "1" },
-        body: JSON.stringify({
-          ...bookData,
-          _k: siteKey,
-          _hp: hp?.value || "",
-          _ts: Date.now(),
-          _boot: pageLoad,
-        }),
-      });
-      const data = await res.json();
+      const { res, data } = await apiPost("/api/book", bookData);
       removeTyping();
       if (data.ok) {
         appendMsg(data.message, "assistant");
+      } else if (res.status === 409 && data.alternatives?.length) {
+        appendMsg(data.error, "assistant");
+        appendMsg(
+          `Elige otra hora (HH:MM) o escribe «agendar cita» de nuevo.\nAlternativas: ${data.alternatives.join(", ")}`,
+          "assistant"
+        );
       } else {
         appendMsg(data.error || "Error al agendar. contact@dvgstudio.com", "assistant");
       }
@@ -145,7 +210,7 @@
     }
   }
 
-  function handleBookingInput(text) {
+  async function handleBookingInput(text) {
     const t = text.trim();
     if (/^cancelar$/i.test(t)) {
       cancelBooking();
@@ -180,6 +245,35 @@
       return true;
     }
 
+    if (step === "time") {
+      bookData.time = t;
+      busy = true;
+      sendBtn.disabled = true;
+      appendTyping();
+      try {
+        const check = await checkTimeSlot(bookData.date, t);
+        removeTyping();
+        if (!check.ok) {
+          appendMsg(
+            check.message ||
+              `No hay hueco a las ${t}. Alternativas: ${check.alts}`,
+            "assistant"
+          );
+          appendMsg("Indica otra hora (HH:MM) o «cancelar».", "assistant");
+          return true;
+        }
+        bookStep++;
+        appendMsg(BOOK_PROMPTS.notes, "assistant");
+      } catch {
+        removeTyping();
+        appendMsg("No pude comprobar el calendario. Prueba otra vez.", "assistant");
+      } finally {
+        busy = false;
+        sendBtn.disabled = false;
+      }
+      return true;
+    }
+
     bookData[step] = t;
     bookStep++;
     const next = BOOK_STEPS[bookStep];
@@ -195,7 +289,14 @@
     if (bookMode) {
       appendMsg(text.trim(), "user");
       input.value = "";
-      handleBookingInput(text);
+      await handleBookingInput(text);
+      return;
+    }
+
+    if (AVAIL_TRIGGERS.test(text) && DATE_RE.test(text)) {
+      appendMsg(text.trim(), "user");
+      input.value = "";
+      await queryAvailability(text);
       return;
     }
 

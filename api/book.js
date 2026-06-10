@@ -10,6 +10,8 @@ import {
 import { icloudConfigured, createBookingEvent as createIcloudEvent } from "./lib/icloud-calendar.js";
 import { calendarConfigured, createBookingEvent as createGoogleEvent } from "./lib/google-calendar.js";
 import { notifyBookingByEmail } from "./lib/booking-notify.js";
+import { assertSlotAvailable } from "./lib/calendar-availability.js";
+import { isInPast } from "./lib/booking-utils.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -75,7 +77,26 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Datos incompletos o formato incorrecto" });
   }
 
+  if (isInPast(booking.date, booking.time)) {
+    return res.status(400).json({ error: "Esa fecha u hora ya ha pasado. Elige un hueco futuro." });
+  }
+
   try {
+    if (icloudConfigured()) {
+      const slot = await assertSlotAvailable(booking.date, booking.time);
+      if (!slot.available) {
+        const alts = slot.alternatives?.length
+          ? slot.alternatives.join(", ")
+          : "ninguno ese día";
+        return res.status(409).json({
+          ok: false,
+          error: `Ese horario no está libre (tienes otra cita en tus calendarios). Huecos alternativos: ${alts}`,
+          alternatives: slot.alternatives || [],
+          slots: slot.slots || [],
+        });
+      }
+    }
+
     let calendarResult = null;
 
     if (icloudConfigured() || calendarConfigured()) {

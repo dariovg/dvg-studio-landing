@@ -18,6 +18,9 @@
     },
     "api/book.js": {
       "maxDuration": 15
+    },
+    "api/availability.js": {
+      "maxDuration": 15
     }
   }
 }
