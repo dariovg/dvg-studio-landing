@@ -38,21 +38,34 @@
 
     <section class="hero" id="hero">
         <div class="hero-parallax" aria-hidden="true">
-            <span class="hero-orb hero-orb-1" data-parallax="0.18"></span>
-            <span class="hero-orb hero-orb-2" data-parallax="0.32"></span>
-            <span class="hero-orb hero-orb-3" data-parallax="0.1"></span>
-            <span class="hero-orb hero-orb-4" data-parallax="0.22"></span>
-            <div class="hero-grid"></div>
+            <div class="hero-mesh"></div>
+            <div class="hero-beam"></div>
+            <div class="hero-noise"></div>
+            <span class="hero-orb hero-orb-1" data-depth="1"></span>
+            <span class="hero-orb hero-orb-2" data-depth="2"></span>
+            <span class="hero-orb hero-orb-3" data-depth="3"></span>
+            <span class="hero-orb hero-orb-4" data-depth="1.5"></span>
+            <div class="hero-grid" data-depth="0.5"></div>
+            <div class="hero-floats">
+                <span class="hero-float" style="--x:12%;--y:22%;--d:0">💬</span>
+                <span class="hero-float" style="--x:78%;--y:18%;--d:1">📅</span>
+                <span class="hero-float" style="--x:85%;--y:62%;--d:2">⚡</span>
+                <span class="hero-float" style="--x:8%;--y:68%;--d:1.5">🤖</span>
+            </div>
         </div>
-        <div class="hero-content reveal">
-            <p class="hero-tagline">hac<span class="brand-ia">IA</span> lo imparable</p>
-            <h1>Automatiza el <span>70%</span> de lo repetitivo — sin contratar más</h1>
-            <p class="subtitle">Empleados digitales con IA agéntica: captan leads, responden al instante y agendan citas — mientras tu equipo se centra en cerrar.</p>
-            <div class="hero-buttons">
+        <div class="hero-content">
+            <p class="hero-tagline hero-anim">hac<span class="brand-ia">IA</span> lo imparable</p>
+            <h1 class="hero-title">
+                <span class="hero-chunk hero-anim" style="--i:1">Automatiza el <span class="hero-highlight">70%</span></span>
+                <span class="hero-chunk hero-anim" style="--i:2">de lo repetitivo —</span>
+                <span class="hero-chunk hero-anim" style="--i:3">sin contratar más</span>
+            </h1>
+            <p class="subtitle hero-anim" style="--i:4">Empleados digitales con IA agéntica: captan leads, responden al instante y agendan citas — mientras tu equipo se centra en cerrar.</p>
+            <div class="hero-buttons hero-anim" style="--i:5">
                 <button type="button" class="cta-button" data-open-chat>Agendar auditoría gratis</button>
                 <button type="button" class="secondary-button" data-open-chat>Hablar con IGNITE</button>
             </div>
-            <div class="stats reveal">
+            <div class="stats hero-anim" style="--i:6">
                 <div class="stat">
                     <div class="stat-number">24/7</div>
                     <div class="stat-label">Operación continua</div>
@@ -75,29 +88,39 @@
     </section>
 
     <div class="trust-bar">
-        <div class="trust-inner">
-            <span class="trust-item">Auditoría gratis</span>
-            <span class="trust-item">IA agéntica 24/7</span>
-            <span class="trust-item">Agenda cita en el chat</span>
-            <span class="trust-item">Respuesta en segundos</span>
+        <div class="trust-marquee" aria-hidden="true">
+            <div class="trust-track">
+                <span class="trust-item">Auditoría gratis</span>
+                <span class="trust-item">IA agéntica 24/7</span>
+                <span class="trust-item">Agenda cita en el chat</span>
+                <span class="trust-item">Respuesta en segundos</span>
+                <span class="trust-item">WhatsApp · Email · Web</span>
+                <span class="trust-item">Empleados digitales para PYMEs</span>
+                <span class="trust-item">Auditoría gratis</span>
+                <span class="trust-item">IA agéntica 24/7</span>
+                <span class="trust-item">Agenda cita en el chat</span>
+                <span class="trust-item">Respuesta en segundos</span>
+                <span class="trust-item">WhatsApp · Email · Web</span>
+                <span class="trust-item">Empleados digitales para PYMEs</span>
+            </div>
         </div>
     </div>
 
     <section class="section section-parallax" id="mercado">
-        <h2 class="section-title reveal">Por qué las <span>PYMEs</span> apuestan por IA agéntica ahora</h2>
-        <p class="section-lead reveal">No es un chatbot de botones. Es un agente que entiende contexto, toma decisiones y actúa en tus canales reales.</p>
+        <h2 class="section-title reveal reveal-impact">Por qué las <span>PYMEs</span> apuestan por IA agéntica ahora</h2>
+        <p class="section-lead reveal reveal-impact">No es un chatbot de botones. Es un agente que entiende contexto, toma decisiones y actúa en tus canales reales.</p>
         <div class="insights reveal-stagger">
-            <div class="insight-card reveal">
+            <div class="insight-card reveal reveal-impact">
                 <div class="insight-stat" data-count="78" data-suffix="%">78%</div>
                 <h3>Compran quien responde primero</h3>
                 <p>Los clientes eligen al negocio que les contesta antes. Un agente 24/7 no deja leads enfriarse por la noche o el fin de semana.</p>
             </div>
-            <div class="insight-card reveal">
+            <div class="insight-card reveal reveal-impact">
                 <div class="insight-stat" data-count="40" data-suffix="h+">40h+</div>
                 <h3>Ahorro mensual en tareas manuales</h3>
                 <p>Cotizaciones, FAQs, agendamiento y seguimiento consumen horas que un empleado digital puede asumir sin nómina extra.</p>
             </div>
-            <div class="insight-card reveal">
+            <div class="insight-card reveal reveal-impact">
                 <div class="insight-stat">IA agéntica</div>
                 <h3>Más allá del chatbot clásico</h3>
                 <p>Los agentes modernos buscan información, ejecutan acciones (CRM, calendario, email) y aprenden de cada interacción con tu negocio.</p>
@@ -106,11 +129,17 @@
     </section>
 
     <section class="scrolly" id="historia" aria-label="Cómo trabaja tu empleado digital">
+        <div class="scrolly-ambient" aria-hidden="true">
+            <span class="scrolly-orb scrolly-orb-1"></span>
+            <span class="scrolly-orb scrolly-orb-2"></span>
+            <span class="scrolly-orb scrolly-orb-3"></span>
+        </div>
         <div class="scrolly-sticky">
             <div class="scrolly-panel">
                 <div class="scrolly-visual-col">
                 <h2 class="scrolly-mobile-title">Cómo <span>funciona</span></h2>
                 <div class="scrolly-visual" id="scrollyVisual">
+                    <div class="scrolly-visual-glow" aria-hidden="true"></div>
                     <div class="scrolly-visual-inner" data-step="1">
                         <div class="agent-avatar">🤖</div>
                         <strong style="color:#fff;font-size:1.2rem">IGNITE</strong>
