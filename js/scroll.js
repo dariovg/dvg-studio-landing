@@ -64,13 +64,15 @@
       else s.removeAttribute("aria-current");
     });
     if (visual) visual.dataset.step = String(next + 1);
-    if (progress) progress.style.width = `${((next + 1) / steps.length) * 100}%`;
     dotsRoot?.querySelectorAll(".scrolly-dot").forEach((dot, i) => {
       dot.classList.toggle("active", i === next);
       dot.setAttribute("aria-selected", i === next ? "true" : "false");
     });
-    if (scroll) {
-      steps[next].scrollIntoView({ behavior: "smooth", block: "center" });
+    if (scroll && mobileMq.matches) {
+      const rect = scrolly.getBoundingClientRect();
+      const total = scrolly.offsetHeight - window.innerHeight;
+      const target = (next / steps.length) * total;
+      window.scrollTo({ top: window.scrollY + rect.top + target, behavior: "smooth" });
     }
     hint?.classList.add("is-hidden");
   };
@@ -90,23 +92,29 @@
     });
   };
 
-  const initMobileScrolly = () => {
-    buildDots();
-    setStep(0);
+  const onScrollyScroll = () => {
+    const rect = scrolly.getBoundingClientRect();
+    const total = scrolly.offsetHeight - window.innerHeight;
+    const scrolled = Math.min(Math.max(-rect.top, 0), total);
+    const pct = total > 0 ? scrolled / total : 0;
 
-    const stepIo = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (!e.isIntersecting) return;
-          const idx = steps.indexOf(e.target);
-          if (idx >= 0) setStep(idx);
-        });
-      },
-      { threshold: 0.5, rootMargin: "-32% 0px -32% 0px" }
-    );
-    steps.forEach((s) => stepIo.observe(s));
+    if (progress) progress.style.width = `${pct * 100}%`;
 
-    if (!visualWrap) return;
+    const stepIndex = Math.min(steps.length - 1, Math.floor(pct * steps.length));
+    if (stepIndex !== activeIndex) setStep(stepIndex);
+    else {
+      steps.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
+      if (visual) visual.dataset.step = String(stepIndex + 1);
+    }
+  };
+
+  buildDots();
+  setStep(0);
+
+  window.addEventListener("scroll", onScrollyScroll, { passive: true });
+  onScrollyScroll();
+
+  if (visualWrap && mobileMq.matches) {
     let touchX = 0;
     let touchY = 0;
     visualWrap.addEventListener(
@@ -127,35 +135,8 @@
       },
       { passive: true }
     );
-  };
+  }
 
-  const initDesktopScrolly = () => {
-    dotsRoot?.replaceChildren();
-    hint?.classList.add("is-hidden");
-
-    const onScroll = () => {
-      const rect = scrolly.getBoundingClientRect();
-      const total = scrolly.offsetHeight - window.innerHeight;
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      const pct = total > 0 ? scrolled / total : 0;
-
-      if (progress) progress.style.width = `${pct * 100}%`;
-
-      const stepIndex = Math.min(steps.length - 1, Math.floor(pct * steps.length));
-      steps.forEach((s, i) => s.classList.toggle("active", i === stepIndex));
-      if (visual) visual.dataset.step = String(stepIndex + 1);
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  };
-
-  const bootScrolly = () => {
-    if (mobileMq.matches) initMobileScrolly();
-    else initDesktopScrolly();
-  };
-
-  bootScrolly();
   mobileMq.addEventListener("change", () => window.location.reload());
 
   const header = document.querySelector("header");
