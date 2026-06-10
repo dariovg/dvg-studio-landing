@@ -11,8 +11,6 @@
   const floats = hero ? [...hero.querySelectorAll(".hero-float")] : [];
   const heroGrid = hero?.querySelector(".hero-grid");
   const mercado = document.getElementById("mercado");
-  const scrollyWrap = document.getElementById("scrollyVisual");
-  const caseStudies = [...document.querySelectorAll(".case-study")];
 
   let mouseX = 0;
   let mouseY = 0;
@@ -84,17 +82,6 @@
       mercado.style.background = `linear-gradient(180deg, rgb(${232 - warm}, ${236 - warm}, ${245 - warm}) 0%, #fff 30%, #eef1f8 70%, var(--light) 100%)`;
     }
 
-    if (scrollyWrap) {
-      const vh = window.innerHeight;
-      const rect = scrollyWrap.getBoundingClientRect();
-      if (rect.top < vh && rect.bottom > 0) {
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const nx = mobile ? 0 : (window.innerWidth / 2 - cx) / window.innerWidth;
-        const ny = mobile ? 0 : (window.innerHeight / 2 - cy) / window.innerHeight;
-        scrollyWrap.style.transform = `rotateY(${nx * depth(16)}deg) rotateX(${-ny * depth(12)}deg)`;
-      }
-    }
   };
 
   const requestTick = () => {
@@ -111,21 +98,6 @@
     document.addEventListener("mousemove", onMouseMove, { passive: true });
   }
   requestAnimationFrame(applyFrame);
-
-  /* Tilt 3D en tarjetas de casos (desktop) */
-  if (!mobile) {
-    caseStudies.forEach((card) => {
-      card.addEventListener("mousemove", (e) => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        card.style.transform = `perspective(900px) rotateY(${x * 14}deg) rotateX(${-y * 12}deg) translateY(-12px) scale(1.02)`;
-      });
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "";
-      });
-    });
-  }
 
   /* Contadores */
   const counters = document.querySelectorAll(".insight-stat[data-count]");
