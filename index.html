@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="DVG Studio — hacIA lo imparable. Empleados digitales con IA agéntica para PYMEs. Agentes 24/7. Auditoría gratis.">
     <title>DVG Studio — hacIA lo imparable</title>
-    <link rel="icon" href="/assets/logo-dvg-studio.png" type="image/png">
+    <link rel="icon" href="/assets/logo-icon.png" type="image/png">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
     <header>
         <div class="header-content">
             <a href="#" class="logo" aria-label="DVG Studio — hacIA lo imparable">
-                <img src="/assets/logo-dvg-studio.png" alt="DVG Studio — hacIA lo imparable" class="logo-img" width="280" height="52">
+                <img src="/assets/logo-dvg-studio.svg" alt="DVG Studio — hacIA lo imparable" class="logo-img" width="280" height="89">
             </a>
             <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="siteNav">
                 <span aria-hidden="true"></span>
@@ -100,7 +100,9 @@
     <section class="scrolly" id="historia" aria-label="Cómo trabaja tu empleado digital">
         <div class="scrolly-sticky">
             <div class="scrolly-panel">
-                <div class="scrolly-visual">
+                <div class="scrolly-visual-col">
+                <h2 class="scrolly-mobile-title">Cómo <span>funciona</span></h2>
+                <div class="scrolly-visual" id="scrollyVisual">
                     <div class="scrolly-visual-inner" data-step="1">
                         <div class="agent-avatar">🤖</div>
                         <strong style="color:#fff;font-size:1.2rem">IGNITE</strong>
@@ -111,7 +113,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="scrolly-text">
+                <div class="scrolly-dots" id="scrollyDots" role="tablist" aria-label="Pasos del proceso"></div>
+                <p class="scrolly-swipe-hint" id="scrollyHint">Desliza ↓ o toca un paso</p>
+                </div>
+                <div class="scrolly-text" id="scrollyText">
                     <div class="scrolly-step active" data-step="1">
                         <span class="step-tag">Paso 1</span>
                         <h3>Llega un lead fuera de horario</h3>
@@ -397,7 +402,7 @@
     <footer>
         <div class="footer-inner">
             <div class="footer-brand">
-                <img src="/assets/logo-dvg-studio.png" alt="DVG Studio" class="footer-logo" width="200" height="44">
+                <img src="/assets/logo-dvg-studio.svg" alt="DVG Studio" class="footer-logo" width="200" height="64">
                 <p>
                     <strong>hac<span class="brand-ia">IA</span> lo imparable</strong>
                     Empleados digitales para PYMEs · España
