@@ -88,7 +88,7 @@ R: Eso lo tratamos directamente con el equipo en info@dvgsstudio.com. No puedo d
 
 ## Contacto
 - Email: info@dvgsstudio.com
-- Instagram: @dvgsstudio
+- Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
 - Cita: «agendar cita» en este chat
 
 ## Este chat
