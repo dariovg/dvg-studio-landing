@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL } from "./site-config.js";
+
 /** Respuestas gratis — alineado con knowledge/empresa.md (sin claims legales) */
 const FAQ = [
   {
@@ -35,7 +37,7 @@ const FAQ = [
   },
   {
     keys: ["auditoria", "auditoría", "gratis", "prueba", "probar"],
-    reply: "Primera reunión de 1h gratuita sin compromiso. Escribe «agendar cita» o contact@dvgstudio.com",
+    reply: `Primera reunión de 1h gratuita sin compromiso. Escribe «agendar cita» o ${CONTACT_EMAIL}`,
   },
   {
     keys: ["app", "apps", "web", "pagina", "página", "desarrollo", "crear web"],
@@ -43,7 +45,7 @@ const FAQ = [
   },
   {
     keys: ["contacto", "email", "escribir", "instagram"],
-    reply: "contact@dvgstudio.com · @dvgstudio · o «agendar cita» en este chat.",
+    reply: `${CONTACT_EMAIL} · @dvgsstudio · o «agendar cita» en este chat.`,
   },
   {
     keys: ["chatgpt", "chatbot", "diferencia", "openai"],
@@ -71,7 +73,7 @@ const FAQ = [
   },
   {
     keys: ["legal", "rgpd", "gdpr", "privacidad", "garantia", "garantía", "responsabilidad"],
-    reply: "Eso lo trata el equipo directamente. Escríbenos a contact@dvgstudio.com",
+    reply: `Eso lo trata el equipo directamente. Escríbenos a ${CONTACT_EMAIL}`,
   },
   {
     keys: ["slogan", "imparable"],

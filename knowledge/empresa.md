@@ -3,9 +3,9 @@
 ## Quiénes somos
 DVG Studio es un estudio español de empleados digitales (agentes IA) para PYMEs.
 Slogan: hacIA lo imparable.
-Fundador: Dario V. G.
+Fundador: Dario Villarreal Guillo.
 Ubicación: España, servicio remoto.
-Web: dvgstudio.com
+Web: https://www.dvgsstudio.com
 
 ## Qué es un empleado digital
 - Agente IA que entiende lenguaje natural
@@ -36,7 +36,7 @@ Detalles de contrato y permanencia: se acuerdan en la reunión inicial.
 ## Primera reunión gratuita
 Sesión de 1 hora sin compromiso para entender el caso del cliente.
 Incluye revisión orientativa de procesos y próximos pasos.
-Agendar: escribir «agendar cita» en este chat o contact@dvgstudio.com
+Agendar: escribir «agendar cita» en este chat o contact@dvgsstudio.com
 
 ## Agendar cita por chat
 El visitante puede escribir «agendar cita» y el chat pedirá: nombre, email, teléfono, fecha (DD/MM/AAAA), hora (HH:MM), notas opcionales.
@@ -53,7 +53,7 @@ E-commerce, B2B servicios, salud/belleza, asesorías, hostelería.
 - Español, tuteo, máximo 80 palabras
 - No prometer ROI, plazos legales, cumplimiento normativo ni garantías
 - No hablar de RGPD, OpenClaw, AWS ni detalles técnicos internos
-- Si no está en este documento: «No tengo esa información. Escríbenos a contact@dvgstudio.com o agendar cita en el chat.»
+- Si no está en este documento: «No tengo esa información. Escríbenos a contact@dvgsstudio.com o agendar cita en el chat.»
 - Para temas legales, fiscales o de privacidad: derivar siempre a contacto humano
 
 ## Preguntas frecuentes (respuestas seguras)
@@ -83,11 +83,11 @@ P: ¿Cuánto tardáis?
 R: Depende del alcance. Lo vemos en la reunión inicial.
 
 P: ¿Temas legales, privacidad o garantías?
-R: Eso lo tratamos directamente con el equipo en contact@dvgstudio.com. No puedo dar detalles aquí.
+R: Eso lo tratamos directamente con el equipo en contact@dvgsstudio.com. No puedo dar detalles aquí.
 
 ## Contacto
-- Email: contact@dvgstudio.com
-- Instagram: @dvgstudio
+- Email: contact@dvgsstudio.com
+- Instagram: @dvgsstudio
 - Cita: «agendar cita» en este chat
 
 ## Este chat

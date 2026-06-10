@@ -12,6 +12,7 @@ import { calendarConfigured, createBookingEvent as createGoogleEvent } from "./l
 import { notifyBookingByEmail } from "./lib/booking-notify.js";
 import { assertSlotAvailable } from "./lib/calendar-availability.js";
 import { isInPast } from "./lib/booking-utils.js";
+import { CONTACT_EMAIL } from "./lib/site-config.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
   const limit = checkRateLimit(ip, { perHour: 3, perDay: 5, prefix: "book:" });
   if (!limit.ok) {
     return res.status(429).json({
-      error: "Demasiadas solicitudes. Escríbenos a contact@dvgstudio.com",
+      error: `Demasiadas solicitudes. Escríbenos a ${CONTACT_EMAIL}`,
     });
   }
 
@@ -124,7 +125,7 @@ export default async function handler(req, res) {
       console.error("Calendar failed:", calendarResult?.error || "unknown");
       return res.status(200).json({
         ok: true,
-        message: `No pudimos crear la cita en el calendario automático. Escríbenos a contact@dvgstudio.com con fecha ${booking.date} y hora ${booking.time}.`,
+        message: `No pudimos crear la cita en el calendario automático. Escríbenos a ${CONTACT_EMAIL} con fecha ${booking.date} y hora ${booking.time}.`,
         calendar: false,
       });
     }
@@ -139,13 +140,13 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       ok: true,
-      message: `Datos recibidos. Si no tienes confirmación, escribe a contact@dvgstudio.com`,
+      message: `Datos recibidos. Si no tienes confirmación, escribe a ${CONTACT_EMAIL}`,
       calendar: false,
     });
   } catch (err) {
     console.error("Booking:", err.message);
     return res.status(500).json({
-      error: "No pudimos procesar la cita. Escríbenos a contact@dvgstudio.com",
+      error: `No pudimos procesar la cita. Escríbenos a ${CONTACT_EMAIL}`,
     });
   }
 }

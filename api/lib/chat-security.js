@@ -1,3 +1,5 @@
+import { CHAT_ORIGINS_DEFAULT } from "./site-config.js";
+
 const lastMsgByIp = new Map();
 
 export function clientIp(req) {
@@ -9,12 +11,10 @@ export function clientIp(req) {
 }
 
 export function validateOrigin(req) {
-  const allowed = (process.env.CHAT_ALLOWED_ORIGINS || "")
+  const allowed = (process.env.CHAT_ALLOWED_ORIGINS || CHAT_ORIGINS_DEFAULT)
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-
-  if (!allowed.length) return true;
 
   const origin = req.headers.origin || "";
   const referer = req.headers.referer || "";

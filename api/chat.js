@@ -14,6 +14,7 @@ import {
   isRepeatedMessage,
   sanitizeHistory,
 } from "./lib/chat-security.js";
+import { CONTACT_EMAIL } from "./lib/site-config.js";
 
 let knowledgeCache = "";
 
@@ -25,13 +26,14 @@ function loadKnowledge() {
 }
 
 function buildSystem(knowledge) {
+  const mail = CONTACT_EMAIL;
   return `Asistente web de DVG Studio. Español, máximo 80 palabras, tono profesional y cercano.
 
 REGLAS:
 1. Responde SOLO con el DOCUMENTO.
-2. Si no está: deriva a contact@dvgstudio.com o «agendar cita» en el chat.
+2. Si no está: deriva a ${mail} o «agendar cita» en el chat.
 3. NUNCA hables de RGPD, garantías legales, responsabilidad, ROI garantizado ni cumplimiento normativo.
-4. Para temas legales/privacidad: solo di que contacten a contact@dvgstudio.com.
+4. Para temas legales/privacidad: solo di que contacten a ${mail}.
 5. No inventes datos ni casos de clientes. No menciones OpenClaw ni AWS.
 
 --- DOCUMENTO ---
@@ -67,7 +69,7 @@ export default async function handler(req, res) {
 
   if (!limit.ok) {
     return res.status(429).json({
-      reply: "Has hecho muchas preguntas. Escríbenos a contact@dvgstudio.com.",
+      reply: `Has hecho muchas preguntas. Escríbenos a ${CONTACT_EMAIL}.`,
     });
   }
 
@@ -86,7 +88,7 @@ export default async function handler(req, res) {
 
   if (!validateMessage(trimmed) || isRepeatedMessage(ip, trimmed)) {
     return res.status(400).json({
-      reply: "No pude procesar ese mensaje. Reformúlalo o escribe a contact@dvgstudio.com",
+      reply: `No pude procesar ese mensaje. Reformúlalo o escribe a ${CONTACT_EMAIL}`,
     });
   }
 
@@ -98,14 +100,14 @@ export default async function handler(req, res) {
   if (!process.env.AWS_ACCESS_KEY_ID) {
     return res.status(200).json({
       reply:
-        "No tengo esa respuesta aquí. Escríbenos a contact@dvgstudio.com o pregunta por precios, planes o auditoría gratis.",
+        `No tengo esa respuesta aquí. Escríbenos a ${CONTACT_EMAIL} o pregunta por precios, planes o auditoría gratis.`,
     });
   }
 
   const maxBedrock = Number(process.env.CHAT_BEDROCK_DAILY_MAX) || 100;
   if (!canCallBedrock(maxBedrock)) {
     return res.status(200).json({
-      reply: "Hoy el asistente automático está al límite. Escríbenos a contact@dvgstudio.com.",
+      reply: `Hoy el asistente automático está al límite. Escríbenos a ${CONTACT_EMAIL}.`,
     });
   }
 
@@ -135,12 +137,12 @@ export default async function handler(req, res) {
     );
     const reply =
       out.output?.message?.content?.map((c) => c.text).join("") ||
-      "No pude responder. contact@dvgstudio.com";
+      `No pude responder. ${CONTACT_EMAIL}`;
     return res.status(200).json({ reply, source: "bedrock" });
   } catch (err) {
     console.error("Bedrock:", err.message);
     return res.status(200).json({
-      reply: "Error temporal. contact@dvgstudio.com o pregunta por precios/planes.",
+      reply: `Error temporal. ${CONTACT_EMAIL} o pregunta por precios/planes.`,
     });
   }
 }

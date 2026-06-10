@@ -1,4 +1,5 @@
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { CONTACT_EMAIL } from "./site-config.js";
 
 /**
  * BOOKING_NOTIFY_EMAIL      → correo de EMPRESA (avisos de nuevas citas)
@@ -6,10 +7,7 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
  * ICLOUD_CALENDAR_EMAIL     → Apple personal (donde se crean las reservas)
  */
 export async function notifyBookingByEmail(booking, calendarResult = null) {
-  const notifyTo = process.env.BOOKING_NOTIFY_EMAIL;
-  if (!notifyTo) {
-    return { ok: false, reason: "sin_BOOKING_NOTIFY_EMAIL" };
-  }
+  const notifyTo = process.env.BOOKING_NOTIFY_EMAIL || CONTACT_EMAIL;
 
   const from = process.env.BOOKING_FROM_EMAIL || notifyTo;
   const calendarLabel =

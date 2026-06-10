@@ -4,8 +4,8 @@
 
 | Rol | Variable | Ejemplo |
 |-----|----------|---------|
-| **Avisos** (email de empresa) | `BOOKING_NOTIFY_EMAIL` | `contact@dvgstudio.com` |
-| **Remitente SES** | `BOOKING_FROM_EMAIL` | `contact@dvgstudio.com` |
+| **Avisos** (email de empresa) | `BOOKING_NOTIFY_EMAIL` | `contact@dvgsstudio.com` |
+| **Remitente SES** | `BOOKING_FROM_EMAIL` | `contact@dvgsstudio.com` |
 | **Calendario** (Apple personal) | `ICLOUD_CALENDAR_EMAIL` | `tu@icloud.com` |
 | **Contraseña app Apple** | `ICLOUD_APP_PASSWORD` | generada en appleid.apple.com |
 
@@ -16,11 +16,11 @@ Flujo:
 
 ## Paso 1 — Avisos (AWS SES)
 
-1. AWS → SES → verifica `contact@dvgstudio.com`
+1. AWS → SES → verifica `contact@dvgsstudio.com`
 2. Vercel:
    ```
-   BOOKING_NOTIFY_EMAIL=contact@dvgstudio.com
-   BOOKING_FROM_EMAIL=contact@dvgstudio.com
+   BOOKING_NOTIFY_EMAIL=contact@dvgsstudio.com
+   BOOKING_FROM_EMAIL=contact@dvgsstudio.com
    BOOKING_TIMEZONE=Europe/Madrid
    ```
 

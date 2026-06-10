@@ -47,7 +47,7 @@ function icsEscape(text) {
 }
 
 function buildIcs(booking, parsed) {
-  const uid = `${randomUUID()}@dvgstudio.com`;
+  const uid = `${randomUUID()}@dvgsstudio.com`;
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z?$/, "Z");
   const description = [
     `Cliente: ${booking.name}`,

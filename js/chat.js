@@ -13,6 +13,7 @@
   const sendBtn = document.getElementById("chatSend");
 
   const siteKey = widget.dataset.siteKey || "";
+  const CONTACT = window.DVG_SITE?.contact || "contact@dvgsstudio.com";
   const pageLoad = Date.now();
 
   let history = [];
@@ -195,11 +196,11 @@
           "assistant"
         );
       } else {
-        appendMsg(data.error || "Error al agendar. contact@dvgstudio.com", "assistant");
+        appendMsg(data.error || `Error al agendar. ${CONTACT}`, "assistant");
       }
     } catch {
       removeTyping();
-      appendMsg("Error de conexión. Escríbenos a contact@dvgstudio.com", "assistant");
+      appendMsg(`Error de conexión. Escríbenos a ${CONTACT}`, "assistant");
     } finally {
       bookMode = false;
       bookStep = 0;
@@ -308,7 +309,7 @@
     }
 
     if (msgCount >= MAX_MSGS) {
-      appendMsg("Límite de esta sesión. Escríbenos a contact@dvgstudio.com", "assistant");
+      appendMsg(`Límite de esta sesión. Escríbenos a ${CONTACT}`, "assistant");
       return;
     }
     const now = Date.now();
@@ -345,7 +346,7 @@
       if (history.length > 12) history = history.slice(-12);
     } catch {
       removeTyping();
-      appendMsg("No pude conectar. contact@dvgstudio.com", "assistant");
+      appendMsg(`No pude conectar. ${CONTACT}`, "assistant");
     } finally {
       busy = false;
       sendBtn.disabled = false;
