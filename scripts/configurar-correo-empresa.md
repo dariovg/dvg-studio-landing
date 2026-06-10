@@ -32,8 +32,11 @@ Marca **Production** (y Preview si quieres). **Save** → **Redeploy**.
 5. Si SES está en *sandbox*: solo envía a correos verificados (el tuyo basta para empezar). Para producción, pide *production access* en SES.
 
 Cuando alguien agenda en el chat:
-- Te llega aviso a **info@dvgsstudio.com**
-- Al cliente le llega confirmación HTML (logo, slogan, Meet, botón Google Calendar + adjunto .ics)
+- Te llega aviso a **info@dvgsstudio.com** con archivo **.ics** adjunto (para tu calendario)
+- Al cliente le llega **siempre** confirmación HTML (logo, Meet, botón Google Calendar + adjunto .ics)
+- La cita también se crea en iCloud/Google Calendar si está configurado
+
+**Importante:** el usuario IAM de AWS necesita permisos `ses:SendEmail` y `ses:SendRawEmail` además de Bedrock.
 
 ### Google Meet (enlace fijo)
 

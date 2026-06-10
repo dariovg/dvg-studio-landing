@@ -19,10 +19,16 @@ Crea un usuario (o usa el existente) con política mínima:
   "Version": "2012-10-17",
   "Statement": [{
     "Effect": "Allow",
-    "Action": ["bedrock:InvokeModel", "bedrock:Converse"],
+    "Action": [
+      "bedrock:InvokeModel",
+      "bedrock:Converse",
+      "ses:SendEmail",
+      "ses:SendRawEmail"
+    ],
     "Resource": [
       "arn:aws:bedrock:us-east-1::foundation-model/amazon.nova-lite-v1:0",
-      "arn:aws:bedrock:*::foundation-model/amazon.nova*"
+      "arn:aws:bedrock:*::foundation-model/amazon.nova*",
+      "arn:aws:ses:us-east-1:*:identity/*"
     ]
   }]
 }
