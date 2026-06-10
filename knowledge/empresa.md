@@ -57,9 +57,13 @@ Condiciones de contrato y permanencia: se acuerdan en la reunión inicial.
 - Horario habitual de reservas: 9:00–18:00 (hora España), franjas de 1 hora.
 
 ## Agendar cita por chat (paso a paso)
-1. El visitante puede decir «agendar cita», «podemos quedar», «reservar reunión», «mañana a las 10», etc.
-2. IGNITE entiende fechas naturales: «mañana», «el martes», «la semana que viene el jueves», «pasado mañana», o DD/MM/AAAA. Horas: «a las 10», «10:30», «por la tarde».
-3. IGNITE pide lo que falte: nombre, email, teléfono, fecha, hora y notas opcionales.
+1. El visitante habla con naturalidad: «podemos quedar», «me gustaría una demo», «quiero que me lo expliquéis», «mañana a las 10», etc.
+2. IGNITE entiende lenguaje coloquial:
+   - Fechas: mañana, pasado mañana, el martes, la semana que viene el jueves, 15 de junio, DD/MM/AAAA.
+   - Horas: a las 10, 10 y media, por la tarde, media mañana, después de comer.
+   - Datos mezclados: «Soy Laura, laura@email.com, 612345678, mañana a las 10».
+   - Correcciones: «cambiar el email», «otra hora».
+3. IGNITE solo pide lo que falte, con tono humano. Confirma antes de reservar.
 3. Comprueba disponibilidad en el calendario del equipo (si está configurado).
 4. Tras confirmar:
    - Se crea la cita en el calendario del equipo (iCloud o Google Calendar).

@@ -1,4 +1,4 @@
-/* Chat web DVG Studio + agendamiento de citas */
+/* Chat web DVG Studio + agendamiento conversacional */
 (function () {
   const widget = document.getElementById("igniteChat");
   if (!widget) return;
@@ -24,52 +24,27 @@
   const COOLDOWN_MS = 3000;
 
   const BOOK_STEPS = ["name", "email", "phone", "date", "time", "notes", "confirm"];
+  const NLP = () => window.DVGNlp || {};
   const ND = () => window.DVGNaturalDate || {};
-  const DATE_HINT = "Puedes decir «mañana», «el martes» o «la semana que viene el jueves», o DD/MM/AAAA.";
-  const TIME_HINT = "Puedes decir «a las 10», «10:30» o «por la tarde». La reunión dura 1 hora (España).";
-
-  const BOOK_PROMPTS = {
-    name: "¿Tu nombre completo?",
-    email: "¿Tu correo electrónico?",
-    phone: "¿Tu teléfono? (con prefijo, ej. +34 600 000 000)",
-    date: `¿Qué día prefieres? ${DATE_HINT}`,
-    time: `¿A qué hora? ${TIME_HINT}`,
-    notes: "¿Algo que debamos saber? (opcional — escribe «no» si nada)",
-    confirm: null,
-  };
 
   let bookMode = false;
   let bookStep = 0;
   let bookData = {};
+  let timeValidated = false;
 
   const welcome =
-    "Hola. Soy IGNITE de DVG Studio. Pregúntame precios, servicios o empleados digitales.\n\nReunión 1h: «podemos quedar», «agendar cita» o «mañana a las 10»\nHuecos: «¿hay hueco mañana?» o «disponibilidad 12/06/2026»";
-
-  const DATE_RE = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/;
-  const TIME_RE = /(\d{1,2}:\d{2})/;
+    "Hola, soy IGNITE. Pregúntame lo que quieras sobre DVG Studio.\n\nSi te apetece hablar con el equipo, dime algo como «podemos quedar mañana» o «me gustaría una demo».";
 
   function parseDateInput(text) {
-    const t = text.trim();
-    if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(t)) return t.replace(/-/g, "/");
-    return ND().parseDate?.(t) || null;
+    return NLP().parseDateExtended?.(text) || ND().parseDate?.(text) || null;
   }
 
   function parseTimeInput(text) {
-    const t = text.trim();
-    if (/^\d{1,2}:\d{2}$/.test(t)) return t;
-    return ND().parseTime?.(t) || null;
+    return NLP().parseTimeExtended?.(text) || ND().parseTime?.(text) || null;
   }
 
-  function extractDateFromText(text) {
-    const explicit = text.match(DATE_RE);
-    if (explicit) return explicit[1].replace(/-/g, "/");
-    return ND().parseDate?.(text) || null;
-  }
-
-  function extractTimeFromText(text) {
-    const explicit = text.match(TIME_RE);
-    if (explicit) return explicit[1];
-    return ND().parseTime?.(text) || null;
+  function extractAll(text) {
+    return NLP().extractBookingFields?.(text) || {};
   }
 
   function wantsBooking(text) {
@@ -78,6 +53,14 @@
 
   function wantsAvailability(text) {
     return ND().wantsAvailability?.(text) || false;
+  }
+
+  function extractDateFromText(text) {
+    return parseDateInput(text);
+  }
+
+  function extractTimeFromText(text) {
+    return parseTimeInput(text);
   }
 
   function openChat() {
@@ -109,7 +92,7 @@
     const div = document.createElement("div");
     div.className = "chat-msg assistant typing";
     div.id = "chatTyping";
-    div.textContent = "Escribiendo…";
+    div.textContent = "Un momento…";
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
   }
@@ -118,46 +101,78 @@
     document.getElementById("chatTyping")?.remove();
   }
 
-  function startBooking(fromText = "") {
-    bookMode = true;
-    bookStep = 0;
-    bookData = {};
-
-    const preDate = extractDateFromText(fromText);
-    const preTime = extractTimeFromText(fromText);
-    if (preDate) bookData.date = preDate;
-    if (preTime) bookData.time = preTime;
-
+  function advanceBookStep() {
     while (bookStep < BOOK_STEPS.length) {
       const key = BOOK_STEPS[bookStep];
       if (key === "confirm") break;
       if (!bookData[key]) break;
       bookStep++;
     }
+  }
 
-    const prefill = [];
-    if (bookData.date) prefill.push(`Día: ${bookData.date}`);
-    if (bookData.time) prefill.push(`Hora: ${bookData.time}`);
+  function showSummary() {
+    bookStep = BOOK_STEPS.indexOf("confirm");
+    const n = NLP().firstName?.(bookData.name) || bookData.name;
+    const lines = [
+      n ? `Resumen, ${n}:` : "Resumen:",
+      `• ${bookData.name}`,
+      `• ${bookData.email}`,
+      `• ${bookData.phone}`,
+      `• ${bookData.date} a las ${bookData.time} (1h, España)`,
+      bookData.notes ? `• Notas: ${bookData.notes}` : "",
+      "",
+      "¿Te encaja? (sí / cancelar)",
+    ].filter(Boolean);
+    appendMsg(lines.join("\n"), "assistant");
+  }
 
-    appendMsg(
-      "Perfecto. Te pido unos datos para una reunión de 1 hora. Puedes escribir «cancelar» en cualquier momento.",
-      "assistant"
-    );
-    if (prefill.length) {
-      appendMsg(`He entendido: ${prefill.join(" · ")}`, "assistant");
-    }
-
+  function promptCurrentStep() {
+    advanceBookStep();
     const step = BOOK_STEPS[bookStep];
-    if (step && BOOK_PROMPTS[step]) {
-      appendMsg(BOOK_PROMPTS[step], "assistant");
+    if (step === "confirm") {
+      showSummary();
+      return;
     }
+    if (step) appendMsg(NLP().humanPrompt?.(step, bookData) || "", "assistant");
+  }
+
+  function startBooking(fromText = "") {
+    bookMode = true;
+    bookStep = 0;
+    bookData = {};
+    timeValidated = false;
+
+    const ext = extractAll(fromText);
+    Object.assign(bookData, Object.fromEntries(
+      Object.entries(ext).filter(([, v]) => v)
+    ));
+
+    advanceBookStep();
+    appendMsg(NLP().humanBookingIntro?.(bookData) || "Organicemos la reunión.", "assistant");
+
+    if (bookData.name) {
+      appendMsg(NLP().humanAck?.("name", bookData.name, bookData) || "", "assistant");
+    }
+    if (bookData.date || bookData.time) {
+      const bits = [];
+      if (bookData.date) bits.push(bookData.date);
+      if (bookData.time) bits.push(bookData.time);
+      appendMsg(`He pillado: ${bits.join(" · ")}`, "assistant");
+    }
+
+    if (bookData.date && bookData.time) {
+      validateTimeAndContinue();
+      return;
+    }
+    promptCurrentStep();
   }
 
   function cancelBooking() {
     bookMode = false;
     bookStep = 0;
     bookData = {};
-    appendMsg("Agendamiento cancelado. ¿En qué más puedo ayudarte?", "assistant");
+    timeValidated = false;
+    appendMsg("Sin problema, lo dejamos aquí. Si quieres retomarlo, dímelo cuando quieras.", "assistant");
   }
 
   async function apiPost(url, payload) {
@@ -190,7 +205,7 @@
       if (!date) {
         removeTyping();
         appendMsg(
-          `Indica cuándo quieres mirar. ${DATE_HINT} Ejemplo: «¿hay hueco mañana a las 10?»`,
+          "¿Para qué día quieres que mire? Puedes decir mañana, el martes, 15 de junio…",
           "assistant"
         );
         return;
@@ -199,11 +214,11 @@
       removeTyping();
       appendMsg(data.message || data.error || "Sin respuesta.", "assistant");
       if (!time && data.slots?.length) {
-        appendMsg("Escribe «agendar cita» y elige uno de esos horarios.", "assistant");
+        appendMsg("Si alguno te va bien, dime «reservar a las 10» o similar.", "assistant");
       }
     } catch {
       removeTyping();
-      appendMsg("No pude consultar el calendario. Prueba más tarde.", "assistant");
+      appendMsg("No pude consultar el calendario ahora. Prueba en un rato.", "assistant");
     } finally {
       busy = false;
       sendBtn.disabled = false;
@@ -222,20 +237,92 @@
     return { ok: false, message: data.message, alts };
   }
 
-  function validateBookField(step, text) {
+  async function validateTimeAndContinue() {
+    if (!bookData.date || !bookData.time) {
+      promptCurrentStep();
+      return;
+    }
+
+    busy = true;
+    sendBtn.disabled = true;
+    appendTyping();
+    try {
+      const check = await checkTimeSlot(bookData.date, bookData.time);
+      removeTyping();
+      if (!check.ok) {
+        timeValidated = false;
+        delete bookData.time;
+        bookStep = BOOK_STEPS.indexOf("time");
+        appendMsg(
+          check.message || `Ese hueco no está libre. Alternativas: ${check.alts}`,
+          "assistant"
+        );
+        appendMsg(NLP().humanPrompt?.("time", bookData) || "¿Otra hora?", "assistant");
+        return;
+      }
+      timeValidated = true;
+      appendMsg(NLP().humanAck?.("time", bookData.time, bookData) || "Perfecto.", "assistant");
+      advanceBookStep();
+      if (BOOK_STEPS[bookStep] === "notes") {
+        appendMsg(NLP().humanPrompt?.("notes", bookData) || "", "assistant");
+      } else if (BOOK_STEPS[bookStep] === "confirm") {
+        showSummary();
+      } else {
+        promptCurrentStep();
+      }
+    } catch {
+      removeTyping();
+      appendMsg("No pude comprobar el calendario. ¿Repetimos la hora?", "assistant");
+      bookStep = BOOK_STEPS.indexOf("time");
+      delete bookData.time;
+      timeValidated = false;
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  function resolveFieldValue(step, text, extracted) {
     const t = text.trim();
-    if (step === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return false;
-    if (step === "date" && !parseDateInput(t)) return false;
-    if (step === "time" && !parseTimeInput(t)) return false;
-    if (step === "phone" && t.length < 6) return false;
-    if (step === "name" && t.length < 2) return false;
-    return true;
+    if (step === "name") {
+      return (
+        extracted.name ||
+        (t.length >= 2 && !extracted.email && !extracted.phone && !extracted.date && !extracted.time
+          ? t.split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
+          : null)
+      );
+    }
+    if (step === "email") return extracted.email || NLP().extractEmail?.(t) || null;
+    if (step === "phone") return extracted.phone || NLP().extractPhone?.(t) || null;
+    if (step === "date") return extracted.date || parseDateInput(t);
+    if (step === "time") return extracted.time || parseTimeInput(t);
+    return null;
+  }
+
+  function applyBulkFields(extracted, fromIndex) {
+    const acked = [];
+    for (let i = fromIndex; i < BOOK_STEPS.length; i++) {
+      const key = BOOK_STEPS[i];
+      if (key === "confirm" || key === "notes") continue;
+      if (bookData[key] || !extracted[key]) continue;
+      bookData[key] = extracted[key];
+      if (key !== "date") {
+        acked.push(NLP().humanAck?.(key, extracted[key], bookData));
+      }
+    }
+    const unique = [...new Set(acked.filter(Boolean))];
+    if (unique.length) appendMsg(unique.slice(0, 2).join(" "), "assistant");
+    if (extracted.date && !unique.some((a) => a.includes(extracted.date))) {
+      appendMsg(NLP().humanAck?.("date", extracted.date, bookData) || "", "assistant");
+    }
   }
 
   async function submitBooking() {
     busy = true;
     sendBtn.disabled = true;
     appendTyping();
+    let keepBooking = false;
     try {
       const { res, data } = await apiPost("/api/book", bookData);
       removeTyping();
@@ -243,20 +330,25 @@
         appendMsg(data.message, "assistant");
       } else if (res.status === 409 && data.alternatives?.length) {
         appendMsg(data.error, "assistant");
-        appendMsg(
-          `Elige otra hora (HH:MM) o escribe «agendar cita» de nuevo.\nAlternativas: ${data.alternatives.join(", ")}`,
-          "assistant"
-        );
+        appendMsg(`¿Te iría alguna de estas? ${data.alternatives.join(", ")}`, "assistant");
+        bookStep = BOOK_STEPS.indexOf("time");
+        delete bookData.time;
+        timeValidated = false;
+        keepBooking = true;
+        appendMsg(NLP().humanPrompt?.("time", bookData) || "", "assistant");
       } else {
-        appendMsg(data.error || `Error al agendar. ${CONTACT}`, "assistant");
+        appendMsg(data.error || `Ups, no pude reservar. Escríbenos a ${CONTACT}`, "assistant");
       }
     } catch {
       removeTyping();
-      appendMsg(`Error de conexión. Escríbenos a ${CONTACT}`, "assistant");
+      appendMsg(`Problema de conexión. Escríbenos a ${CONTACT}`, "assistant");
     } finally {
-      bookMode = false;
-      bookStep = 0;
-      bookData = {};
+      if (!keepBooking) {
+        bookMode = false;
+        bookStep = 0;
+        bookData = {};
+        timeValidated = false;
+      }
       busy = false;
       sendBtn.disabled = false;
       input.focus();
@@ -265,94 +357,79 @@
 
   async function handleBookingInput(text) {
     const t = text.trim();
-    if (/^cancelar$/i.test(t)) {
+    if (NLP().wantsCancel?.(t)) {
       cancelBooking();
-      return true;
+      return;
+    }
+
+    const correction = NLP().detectCorrection?.(t);
+    if (correction) {
+      const ext = extractAll(t);
+      const val = resolveFieldValue(correction, t, ext);
+      if (val) {
+        bookData[correction] = val;
+        if (correction === "time") timeValidated = false;
+        appendMsg(NLP().humanAck?.(correction, val, bookData) || "Actualizado.", "assistant");
+        bookStep = BOOK_STEPS.indexOf(correction);
+        if (correction === "date" || correction === "time") {
+          if (bookData.date && bookData.time) await validateTimeAndContinue();
+          else promptCurrentStep();
+        } else {
+          advanceBookStep();
+          promptCurrentStep();
+        }
+      } else {
+        bookStep = BOOK_STEPS.indexOf(correction);
+        appendMsg(NLP().humanPrompt?.(correction, bookData) || "", "assistant");
+      }
+      return;
     }
 
     const step = BOOK_STEPS[bookStep];
 
     if (step === "confirm") {
-      if (/^(si|sí|ok|confirmo|vale|yes)$/i.test(t)) {
-        submitBooking();
-        return true;
+      if (NLP().isAffirmative?.(t)) {
+        await submitBooking();
+        return;
       }
-      if (/^(no|cancelar)$/i.test(t)) {
+      if (NLP().isNegative?.(t)) {
         cancelBooking();
-        return true;
+        return;
       }
-      appendMsg("Responde «sí» para confirmar o «cancelar».", "assistant");
-      return true;
+      appendMsg("¿Confirmamos? Dime «sí» o «cancelar».", "assistant");
+      return;
     }
 
     if (step === "notes") {
-      bookData.notes = /^(no|nada|-)$/i.test(t) ? "" : t;
-      bookStep++;
-      const summary = [
-        "Resumen:",
-        `• ${bookData.name}`,
-        `• ${bookData.email}`,
-        `• ${bookData.phone}`,
-        `• ${bookData.date} ${bookData.time} (1h)`,
-        bookData.notes ? `• ${bookData.notes}` : "",
-        "",
-        "¿Confirmas? (sí / cancelar)",
-      ]
-        .filter(Boolean)
-        .join("\n");
-      appendMsg(summary, "assistant");
-      return true;
+      bookData.notes = NLP().isSkipNotes?.(t) ? "" : t;
+      showSummary();
+      return;
     }
 
-    if (!validateBookField(step, t)) {
-      appendMsg(`No lo entendí bien. ${BOOK_PROMPTS[step]}`, "assistant");
-      return true;
-    }
+    const extracted = extractAll(t);
+    applyBulkFields(extracted, bookStep);
 
-    if (step === "date") {
-      bookData.date = parseDateInput(t);
-      bookStep++;
-      appendMsg(`Perfecto, ${bookData.date}.`, "assistant");
-      appendMsg(BOOK_PROMPTS.time, "assistant");
-      return true;
-    }
-
-    if (step === "time") {
-      bookData.time = parseTimeInput(t);
-      busy = true;
-      sendBtn.disabled = true;
-      appendTyping();
-      try {
-        const check = await checkTimeSlot(bookData.date, t);
-        removeTyping();
-        if (!check.ok) {
-          appendMsg(
-            check.message ||
-              `No hay hueco a las ${t}. Alternativas: ${check.alts}`,
-            "assistant"
-          );
-          appendMsg("Indica otra hora (HH:MM) o «cancelar».", "assistant");
-          return true;
-        }
-        bookStep++;
-        appendMsg(BOOK_PROMPTS.notes, "assistant");
-      } catch {
-        removeTyping();
-        appendMsg("No pude comprobar el calendario. Prueba otra vez.", "assistant");
-      } finally {
-        busy = false;
-        sendBtn.disabled = false;
+    const cur = BOOK_STEPS[bookStep];
+    if (cur && cur !== "notes" && cur !== "confirm" && !bookData[cur]) {
+      const val = resolveFieldValue(cur, t, extracted);
+      if (val) {
+        bookData[cur] = val;
+        appendMsg(NLP().humanAck?.(cur, val, bookData) || "Perfecto.", "assistant");
+      } else {
+        appendMsg("No lo pillé del todo — ¿me lo dices de otra forma?", "assistant");
+        appendMsg(NLP().humanPrompt?.(cur, bookData) || "", "assistant");
+        return;
       }
-      return true;
     }
 
-    bookData[step] = t;
-    bookStep++;
-    const next = BOOK_STEPS[bookStep];
-    if (next && BOOK_PROMPTS[next]) {
-      appendMsg(BOOK_PROMPTS[next], "assistant");
+    advanceBookStep();
+
+    if (bookData.date && bookData.time && !timeValidated) {
+      await validateTimeAndContinue();
+      return;
     }
-    return true;
+
+    promptCurrentStep();
   }
 
   async function sendMessage(text) {
@@ -372,7 +449,7 @@
       return;
     }
 
-    if (wantsBooking(text) && !bookMode) {
+    if (wantsBooking(text)) {
       appendMsg(text.trim(), "user");
       input.value = "";
       startBooking(text);
@@ -380,7 +457,7 @@
     }
 
     if (msgCount >= MAX_MSGS) {
-      appendMsg(`Límite de esta sesión. Escríbenos a ${CONTACT}`, "assistant");
+      appendMsg(`He llegado al límite de esta charla. Escríbenos a ${CONTACT}`, "assistant");
       return;
     }
     const now = Date.now();
@@ -415,6 +492,10 @@
       appendMsg(reply, "assistant");
       history.push({ role: "assistant", content: reply });
       if (history.length > 12) history = history.slice(-12);
+
+      if (wantsBooking(reply) || wantsBooking(text)) {
+        /* no auto-start from assistant reply */
+      }
     } catch {
       removeTyping();
       appendMsg(`No pude conectar. ${CONTACT}`, "assistant");

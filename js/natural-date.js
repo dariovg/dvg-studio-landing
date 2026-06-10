@@ -151,34 +151,24 @@
     var t = normalize(text);
     if (!t) return false;
 
-    if (
-      /agendar|cita|reunion|videollamada|llamada|auditoria|reservar|calendar|concertar|programar|apuntar|solicitar/.test(
-        t
-      )
-    ) {
+    if (/agendar|cita|reunion|videollamada|llamada|auditoria|reservar|calendar|concertar|programar|apuntar|solicitar|demo|presentacion|asesoria|consulta/.test(t)) {
       return true;
     }
-
-    if (/\b(quedar|quedamos|nos vemos|vernos|concertamos|quedaria)\b/.test(t)) return true;
-
-    if (
-      /\b(podemos|quiero|podria|te viene|nos podemos|cuando|gustaria)\b/.test(t) &&
-      /\b(ver|hablar|llamar|quedar)\b/.test(t)
-    ) {
+    if (/\b(quedar|quedamos|nos vemos|vernos|concertamos|quedaria|quedemos)\b/.test(t)) return true;
+    if (/\b(podemos|quiero|podria|te viene|nos podemos|cuando|gustaria|me gustaria)\b/.test(t) && /\b(ver|hablar|llamar|quedar|conocer|charlar|explicar|enseñar|mostrar)\b/.test(t)) {
       return true;
     }
-
-    if (/\b(reservar|apuntar|sacar|pedir)\b.*\b(cita|hora|reunion|videollamada)\b/.test(t)) {
-      return true;
-    }
-
+    if (/\b(reservar|apuntar|sacar|pedir|organizar|coordinar)\b.*\b(cita|hora|reunion|videollamada|sesion|llamada)\b/.test(t)) return true;
+    if (/\b(cita|reunion|videollamada|sesion|llamada)\b.*\b(reservar|agendar|concertar|organizar)\b/.test(t)) return true;
+    if (/\b(tener|hacer|montar)\b.*\b(reunion|videollamada|sesion|llamada)\b/.test(t)) return true;
+    if (/\b(me interesa|estoy interesad|cuentame mas)\b/.test(t) && /\b(reunion|llamada|hablar|vernos)\b/.test(t)) return true;
     return false;
   }
 
   function wantsAvailability(text) {
     var t = normalize(text);
     if (!t) return false;
-    return /hueco|huecos|disponib|libre|horarios|disponibilidad|hay sitio|esta libre/.test(t);
+    return /hueco|huecos|disponib|libre|horarios|disponibilidad|hay sitio|esta libre|cuando podeis|cuando podéis|cuando tengais|que dias|qué días/.test(t);
   }
 
   window.DVGNaturalDate = {
