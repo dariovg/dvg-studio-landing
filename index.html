@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0A0E27">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="description" content="DVG Studio — hacIA lo imparable. Empleados digitales con IA agéntica para PYMEs. Agentes 24/7. Auditoría gratis.">
     <title>DVG Studio — hacIA lo imparable</title>
     <link rel="icon" href="/assets/logo-dvg-studio.png" type="image/png">
@@ -17,13 +19,18 @@
             <a href="#" class="logo" aria-label="DVG Studio — hacIA lo imparable">
                 <img src="/assets/logo-dvg-studio.png" alt="DVG Studio — hacIA lo imparable" class="logo-img" width="280" height="52">
             </a>
-            <nav>
+            <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="siteNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </button>
+            <nav class="site-nav" id="siteNav">
                 <a href="#historia">Cómo funciona</a>
                 <a href="#servicios">Servicios</a>
                 <a href="#casos">Casos</a>
                 <a href="#pricing">Planes</a>
                 <a href="#faq">FAQ</a>
-                <a href="mailto:contact@dvgstudio.com?subject=Auditor%C3%ADa%20gratis" class="cta-button">Auditoría gratis</a>
+                <a href="mailto:contact@dvgstudio.com?subject=Auditor%C3%ADa%20gratis" class="cta-button nav-cta">Auditoría gratis</a>
             </nav>
         </div>
     </header>
@@ -179,18 +186,20 @@
 
     <section class="section reveal-scale" id="comparativa">
         <h2 class="section-title">Empleado humano vs <span>Empleado Digital</span></h2>
-        <table class="compare-table reveal">
-            <thead>
-                <tr><th></th><th>Empleado tradicional</th><th>Empleado Digital DVG</th></tr>
-            </thead>
-            <tbody>
-                <tr><td>Coste mensual</td><td>~2.000–2.500 €</td><td class="win">Desde 199 €</td></tr>
-                <tr><td>Disponibilidad</td><td>8h/día, vacaciones</td><td class="win">24/7/365</td></tr>
-                <tr><td>Tiempo de respuesta</td><td>Horas</td><td class="win">Segundos</td></tr>
-                <tr><td>Escalado</td><td>+1 contratación</td><td class="win">Mismo coste, más volumen</td></tr>
-                <tr><td>Ideal para</td><td>Estrategia, relaciones</td><td class="win">Tareas repetitivas + primer contacto</td></tr>
-            </tbody>
-        </table>
+        <div class="table-scroll reveal" tabindex="0" role="region" aria-label="Tabla comparativa — desliza horizontalmente">
+            <table class="compare-table">
+                <thead>
+                    <tr><th></th><th>Empleado tradicional</th><th>Empleado Digital DVG</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Coste mensual</td><td>~2.000–2.500 €</td><td class="win">Desde 199 €</td></tr>
+                    <tr><td>Disponibilidad</td><td>8h/día, vacaciones</td><td class="win">24/7/365</td></tr>
+                    <tr><td>Tiempo de respuesta</td><td>Horas</td><td class="win">Segundos</td></tr>
+                    <tr><td>Escalado</td><td>+1 contratación</td><td class="win">Mismo coste, más volumen</td></tr>
+                    <tr><td>Ideal para</td><td>Estrategia, relaciones</td><td class="win">Tareas repetitivas + primer contacto</td></tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <section class="section" id="demo">
@@ -423,6 +432,7 @@
     </div>
 
     <script src="/js/scroll.js"></script>
+    <script src="/js/mobile.js"></script>
     <script>
         const previews = ['…esperando mensaje','¡Hola! ¿En qué puedo ayudarte?','Te preparo una cotización','Cita confirmada ✓','Lead cerrado 🎉'];
         const statuses = ['En espera…','Respondiendo…','Cotizando…','Agendando…','¡Misión cumplida!'];

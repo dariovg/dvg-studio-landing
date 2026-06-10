@@ -45,6 +45,7 @@
 
   function openChat() {
     panel.classList.add("open");
+    document.body.classList.add("chat-open");
     toggle.setAttribute("aria-expanded", "true");
     if (!messages.dataset.init) {
       appendMsg(welcome, "assistant");
@@ -55,6 +56,7 @@
 
   function closeChat() {
     panel.classList.remove("open");
+    document.body.classList.remove("chat-open");
     toggle.setAttribute("aria-expanded", "false");
   }
 
