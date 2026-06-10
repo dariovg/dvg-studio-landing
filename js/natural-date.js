@@ -1,0 +1,191 @@
+/* Parser de fechas/horas naturales — sincronizado con lib/natural-date.js */
+(function () {
+  const WEEKDAYS = {
+    domingo: 7,
+    lunes: 1,
+    martes: 2,
+    miercoles: 3,
+    miércoles: 3,
+    jueves: 4,
+    viernes: 5,
+    sabado: 6,
+    sábado: 6,
+  };
+
+  function normalize(text) {
+    return String(text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function getSpainToday(when) {
+    when = when || new Date();
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Madrid",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(when);
+    const get = function (type) {
+      return Number(parts.find(function (p) { return p.type === type; })?.value || 0);
+    };
+    return { year: get("year"), month: get("month"), day: get("day") };
+  }
+
+  function pad2(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function formatDateParts(ref) {
+    return pad2(ref.day) + "/" + pad2(ref.month) + "/" + ref.year;
+  }
+
+  function toDateObj(ref) {
+    return new Date(ref.year, ref.month - 1, ref.day);
+  }
+
+  function fromDateObj(d) {
+    return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate() };
+  }
+
+  function addDays(ref, days) {
+    var d = toDateObj(ref);
+    d.setDate(d.getDate() + days);
+    return fromDateObj(d);
+  }
+
+  function isoWeekday(ref) {
+    var d = toDateObj(ref);
+    var js = d.getDay();
+    return js === 0 ? 7 : js;
+  }
+
+  function weekdayInNextCalendarWeek(ref, isoWd) {
+    var current = isoWeekday(ref);
+    var daysToNextMonday = current === 1 ? 7 : (8 - current) % 7 || 7;
+    var monday = addDays(ref, daysToNextMonday);
+    return addDays(monday, isoWd - 1);
+  }
+
+  function nextWeekday(ref, isoWd, forceNext) {
+    var current = isoWeekday(ref);
+    var delta = (isoWd - current + 7) % 7;
+    if (forceNext && delta === 0) delta = 7;
+    return addDays(ref, delta);
+  }
+
+  function matchWeekday(text) {
+    var m = text.match(/\b(domingo|lunes|martes|miercoles|jueves|viernes|sabado)\b/);
+    return m ? WEEKDAYS[m[1]] : null;
+  }
+
+  function parseNaturalDate(text, ref) {
+    ref = ref || getSpainToday();
+    var t = normalize(text);
+    if (!t) return null;
+
+    var explicit = t.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if (explicit) {
+      return pad2(Number(explicit[1])) + "/" + pad2(Number(explicit[2])) + "/" + explicit[3];
+    }
+
+    if (/\bpasado\s+manana\b/.test(t)) return formatDateParts(addDays(ref, 2));
+    if (/\bmanana\b/.test(t) && !/\bmanana\s+(temprano|a las)/.test(t)) {
+      return formatDateParts(addDays(ref, 1));
+    }
+    if (/\bhoy\b/.test(t)) return formatDateParts(ref);
+
+    var inDays = t.match(/\ben\s+(\d{1,2})\s+dias?\b/);
+    if (inDays) return formatDateParts(addDays(ref, Number(inDays[1])));
+
+    var wd = matchWeekday(t);
+    if (wd) {
+      if (/\bsemana\s+que\s+viene\b/.test(t)) {
+        return formatDateParts(weekdayInNextCalendarWeek(ref, wd));
+      }
+      if (/\b(proximo|siguiente)\b/.test(t)) {
+        return formatDateParts(nextWeekday(ref, wd, true));
+      }
+      return formatDateParts(nextWeekday(ref, wd, false));
+    }
+
+    return null;
+  }
+
+  function parseNaturalTime(text) {
+    var t = normalize(text);
+    if (!t) return null;
+
+    var hhmm = t.match(/\b(\d{1,2}):(\d{2})\b/);
+    if (hhmm) {
+      var h = Number(hhmm[1]);
+      var m = Number(hhmm[2]);
+      if (h <= 23 && m <= 59) return pad2(h) + ":" + pad2(m);
+    }
+
+    var atHour = t.match(/\b(?:a las|las|sobre las)\s+(\d{1,2})(?:\s*h(?:oras?)?)?\b/);
+    if (atHour) {
+      h = Number(atHour[1]);
+      if (h >= 0 && h <= 23) return pad2(h) + ":00";
+    }
+
+    var hourH = t.match(/\b(\d{1,2})\s*h(?:oras?)?\b/);
+    if (hourH) {
+      h = Number(hourH[1]);
+      if (h >= 0 && h <= 23) return pad2(h) + ":00";
+    }
+
+    if (/\b(ultima hora|fin de tarde)\b/.test(t)) return "17:00";
+    if (/\b(por la tarde|tarde)\b/.test(t)) return "16:00";
+    if (/\b(media manana)\b/.test(t)) return "11:30";
+    if (/\b(por la manana|manana temprano|primera hora)\b/.test(t)) return "10:00";
+    if (/\b(mediodia|almuerzo)\b/.test(t)) return "12:00";
+
+    return null;
+  }
+
+  function wantsBooking(text) {
+    var t = normalize(text);
+    if (!t) return false;
+
+    if (
+      /agendar|cita|reunion|videollamada|llamada|auditoria|reservar|calendar|concertar|programar|apuntar|solicitar/.test(
+        t
+      )
+    ) {
+      return true;
+    }
+
+    if (/\b(quedar|quedamos|nos vemos|vernos|concertamos|quedaria)\b/.test(t)) return true;
+
+    if (
+      /\b(podemos|quiero|podria|te viene|nos podemos|cuando|gustaria)\b/.test(t) &&
+      /\b(ver|hablar|llamar|quedar)\b/.test(t)
+    ) {
+      return true;
+    }
+
+    if (/\b(reservar|apuntar|sacar|pedir)\b.*\b(cita|hora|reunion|videollamada)\b/.test(t)) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function wantsAvailability(text) {
+    var t = normalize(text);
+    if (!t) return false;
+    return /hueco|huecos|disponib|libre|horarios|disponibilidad|hay sitio|esta libre/.test(t);
+  }
+
+  window.DVGNaturalDate = {
+    parseDate: parseNaturalDate,
+    parseTime: parseNaturalTime,
+    wantsBooking: wantsBooking,
+    wantsAvailability: wantsAvailability,
+    formatHint: "Puedes decir «mañana», «el martes» o «la semana que viene el jueves».",
+  };
+})();

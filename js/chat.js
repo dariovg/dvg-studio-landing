@@ -24,12 +24,16 @@
   const COOLDOWN_MS = 3000;
 
   const BOOK_STEPS = ["name", "email", "phone", "date", "time", "notes", "confirm"];
+  const ND = () => window.DVGNaturalDate || {};
+  const DATE_HINT = "Puedes decir «mañana», «el martes» o «la semana que viene el jueves», o DD/MM/AAAA.";
+  const TIME_HINT = "Puedes decir «a las 10», «10:30» o «por la tarde». La reunión dura 1 hora (España).";
+
   const BOOK_PROMPTS = {
     name: "¿Tu nombre completo?",
     email: "¿Tu correo electrónico?",
     phone: "¿Tu teléfono? (con prefijo, ej. +34 600 000 000)",
-    date: "¿Qué día prefieres? Formato: DD/MM/AAAA (ej. 15/06/2026)",
-    time: "¿A qué hora? Formato: HH:MM en hora de España (ej. 10:00). La reunión dura 1 hora.",
+    date: `¿Qué día prefieres? ${DATE_HINT}`,
+    time: `¿A qué hora? ${TIME_HINT}`,
     notes: "¿Algo que debamos saber? (opcional — escribe «no» si nada)",
     confirm: null,
   };
@@ -39,16 +43,42 @@
   let bookData = {};
 
   const welcome =
-    "Hola. Soy IGNITE de DVG Studio. Pregúntame precios, servicios o empleados digitales.\n\nReunión 1h: «agendar cita»\nHuecos libres: «disponibilidad 12/06/2026»";
-
-  const BOOK_TRIGGERS =
-    /agendar|cita|reunion|reunión|videollamada|llamada|auditor[ií]a|reservar|calendar/i;
-
-  const AVAIL_TRIGGERS =
-    /hueco|huecos|disponib|libre|horarios|tienes.*cita|hay.*cita|tengo.*cita/i;
+    "Hola. Soy IGNITE de DVG Studio. Pregúntame precios, servicios o empleados digitales.\n\nReunión 1h: «podemos quedar», «agendar cita» o «mañana a las 10»\nHuecos: «¿hay hueco mañana?» o «disponibilidad 12/06/2026»";
 
   const DATE_RE = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/;
   const TIME_RE = /(\d{1,2}:\d{2})/;
+
+  function parseDateInput(text) {
+    const t = text.trim();
+    if (/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(t)) return t.replace(/-/g, "/");
+    return ND().parseDate?.(t) || null;
+  }
+
+  function parseTimeInput(text) {
+    const t = text.trim();
+    if (/^\d{1,2}:\d{2}$/.test(t)) return t;
+    return ND().parseTime?.(t) || null;
+  }
+
+  function extractDateFromText(text) {
+    const explicit = text.match(DATE_RE);
+    if (explicit) return explicit[1].replace(/-/g, "/");
+    return ND().parseDate?.(text) || null;
+  }
+
+  function extractTimeFromText(text) {
+    const explicit = text.match(TIME_RE);
+    if (explicit) return explicit[1];
+    return ND().parseTime?.(text) || null;
+  }
+
+  function wantsBooking(text) {
+    return ND().wantsBooking?.(text) || false;
+  }
+
+  function wantsAvailability(text) {
+    return ND().wantsAvailability?.(text) || false;
+  }
 
   function openChat() {
     panel.classList.add("open");
@@ -88,15 +118,39 @@
     document.getElementById("chatTyping")?.remove();
   }
 
-  function startBooking() {
+  function startBooking(fromText = "") {
     bookMode = true;
     bookStep = 0;
     bookData = {};
+
+    const preDate = extractDateFromText(fromText);
+    const preTime = extractTimeFromText(fromText);
+    if (preDate) bookData.date = preDate;
+    if (preTime) bookData.time = preTime;
+
+    while (bookStep < BOOK_STEPS.length) {
+      const key = BOOK_STEPS[bookStep];
+      if (key === "confirm") break;
+      if (!bookData[key]) break;
+      bookStep++;
+    }
+
+    const prefill = [];
+    if (bookData.date) prefill.push(`Día: ${bookData.date}`);
+    if (bookData.time) prefill.push(`Hora: ${bookData.time}`);
+
     appendMsg(
       "Perfecto. Te pido unos datos para una reunión de 1 hora. Puedes escribir «cancelar» en cualquier momento.",
       "assistant"
     );
-    appendMsg(BOOK_PROMPTS.name, "assistant");
+    if (prefill.length) {
+      appendMsg(`He entendido: ${prefill.join(" · ")}`, "assistant");
+    }
+
+    const step = BOOK_STEPS[bookStep];
+    if (step && BOOK_PROMPTS[step]) {
+      appendMsg(BOOK_PROMPTS[step], "assistant");
+    }
   }
 
   function cancelBooking() {
@@ -131,18 +185,16 @@
     sendBtn.disabled = true;
     appendTyping();
     try {
-      const dateM = text.match(DATE_RE);
-      const timeM = text.match(TIME_RE);
-      if (!dateM) {
+      const date = extractDateFromText(text);
+      const time = extractTimeFromText(text) || "";
+      if (!date) {
         removeTyping();
         appendMsg(
-          "Indica la fecha en formato DD/MM/AAAA. Ejemplo: «disponibilidad 15/06/2026» o «¿hay hueco el 15/06/2026 a las 10:00?»",
+          `Indica cuándo quieres mirar. ${DATE_HINT} Ejemplo: «¿hay hueco mañana a las 10?»`,
           "assistant"
         );
         return;
       }
-      const date = dateM[1].replace(/-/g, "/");
-      const time = timeM ? timeM[1] : "";
       const data = await fetchAvailability(date, time, text);
       removeTyping();
       appendMsg(data.message || data.error || "Sin respuesta.", "assistant");
@@ -173,8 +225,8 @@
   function validateBookField(step, text) {
     const t = text.trim();
     if (step === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(t)) return false;
-    if (step === "date" && !/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(t)) return false;
-    if (step === "time" && !/^\d{1,2}:\d{2}$/.test(t)) return false;
+    if (step === "date" && !parseDateInput(t)) return false;
+    if (step === "time" && !parseTimeInput(t)) return false;
     if (step === "phone" && t.length < 6) return false;
     if (step === "name" && t.length < 2) return false;
     return true;
@@ -253,12 +305,20 @@
     }
 
     if (!validateBookField(step, t)) {
-      appendMsg(`Dato no válido. ${BOOK_PROMPTS[step]}`, "assistant");
+      appendMsg(`No lo entendí bien. ${BOOK_PROMPTS[step]}`, "assistant");
+      return true;
+    }
+
+    if (step === "date") {
+      bookData.date = parseDateInput(t);
+      bookStep++;
+      appendMsg(`Perfecto, ${bookData.date}.`, "assistant");
+      appendMsg(BOOK_PROMPTS.time, "assistant");
       return true;
     }
 
     if (step === "time") {
-      bookData.time = t;
+      bookData.time = parseTimeInput(t);
       busy = true;
       sendBtn.disabled = true;
       appendTyping();
@@ -305,17 +365,17 @@
       return;
     }
 
-    if (AVAIL_TRIGGERS.test(text) && DATE_RE.test(text)) {
+    if (wantsAvailability(text) && extractDateFromText(text)) {
       appendMsg(text.trim(), "user");
       input.value = "";
       await queryAvailability(text);
       return;
     }
 
-    if (BOOK_TRIGGERS.test(text) && !bookMode) {
+    if (wantsBooking(text) && !bookMode) {
       appendMsg(text.trim(), "user");
       input.value = "";
-      startBooking();
+      startBooking(text);
       return;
     }
 

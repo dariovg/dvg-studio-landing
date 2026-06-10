@@ -57,8 +57,9 @@ Condiciones de contrato y permanencia: se acuerdan en la reunión inicial.
 - Horario habitual de reservas: 9:00–18:00 (hora España), franjas de 1 hora.
 
 ## Agendar cita por chat (paso a paso)
-1. El visitante escribe «agendar cita» (o similar).
-2. IGNITE pide: nombre, email, teléfono, fecha (DD/MM/AAAA), hora (HH:MM) y notas opcionales.
+1. El visitante puede decir «agendar cita», «podemos quedar», «reservar reunión», «mañana a las 10», etc.
+2. IGNITE entiende fechas naturales: «mañana», «el martes», «la semana que viene el jueves», «pasado mañana», o DD/MM/AAAA. Horas: «a las 10», «10:30», «por la tarde».
+3. IGNITE pide lo que falte: nombre, email, teléfono, fecha, hora y notas opcionales.
 3. Comprueba disponibilidad en el calendario del equipo (si está configurado).
 4. Tras confirmar:
    - Se crea la cita en el calendario del equipo (iCloud o Google Calendar).
@@ -67,6 +68,7 @@ Condiciones de contrato y permanencia: se acuerdan en la reunión inicial.
 5. Si el correo no llega en 2 minutos, revisar carpeta spam o escribir a info@dvgsstudio.com.
 
 ## Consultar disponibilidad en el chat
+- «¿hay hueco mañana?» o «disponibilidad el martes» → fechas en lenguaje natural.
 - «disponibilidad 15/06/2026» → muestra huecos libres ese día.
 - «¿hay hueco el 15/06/2026 a las 10:00?» → comprueba un horario concreto.
 - Horario laboral por defecto: 9:00 a 18:00, citas de 1 hora.
