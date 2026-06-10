@@ -36,7 +36,14 @@
         </div>
     </header>
 
-    <section class="hero">
+    <section class="hero" id="hero">
+        <div class="hero-parallax" aria-hidden="true">
+            <span class="hero-orb hero-orb-1" data-parallax="0.18"></span>
+            <span class="hero-orb hero-orb-2" data-parallax="0.32"></span>
+            <span class="hero-orb hero-orb-3" data-parallax="0.1"></span>
+            <span class="hero-orb hero-orb-4" data-parallax="0.22"></span>
+            <div class="hero-grid"></div>
+        </div>
         <div class="hero-content reveal">
             <p class="hero-tagline">hac<span class="brand-ia">IA</span> lo imparable</p>
             <h1>Automatiza el <span>70%</span> de lo repetitivo — sin contratar más</h1>
@@ -76,17 +83,17 @@
         </div>
     </div>
 
-    <section class="section" id="mercado">
+    <section class="section section-parallax" id="mercado">
         <h2 class="section-title reveal">Por qué las <span>PYMEs</span> apuestan por IA agéntica ahora</h2>
         <p class="section-lead reveal">No es un chatbot de botones. Es un agente que entiende contexto, toma decisiones y actúa en tus canales reales.</p>
-        <div class="insights">
+        <div class="insights reveal-stagger">
             <div class="insight-card reveal">
-                <div class="insight-stat">78%</div>
+                <div class="insight-stat" data-count="78" data-suffix="%">78%</div>
                 <h3>Compran quien responde primero</h3>
                 <p>Los clientes eligen al negocio que les contesta antes. Un agente 24/7 no deja leads enfriarse por la noche o el fin de semana.</p>
             </div>
             <div class="insight-card reveal">
-                <div class="insight-stat">40h+</div>
+                <div class="insight-stat" data-count="40" data-suffix="h+">40h+</div>
                 <h3>Ahorro mensual en tareas manuales</h3>
                 <p>Cotizaciones, FAQs, agendamiento y seguimiento consumen horas que un empleado digital puede asumir sin nómina extra.</p>
             </div>
@@ -151,7 +158,7 @@
     <section class="section section-process" id="proceso">
         <h2 class="section-title reveal">Cómo te <span>implantamos</span> IGNITE</h2>
         <p class="section-lead reveal">El chat de arriba muestra el día a día con tus clientes. Esto es nuestro proceso contigo.</p>
-        <div class="process-grid">
+        <div class="process-grid reveal-stagger">
             <article class="process-card reveal">
                 <span class="process-step">01</span>
                 <h3>Entendemos tu negocio</h3>
@@ -255,7 +262,7 @@
     <section class="section section-cases" id="casos">
         <h2 class="section-title reveal">IGNITE en <span>acción</span></h2>
         <p class="section-lead reveal">Escenarios simulados y realistas — basados en patrones de PYMEs españolas, no clientes concretos (aún).</p>
-        <div class="case-studies-grid">
+        <div class="case-studies-grid reveal-stagger">
             <article class="case-study reveal">
                 <div class="case-study-header">
                     <div class="case-header-row">
@@ -533,7 +540,11 @@
         </div>
     </section>
 
-    <section class="cta-section reveal">
+    <section class="cta-section reveal" id="cta">
+        <div class="cta-parallax" aria-hidden="true">
+            <span class="cta-orb"></span>
+            <span class="cta-orb cta-orb-2"></span>
+        </div>
         <h2>¿Listo para tu primer empleado digital?</h2>
         <p>Habla con IGNITE ahora o solicita auditoría gratis. Sin letra pequeña.</p>
         <div class="cta-buttons">
@@ -581,6 +592,7 @@
 
     <script>window.DVG_SITE={contact:"info@dvgsstudio.com",url:"https://www.dvgsstudio.com"};</script>
     <script src="/js/scroll.js"></script>
+    <script src="/js/parallax.js"></script>
     <script src="/js/mobile.js"></script>
     <script>
         const previews = ['…esperando mensaje','¡Hola! ¿En qué puedo ayudarte?','Te preparo una cotización','Cita confirmada ✓','Lead cerrado 🎉'];
