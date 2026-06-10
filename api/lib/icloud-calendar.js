@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { createDAVClient } from "tsdav";
 
 const SKIP_CALENDAR = /inbox|notification|tasks|archive|birthdays|holidays|recyclebin/i;
+const DEPRIORITIZE = /quedada|meetup|social/i;
 
 function password() {
   return (process.env.ICLOUD_APP_PASSWORD || "").trim().replace(/\s+/g, "");
@@ -90,19 +91,44 @@ function buildIcs(booking, parsed) {
   return { uid, body };
 }
 
-function pickCalendar(calendars) {
-  const sorted = [...calendars].sort((a, b) => {
-    const score = (c) => {
-      const label = `${c.displayName || ""} ${c.url || ""}`.toLowerCase();
-      let s = 0;
-      if (/home|inicio|personal|calendario/i.test(label)) s += 10;
-      if (/\/home\/?$/i.test(c.url || "")) s += 8;
-      if (SKIP_CALENDAR.test(c.url || "")) s -= 20;
-      return s;
-    };
-    return score(b) - score(a);
-  });
-  return sorted.find((c) => c.url && !SKIP_CALENDAR.test(c.url)) || sorted[0];
+function calendarLabel(c) {
+  return c.displayName || c.url?.split("/").filter(Boolean).pop() || "Calendario";
+}
+
+export function pickCalendar(calendars) {
+  const valid = calendars.filter((c) => c.url && !SKIP_CALENDAR.test(c.url || ""));
+  if (!valid.length) return null;
+
+  const preferredUrl = (process.env.ICLOUD_CALENDAR_URL || "").trim();
+  if (preferredUrl) {
+    const hit = valid.find(
+      (c) => c.url === preferredUrl || c.url?.includes(preferredUrl.replace(/\/$/, ""))
+    );
+    if (hit) return hit;
+  }
+
+  const preferredName = (process.env.ICLOUD_CALENDAR_NAME || "DVG Studio").trim();
+  if (preferredName) {
+    const escaped = preferredName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const re = new RegExp(escaped, "i");
+    const byName = valid.find((c) => re.test(calendarLabel(c)));
+    if (byName) return byName;
+  }
+
+  const scored = [...valid].sort((a, b) => scoreCalendar(b) - scoreCalendar(a));
+  return scored[0];
+}
+
+function scoreCalendar(c) {
+  const label = calendarLabel(c).toLowerCase();
+  const url = (c.url || "").toLowerCase();
+  let s = 0;
+  if (/dvg\s*studio|dvgstudio/i.test(label)) s += 30;
+  if (/trabajo|work|negocio|business|empresa/i.test(label)) s += 12;
+  if (/home|inicio|personal/i.test(label)) s += 8;
+  if (/\/home\/?$/i.test(url)) s += 5;
+  if (DEPRIORITIZE.test(label)) s -= 25;
+  return s;
 }
 
 async function connectIcloud() {
@@ -123,9 +149,12 @@ async function connectIcloud() {
       const calendars = await client.fetchCalendars();
       const calendar = pickCalendar(calendars);
       if (!calendar?.url) {
-        throw new Error("Sin calendarios escribibles");
+        const names = calendars.map((c) => calendarLabel(c)).join(", ");
+        throw new Error(
+          `No se encontró calendario "${process.env.ICLOUD_CALENDAR_NAME || "DVG Studio"}". Disponibles: ${names}`
+        );
       }
-      return { client, calendar, username };
+      return { client, calendar, calendars, username };
     } catch (err) {
       errors.push(`${username}: ${err.message}`);
     }
@@ -156,17 +185,30 @@ export async function createBookingEvent(booking) {
       return { ok: false, error: `iCloud PUT ${res.status}: ${errText.slice(0, 160)}` };
     }
 
+    const name = calendarLabel(calendar);
+
     return {
       ok: true,
       provider: "icloud",
       eventId: uid,
       htmlLink: null,
-      calendarLabel: `Calendario Apple (${username})`,
+      calendarLabel: `Calendario Apple (${name})`,
       calendarUrl: calendar.url,
     };
   } catch (err) {
     return { ok: false, error: err.message || "Error iCloud" };
   }
+}
+
+export async function listIcloudCalendars() {
+  const { calendars, username } = await connectIcloud();
+  return {
+    username,
+    selected: calendarLabel(pickCalendar(calendars)),
+    calendars: calendars
+      .filter((c) => c.url && !SKIP_CALENDAR.test(c.url || ""))
+      .map((c) => ({ name: calendarLabel(c), url: c.url })),
+  };
 }
 
 export async function diagnoseIcloud() {
@@ -179,9 +221,18 @@ export async function diagnoseIcloud() {
   });
 
   try {
-    const { calendar, username } = await connectIcloud();
+    const { calendar, calendars, username } = await connectIcloud();
     steps.push({ step: "conexion", ok: true, detail: `OK con ${username}` });
-    steps.push({ step: "calendario", ok: true, detail: `${calendar.displayName || "Principal"} → ${calendar.url}` });
+    steps.push({
+      step: "calendario_elegido",
+      ok: true,
+      detail: `${calendarLabel(calendar)} → ${calendar.url}`,
+    });
+    steps.push({
+      step: "todos_los_calendarios",
+      ok: true,
+      detail: calendars.map((c) => calendarLabel(c)).join(" | "),
+    });
     return { ok: true, steps, workingEmail: username };
   } catch (err) {
     steps.push({ step: "conexion", ok: false, detail: err.message });

@@ -127,7 +127,8 @@ knowledge/empresa.md  Documento que lee el modelo
 |-----|----------|---------|
 | **Avisos** (correo empresa) | `BOOKING_NOTIFY_EMAIL` | `contact@dvgstudio.com` |
 | **Remitente** (verificado en SES) | `BOOKING_FROM_EMAIL` | `contact@dvgstudio.com` |
-| **Calendario** (Apple personal) | `ICLOUD_CALENDAR_EMAIL` + `ICLOUD_APP_PASSWORD` | tu `@icloud.com` |
+| **Calendario** (Apple personal) | `ICLOUD_CALENDAR_EMAIL` + `ICLOUD_APP_PASSWORD` | tu Apple ID |
+| **Nombre del calendario** | `ICLOUD_CALENDAR_NAME` | `DVG Studio` |
 
 1. Cliente escribe **«agendar cita»** en el chat
 2. Se crea evento **1h** en tu **Calendario de Apple** (iCloud)
@@ -140,7 +141,8 @@ Guía Apple: `scripts/setup-apple-calendar.md`
 ```
 BOOKING_NOTIFY_EMAIL=contact@dvgstudio.com
 BOOKING_FROM_EMAIL=contact@dvgstudio.com
-ICLOUD_CALENDAR_EMAIL=tu-personal@icloud.com
+ICLOUD_CALENDAR_EMAIL=elniu101@gmail.com
 ICLOUD_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+ICLOUD_CALENDAR_NAME=DVG Studio
 BOOKING_TIMEZONE=Europe/Madrid
 ```

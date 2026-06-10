@@ -3,11 +3,14 @@
 ## Variables Vercel
 
 ```
-ICLOUD_CALENDAR_EMAIL=elniu@gmail.com
+ICLOUD_CALENDAR_EMAIL=elniu101@gmail.com
 ICLOUD_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
-ICLOUD_ALT_EMAILS=otro@icloud.com,otro@me.com
+ICLOUD_CALENDAR_NAME=DVG Studio
 BOOKING_TIMEZONE=Europe/Madrid
 ```
+
+`ICLOUD_CALENDAR_NAME` elige el calendario de Apple (por defecto busca **DVG Studio**).
+Si no existe, créalo en la app Calendario del iPhone/Mac antes de agendar.
 
 Si tu Apple ID es Gmail, el sistema **prueba también** `tu@icloud.com` y `tu@me.com` automáticamente.
 
