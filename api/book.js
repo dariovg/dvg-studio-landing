@@ -99,6 +99,15 @@ export default async function handler(req, res) {
       });
     }
 
+    if (icloudConfigured() || calendarConfigured()) {
+      console.error("Calendar failed:", calendarResult?.error || "unknown");
+      return res.status(200).json({
+        ok: true,
+        message: `No pudimos crear la cita en el calendario automático. Escríbenos a contact@dvgstudio.com con fecha ${booking.date} y hora ${booking.time}.`,
+        calendar: false,
+      });
+    }
+
     if (notifyResult.ok) {
       return res.status(200).json({
         ok: true,

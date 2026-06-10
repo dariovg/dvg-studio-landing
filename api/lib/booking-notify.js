@@ -53,16 +53,21 @@ export async function notifyBookingByEmail(booking, calendarResult = null) {
     .filter(Boolean)
     .join("\n");
 
-  const client = new SESClient({ region });
-  await client.send(
-    new SendEmailCommand({
-      Source: from,
-      Destination: { ToAddresses: [notifyTo] },
-      Message: {
-        Subject: { Data: `[DVG] Nueva cita — ${booking.name} — ${booking.date} ${booking.time}` },
-        Body: { Text: { Data: body } },
-      },
-    })
-  );
-  return { ok: true };
+  try {
+    const client = new SESClient({ region });
+    await client.send(
+      new SendEmailCommand({
+        Source: from,
+        Destination: { ToAddresses: [notifyTo] },
+        Message: {
+          Subject: { Data: `[DVG] Nueva cita — ${booking.name} — ${booking.date} ${booking.time}` },
+          Body: { Text: { Data: body } },
+        },
+      })
+    );
+    return { ok: true };
+  } catch (err) {
+    console.error("SES:", err.message);
+    return { ok: false, reason: err.message || "ses_error" };
+  }
 }
