@@ -1,4 +1,4 @@
-import { checkRateLimit } from "./lib/rate-limit.js";
+import { checkRateLimit } from "../lib/rate-limit.js";
 import {
   clientIp,
   validateOrigin,
@@ -6,13 +6,13 @@ import {
   validateHoneypot,
   validateTiming,
   validateUserAgent,
-} from "./lib/chat-security.js";
-import { icloudConfigured, createBookingEvent as createIcloudEvent } from "./lib/icloud-calendar.js";
-import { calendarConfigured, createBookingEvent as createGoogleEvent } from "./lib/google-calendar.js";
-import { sendBookingEmails } from "./lib/booking-notify.js";
-import { assertSlotAvailable } from "./lib/calendar-availability.js";
-import { isInPast } from "./lib/booking-utils.js";
-import { CONTACT_EMAIL } from "./lib/site-config.js";
+} from "../lib/chat-security.js";
+import { icloudConfigured, createBookingEvent as createIcloudEvent } from "../lib/icloud-calendar.js";
+import { calendarConfigured, createBookingEvent as createGoogleEvent } from "../lib/google-calendar.js";
+import { sendBookingEmails } from "../lib/booking-notify.js";
+import { assertSlotAvailable } from "../lib/calendar-availability.js";
+import { isInPast } from "../lib/booking-utils.js";
+import { CONTACT_EMAIL } from "../lib/site-config.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

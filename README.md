@@ -108,7 +108,7 @@ css/main.css        Estilos
 js/chat.js          Widget chat
 js/scroll.js        Animaciones
 api/chat.js         API Bedrock
-api/lib/            FAQ, rate-limit, seguridad
+lib/                FAQ, rate-limit, seguridad (fuera de api/ para límite Vercel Hobby)
 knowledge/empresa.md  Documento que lee el modelo
 ```
 

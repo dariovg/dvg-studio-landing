@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { diagnoseIcloud, icloudConfigured } from "../api/lib/icloud-calendar.js";
+import { diagnoseIcloud, icloudConfigured } from "../lib/icloud-calendar.js";
 
 if (!icloudConfigured()) {
   console.error("\n❌ Faltan ICLOUD_CALENDAR_EMAIL e ICLOUD_APP_PASSWORD\n");

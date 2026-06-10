@@ -1,4 +1,4 @@
-import { checkRateLimit } from "./lib/rate-limit.js";
+import { checkRateLimit } from "../lib/rate-limit.js";
 import {
   clientIp,
   validateOrigin,
@@ -6,9 +6,9 @@ import {
   validateHoneypot,
   validateTiming,
   validateUserAgent,
-} from "./lib/chat-security.js";
-import { getAvailability } from "./lib/calendar-availability.js";
-import { parseBookingDateTime } from "./lib/booking-utils.js";
+} from "../lib/chat-security.js";
+import { getAvailability } from "../lib/calendar-availability.js";
+import { parseBookingDateTime } from "../lib/booking-utils.js";
 
 function extractDate(text) {
   const m = String(text || "").match(/(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4})/);
