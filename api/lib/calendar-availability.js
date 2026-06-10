@@ -6,7 +6,6 @@ import {
   isInPast,
   slotDurationMinutes,
   wallClockToDate,
-  tzOffsetMinutes,
 } from "./booking-utils.js";
 
 const SKIP_FETCH = /inbox|notification|tasks|archive|recyclebin/i;
