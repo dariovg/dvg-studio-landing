@@ -133,7 +133,7 @@ knowledge/empresa.md  Documento que lee el modelo
 2. Se crea evento **1h** en tu **Calendario de Apple** (iCloud)
 3. Te llega un **aviso al correo de empresa**
 
-Guía detallada: `scripts/setup-booking.md`
+Guía Apple: `scripts/setup-apple-calendar.md`
 
 ### Variables en Vercel
 
