@@ -6,21 +6,24 @@
 |-----|----------|---------|
 | **Avisos** (email de empresa) | `BOOKING_NOTIFY_EMAIL` | `info@dvgsstudio.com` |
 | **Remitente SES** | `BOOKING_FROM_EMAIL` | `info@dvgsstudio.com` |
+| **Google Meet** (enlace reunión) | `BOOKING_MEET_URL` | `https://meet.google.com/xxx` |
 | **Calendario** (Apple personal) | `ICLOUD_CALENDAR_EMAIL` | `tu@icloud.com` |
 | **Contraseña app Apple** | `ICLOUD_APP_PASSWORD` | generada en appleid.apple.com |
 
 Flujo:
 1. Cliente agenda en el chat
 2. La cita se crea en **tu Calendario de Apple** (iCloud)
-3. Te llega un **aviso al correo de empresa**
+3. Te llega aviso a **info@dvgsstudio.com**
+4. Al cliente le llega confirmación con logo, Meet y botón Google Calendar
 
-## Paso 1 — Avisos (AWS SES)
+## Paso 1 — Avisos y confirmaciones (AWS SES)
 
-1. AWS → SES → verifica `info@dvgsstudio.com`
+1. AWS → SES → verifica **`info@dvgsstudio.com`**
 2. Vercel:
    ```
    BOOKING_NOTIFY_EMAIL=info@dvgsstudio.com
    BOOKING_FROM_EMAIL=info@dvgsstudio.com
+   BOOKING_MEET_URL=https://meet.google.com/xxx-xxxx-xxx
    BOOKING_TIMEZONE=Europe/Madrid
    ```
 

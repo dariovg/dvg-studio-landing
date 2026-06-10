@@ -17,6 +17,7 @@ Proyecto **dvg-studio-landing** → **Settings** → **Environment Variables** �
 BOOKING_NOTIFY_EMAIL=info@dvgsstudio.com
 BOOKING_FROM_EMAIL=info@dvgsstudio.com
 CONTACT_EMAIL=info@dvgsstudio.com
+BOOKING_MEET_URL=https://meet.google.com/xxx-xxxx-xxx
 CHAT_ALLOWED_ORIGINS=https://dvgsstudio.com,https://www.dvgsstudio.com,https://dvgsstudio.es,https://www.dvgsstudio.es
 ```
 
@@ -30,7 +31,17 @@ Marca **Production** (y Preview si quieres). **Save** → **Redeploy**.
 4. Abre el correo de confirmación en Gmail de empresa → **Confirmar**
 5. Si SES está en *sandbox*: solo envía a correos verificados (el tuyo basta para empezar). Para producción, pide *production access* en SES.
 
-Cuando alguien agenda en el chat, recibirás un email en **info@dvgsstudio.com**.
+Cuando alguien agenda en el chat:
+- Te llega aviso a **info@dvgsstudio.com**
+- Al cliente le llega confirmación HTML (logo, slogan, Meet, botón Google Calendar + adjunto .ics)
+
+### Google Meet (enlace fijo)
+
+1. Crea una sala en [meet.google.com](https://meet.google.com) → **Nueva reunión** → **Crear enlace permanente** (o usa un enlace de reunión recurrente)
+2. Vercel:
+   ```
+   BOOKING_MEET_URL=https://meet.google.com/abc-defg-hij
+   ```
 
 ## Paso 3 — Probar
 

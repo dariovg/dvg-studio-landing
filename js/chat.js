@@ -236,7 +236,18 @@
     if (step === "notes") {
       bookData.notes = /^(no|nada|-)$/i.test(t) ? "" : t;
       bookStep++;
-      const summary = `Resumen:\n• ${bookData.name}\n• ${bookData.email}\n• ${bookData.phone}\n• ${bookData.date} ${bookData.time} (1h)${bookData.notes ? "\n• " + bookData.notes : ""}\n\n¿Confirmas? (sí / cancelar)`;
+      const summary = [
+        "Resumen:",
+        `• ${bookData.name}`,
+        `• ${bookData.email}`,
+        `• ${bookData.phone}`,
+        `• ${bookData.date} ${bookData.time} (1h)`,
+        bookData.notes ? `• ${bookData.notes}` : "",
+        "",
+        "¿Confirmas? (sí / cancelar)",
+      ]
+        .filter(Boolean)
+        .join("\n");
       appendMsg(summary, "assistant");
       return true;
     }

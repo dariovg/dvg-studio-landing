@@ -1,6 +1,6 @@
-import { randomUUID } from "crypto";
 import { createDAVClient } from "tsdav";
 import { parseBookingDateTime } from "./booking-utils.js";
+import { buildBookingIcs } from "./booking-ics.js";
 
 const SKIP_CALENDAR = /inbox|notification|tasks|archive|birthdays|holidays|recyclebin/i;
 const DEPRIORITIZE = /quedada|meetup|social/i;
@@ -36,44 +36,6 @@ function parseDateTime(dateStr, timeStr) {
   const p = parseBookingDateTime(dateStr, timeStr);
   if (!p) return null;
   return { start: p.start, end: p.end };
-}
-
-function icsEscape(text) {
-  return String(text || "")
-    .replace(/\\/g, "\\\\")
-    .replace(/;/g, "\\;")
-    .replace(/,/g, "\\,")
-    .replace(/\n/g, "\\n");
-}
-
-function buildIcs(booking, parsed) {
-  const uid = `${randomUUID()}@dvgsstudio.com`;
-  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z?$/, "Z");
-  const description = [
-    `Cliente: ${booking.name}`,
-    `Email: ${booking.email}`,
-    `Teléfono: ${booking.phone || "—"}`,
-    booking.notes ? `Notas: ${booking.notes}` : "",
-    "Reserva 1h — chat web DVG Studio",
-  ].join("\\n");
-
-  const body = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//DVG Studio//Booking//ES",
-    "CALSCALE:GREGORIAN",
-    "BEGIN:VEVENT",
-    `UID:${uid}`,
-    `DTSTAMP:${stamp}`,
-    `DTSTART:${parsed.start}`,
-    `DTEND:${parsed.end}`,
-    `SUMMARY:${icsEscape(`DVG Studio — ${booking.name}`)}`,
-    `DESCRIPTION:${icsEscape(description)}`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-
-  return { uid, body };
 }
 
 function calendarLabel(c) {
@@ -156,7 +118,12 @@ export async function createBookingEvent(booking) {
     if (!parsed) return { ok: false, error: "Fecha u hora no válida" };
 
     const { client, calendar, username } = await connectIcloud();
-    const { uid, body } = buildIcs(booking, parsed);
+    const icsPack = buildBookingIcs(booking, {
+      meetUrl: (process.env.BOOKING_MEET_URL || "").trim(),
+    });
+    if (!icsPack) return { ok: false, error: "Fecha u hora no válida" };
+
+    const { uid, body } = icsPack;
     const filename = `dvg-${uid.replace(/[^a-zA-Z0-9-]/g, "")}.ics`;
 
     const res = await client.createCalendarObject({

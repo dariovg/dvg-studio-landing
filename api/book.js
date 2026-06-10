@@ -9,7 +9,7 @@ import {
 } from "./lib/chat-security.js";
 import { icloudConfigured, createBookingEvent as createIcloudEvent } from "./lib/icloud-calendar.js";
 import { calendarConfigured, createBookingEvent as createGoogleEvent } from "./lib/google-calendar.js";
-import { notifyBookingByEmail } from "./lib/booking-notify.js";
+import { sendBookingEmails } from "./lib/booking-notify.js";
 import { assertSlotAvailable } from "./lib/calendar-availability.js";
 import { isInPast } from "./lib/booking-utils.js";
 import { CONTACT_EMAIL } from "./lib/site-config.js";
@@ -108,15 +108,18 @@ export default async function handler(req, res) {
       }
     }
 
-    const notifyResult = await notifyBookingByEmail(booking, calendarResult);
-    if (!notifyResult.ok) {
-      console.error("Notify:", notifyResult.reason);
+    const emailResults = await sendBookingEmails(booking, calendarResult);
+    if (!emailResults.internal.ok) {
+      console.error("Notify:", emailResults.internal.reason);
     }
 
     if (calendarResult?.ok) {
+      const mailNote = emailResults.customer.ok
+        ? `\n\n📧 Te hemos enviado la confirmación a ${booking.email}.`
+        : `\n\n📧 Revisa ${booking.email} (puede tardar 1 min).`;
       return res.status(200).json({
         ok: true,
-        message: `Cita reservada el ${booking.date} a las ${booking.time} (1h). Te confirmamos a ${booking.email}.`,
+        message: `✅ Cita reservada\n\n📅 ${booking.date} a las ${booking.time} (1h, hora España)${mailNote}`,
         calendar: true,
       });
     }
@@ -130,7 +133,7 @@ export default async function handler(req, res) {
       });
     }
 
-    if (notifyResult.ok) {
+    if (emailResults.internal.ok) {
       return res.status(200).json({
         ok: true,
         message: `Solicitud recibida para el ${booking.date} a las ${booking.time}. Te confirmamos por email pronto.`,
