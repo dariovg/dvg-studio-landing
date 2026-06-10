@@ -6,8 +6,12 @@ const SKIP_CALENDAR = /\/(inbox|notification|tasks|archive|birthdays|holidays|re
 function credentials() {
   const email = (
     process.env.ICLOUD_CALENDAR_EMAIL || process.env.BOOKING_CALENDAR_EMAIL || ""
-  ).trim();
-  const password = (process.env.ICLOUD_APP_PASSWORD || "").replace(/[\s-]/g, "");
+  )
+    .trim()
+    .toLowerCase();
+  const raw = (process.env.ICLOUD_APP_PASSWORD || "").trim();
+  // Apple da 16 caracteres a veces con guiones: aceptamos ambos formatos
+  const password = raw.replace(/\s+/g, "");
   return { email, password };
 }
 
