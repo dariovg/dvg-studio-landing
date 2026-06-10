@@ -209,13 +209,17 @@
             <span class="services-orb services-orb-2"></span>
         </div>
         <div class="services-inner">
-            <header class="services-header reveal">
+            <header class="services-header">
                 <p class="services-eyebrow">Capacidades del agente</p>
                 <h2 class="services-title">Qué hace un <span>Empleado Digital</span></h2>
-                <p class="services-lead">Personalizado para tu sector. Conectado a tus canales. Supervisado por ti.</p>
+                <ul class="services-tags" aria-label="Ventajas clave">
+                    <li>Tu sector</li>
+                    <li>Tus canales</li>
+                    <li>Supervisado por ti</li>
+                </ul>
             </header>
             <div class="services-bento reveal-stagger">
-                <article class="service-card-bento service-card-wide reveal">
+                <article class="service-card-bento reveal">
                     <span class="service-card-num">01</span>
                     <div class="service-card-icon" aria-hidden="true">💬</div>
                     <h3>Atención multicanal 24/7</h3>
@@ -233,7 +237,7 @@
                     <h3>Agenda inteligente</h3>
                     <p>Confirma citas, envía recordatorios y reprograma sin intervención humana.</p>
                 </article>
-                <article class="service-card-bento service-card-wide reveal">
+                <article class="service-card-bento reveal">
                     <span class="service-card-num">04</span>
                     <div class="service-card-icon" aria-hidden="true">🛒</div>
                     <h3>Catálogo de productos</h3>
@@ -251,16 +255,16 @@
                     <h3>Chat en tu web</h3>
                     <p>Integramos IGNITE en tu landing para resolver dudas y captar leads cualificados — como en esta página.</p>
                 </article>
-                <article class="service-card-bento service-card-banner reveal">
+                <article class="service-card-bento reveal">
                     <span class="service-card-num">07</span>
                     <div class="service-card-icon" aria-hidden="true">📱</div>
-                    <div class="service-card-banner-text">
-                        <h3>Apps y webs con IA integrada</h3>
-                        <p>Diseño y desarrollo con asistente IA, chat y automatizaciones incluidas desde el primer día.</p>
-                    </div>
-                    <button type="button" class="service-card-cta secondary-button" data-open-chat>Hablar con IGNITE</button>
+                    <h3>Apps y webs con IA</h3>
+                    <p>Desarrollo con asistente IA, chat y automatizaciones desde el primer día.</p>
                 </article>
             </div>
+            <p class="services-cta-row">
+                <button type="button" class="service-card-cta secondary-button" data-open-chat>Hablar con IGNITE</button>
+            </p>
         </div>
     </section>
 
@@ -282,28 +286,40 @@
         </div>
     </section>
 
-    <section class="section" id="demo">
+    <section class="section section-demo" id="demo">
         <h2 class="section-title reveal">Pruébalo ahora: <span>IGNITE</span></h2>
-        <p class="section-lead reveal">El mismo tipo de asistente que instalamos en tu web y canales. Haz una pregunta real.</p>
-        <div class="demo-container reveal">
-            <div>
+        <p class="section-lead reveal">El mismo asistente que instalamos en tu web. Haz una pregunta real.</p>
+        <div class="demo-wrap reveal">
+            <div class="demo-copy">
+                <p class="demo-label">Demo en vivo</p>
                 <h3>Asistente IA en tu web</h3>
-                <p>Este chat usa inteligencia artificial para responder dudas sobre DVG Studio, planes y automatización.</p>
-                <p>Es la demostración en vivo de lo que tus clientes experimentarían en tu negocio.</p>
-                <button class="cta-button" data-open-chat>Abrir chat con IGNITE</button>
+                <p>Responde dudas sobre planes, sectores y agenda citas — como lo haría con tus clientes.</p>
+                <ul class="demo-points">
+                    <li>Respuesta en segundos</li>
+                    <li>Tono de tu marca</li>
+                    <li>Auditoría gratis desde el chat</li>
+                </ul>
+                <button type="button" class="cta-button" data-open-chat>Abrir chat con IGNITE</button>
             </div>
-            <div class="chat-mockup">
-                <div class="chat-message user-msg">¿Cuánto cuesta un agente para mi pyme?</div>
-                <div class="chat-message ai-msg">Desde 199 €/mes + IVA el plan Starter con 1 agente. Hacemos auditoría gratis para ver si encaja contigo. ¿Qué sector es?</div>
-                <div class="chat-message user-msg">Tengo una clínica dental</div>
-                <div class="chat-message ai-msg">En salud suele encajar bien la agenda 24/7 y los recordatorios. ¿Quieres agendar una auditoría de 1h?</div>
+            <div class="demo-phone" aria-hidden="true">
+                <div class="demo-phone-bar">
+                    <span class="demo-phone-dot"></span>
+                    <span class="demo-phone-title">IGNITE</span>
+                    <span class="demo-phone-status">En línea</span>
+                </div>
+                <div class="demo-chat">
+                    <div class="demo-msg demo-msg-user">¿Cuánto cuesta un agente para mi pyme?</div>
+                    <div class="demo-msg demo-msg-ai">Desde 199 €/mes + IVA el plan Starter. ¿Qué sector es?</div>
+                    <div class="demo-msg demo-msg-user">Tengo una clínica dental</div>
+                    <div class="demo-msg demo-msg-ai">En salud encaja la agenda 24/7. ¿Agendamos una auditoría de 1h?</div>
+                </div>
+                <div class="demo-phone-input">Escribe tu pregunta…</div>
             </div>
         </div>
     </section>
 
     <section class="section section-cases" id="casos">
         <h2 class="section-title reveal">IGNITE en <span>acción</span></h2>
-        <p class="section-lead reveal cases-lead-short">3 escenarios tipo · lectura en 10 segundos</p>
         <div class="cases-strip reveal-stagger">
             <article class="case-card reveal">
                 <div class="case-card-head">
