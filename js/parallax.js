@@ -99,6 +99,22 @@
   }
   requestAnimationFrame(applyFrame);
 
+  /* Spotlight en tarjetas de servicios */
+  const serviceCards = [...document.querySelectorAll(".service-card-bento")];
+  if (!mobile && serviceCards.length) {
+    serviceCards.forEach((card) => {
+      card.addEventListener(
+        "mousemove",
+        (e) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+          card.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
+        },
+        { passive: true }
+      );
+    });
+  }
+
   /* Contadores */
   const counters = document.querySelectorAll(".insight-stat[data-count]");
   if (counters.length) {
