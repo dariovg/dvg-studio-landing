@@ -2,7 +2,7 @@
 export const CONTACT_EMAIL =
   process.env.CONTACT_EMAIL ||
   process.env.BOOKING_NOTIFY_EMAIL ||
-  "contact@dvgsstudio.com";
+  "info@dvgsstudio.com";
 
 export const SITE_URL =
   process.env.SITE_URL || "https://www.dvgsstudio.com";

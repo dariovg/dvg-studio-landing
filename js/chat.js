@@ -13,7 +13,7 @@
   const sendBtn = document.getElementById("chatSend");
 
   const siteKey = widget.dataset.siteKey || "";
-  const CONTACT = window.DVG_SITE?.contact || "contact@dvgsstudio.com";
+  const CONTACT = window.DVG_SITE?.contact || "info@dvgsstudio.com";
   const pageLoad = Date.now();
 
   let history = [];

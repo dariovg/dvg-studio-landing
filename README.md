@@ -48,8 +48,8 @@ En el proyecto → **Settings → Environment Variables**:
 | `BEDROCK_MODEL_ID` | `amazon.nova-lite-v1:0` | Sí |
 | `CHAT_SITE_KEY` | Misma clave que `data-site-key` en `index.html` | Recomendado |
 | `CHAT_ALLOWED_ORIGINS` | `https://dvgsstudio.com,https://www.dvgsstudio.com,...` | Recomendado |
-| `BOOKING_NOTIFY_EMAIL` | `contact@dvgsstudio.com` | Recomendado |
-| `BOOKING_FROM_EMAIL` | `contact@dvgsstudio.com` (verificado en SES) | Recomendado |
+| `BOOKING_NOTIFY_EMAIL` | `info@dvgsstudio.com` | Recomendado |
+| `BOOKING_FROM_EMAIL` | `info@dvgsstudio.com` (verificado en SES) | Recomendado |
 | `CHAT_LIMIT_HOUR` | `6` | Opcional |
 | `CHAT_LIMIT_DAY` | `20` | Opcional |
 | `CHAT_BEDROCK_DAILY_MAX` | `100` | Opcional |
@@ -123,8 +123,8 @@ knowledge/empresa.md  Documento que lee el modelo
 
 | Qué | Variable | Ejemplo |
 |-----|----------|---------|
-| **Avisos** (correo empresa) | `BOOKING_NOTIFY_EMAIL` | `contact@dvgsstudio.com` |
-| **Remitente** (verificado en SES) | `BOOKING_FROM_EMAIL` | `contact@dvgsstudio.com` |
+| **Avisos** (correo empresa) | `BOOKING_NOTIFY_EMAIL` | `info@dvgsstudio.com` |
+| **Remitente** (verificado en SES) | `BOOKING_FROM_EMAIL` | `info@dvgsstudio.com` |
 | **Calendario** (Apple personal) | `ICLOUD_CALENDAR_EMAIL` + `ICLOUD_APP_PASSWORD` | tu Apple ID |
 | **Nombre del calendario** | `ICLOUD_CALENDAR_NAME` | `DVG Studio` |
 
@@ -138,8 +138,8 @@ Guía correo empresa + SES: `scripts/configurar-correo-empresa.md`
 ### Variables en Vercel
 
 ```
-BOOKING_NOTIFY_EMAIL=contact@dvgsstudio.com
-BOOKING_FROM_EMAIL=contact@dvgsstudio.com
+BOOKING_NOTIFY_EMAIL=info@dvgsstudio.com
+BOOKING_FROM_EMAIL=info@dvgsstudio.com
 CHAT_ALLOWED_ORIGINS=https://dvgsstudio.com,https://www.dvgsstudio.com,https://dvgsstudio.es,https://www.dvgsstudio.es
 ICLOUD_CALENDAR_EMAIL=elniu101@gmail.com
 ICLOUD_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
