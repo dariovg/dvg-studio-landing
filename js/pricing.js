@@ -18,7 +18,7 @@
       const annualPrice = Number(el.dataset.priceAnnual);
       el.textContent = formatEuro(annual ? annualPrice : monthly);
 
-      const saveEl = el.parentElement?.querySelector(".pricing-save");
+      const saveEl = el.closest(".pricing-card")?.querySelector(".pricing-save");
       if (saveEl) {
         const saved = (monthly - annualPrice) * 12;
         saveEl.textContent = annual && saved > 0 ? `Ahorras ${formatEuro(saved)}/año` : "";

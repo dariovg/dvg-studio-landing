@@ -27,9 +27,10 @@ Web: https://www.dvgsstudio.com
 - Apps y webs con IA integrada: diseño y desarrollo de aplicaciones y páginas web con asistente IA y automatizaciones desde el primer día
 
 ## Planes y precios (2026)
-Starter: 199 €/mes mensual, 159 €/mes anual (-20%). 1 agente, chat web + 1 canal, 10.000 interacciones/mes.
-Pro: 499 €/mes mensual, 399 €/mes anual. 5 agentes, todos los canales, 100.000 interacciones/mes.
-Enterprise: 2.499 €/mes mensual, 1.999 €/mes anual. 20 agentes, integraciones a medida.
+Precios sin IVA (España). IVA aplicable según normativa vigente.
+Starter: 199 €/mes + IVA mensual, 159 €/mes + IVA anual (-20%). 1 agente, chat web + 1 canal, 10.000 interacciones/mes.
+Pro: 499 €/mes + IVA mensual, 399 €/mes + IVA anual. 5 agentes, todos los canales, 100.000 interacciones/mes.
+Enterprise: 2.499 €/mes + IVA mensual, 1.999 €/mes + IVA anual. 20 agentes, integraciones a medida.
 Interacción = 1 mensaje entrante del cliente.
 Detalles de contrato y permanencia: se acuerdan en la reunión inicial.
 
