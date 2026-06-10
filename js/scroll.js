@@ -139,7 +139,7 @@
 
   mobileMq.addEventListener("change", () => window.location.reload());
 
-  const header = document.querySelector("header");
+  const header = document.querySelector(".site-header");
   if (header) {
     window.addEventListener(
       "scroll",
