@@ -131,6 +131,20 @@ body.nav-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-
 .detail-label{font-size:.75rem;color:var(--gray);text-transform:uppercase}
 .detail-value{font-weight:700;color:var(--dark)}
 .case-badge{display:inline-block;font-size:.65rem;background:rgba(255,107,53,.15);color:var(--primary);padding:.15rem .5rem;border-radius:4px;margin-bottom:.5rem;font-weight:700;text-transform:uppercase}
+.case-flow{list-style:none;margin:0 0 1rem;padding:0;font-size:.9rem;color:var(--gray);line-height:1.55}
+.case-flow li{padding:.35rem 0;border-bottom:1px solid #f0f0f0}
+.case-flow li:last-child{border-bottom:none}
+.case-flow strong{color:var(--dark)}
+.cases-disclaimer{max-width:720px;margin:2rem auto 0;text-align:center;font-size:.85rem;color:var(--gray);line-height:1.6}
+
+/* Implantación */
+.section-process{background:linear-gradient(180deg,#f8f9fc 0%,#fff 100%)}
+.process-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-top:2rem}
+.process-card{background:#fff;border-radius:16px;padding:1.75rem;box-shadow:0 6px 24px rgba(0,0,0,.06);border:1px solid rgba(255,107,53,.08)}
+.process-step{display:inline-block;font-size:.75rem;font-weight:800;color:var(--primary);letter-spacing:.08em;margin-bottom:.75rem}
+.process-card h3{font-size:1.15rem;margin-bottom:.35rem;color:var(--dark)}
+.process-time{font-size:.8rem;font-weight:700;color:var(--accent);margin-bottom:.75rem}
+.process-card p{font-size:.92rem;color:var(--gray);line-height:1.55;margin:0}
 
 /* Compare */
 .table-scroll{
