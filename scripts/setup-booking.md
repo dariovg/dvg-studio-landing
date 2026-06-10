@@ -31,7 +31,14 @@ Flujo:
 3. Vercel:
    ```
    ICLOUD_CALENDAR_EMAIL=tu-correo-personal@icloud.com
-   ICLOUD_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+   ICLOUD_APP_PASSWORD=abcdefghijklmnop
+   ```
+   > La contraseña de app son **16 letras** (puedes pegarla con o sin guiones; el sistema los quita).
+
+4. Prueba en tu Mac:
+   ```bash
+   cd dvg-studio-landing
+   ICLOUD_CALENDAR_EMAIL=tu@icloud.com ICLOUD_APP_PASSWORD=tuapppassword node scripts/test-icloud.mjs
    ```
 
 La cita aparece en la app **Calendario** de tu Mac/iPhone (misma cuenta iCloud).
