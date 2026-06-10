@@ -13,13 +13,7 @@
     }
   ],
   "functions": {
-    "api/chat.js": {
-      "maxDuration": 15
-    },
-    "api/book.js": {
-      "maxDuration": 15
-    },
-    "api/availability.js": {
+    "api/[route].js": {
       "maxDuration": 15
     }
   }
