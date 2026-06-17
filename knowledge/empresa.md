@@ -47,8 +47,8 @@ Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
 - Contratación mínima: 3 meses.
 
 ## Proceso de implantación (con el cliente)
-1. Auditoría gratis (reunión ~1h): mapeamos procesos, canales, herramientas y tono. Sin compromiso.
-2. Propuesta e implementación (cuando asumen coste): agentes IA, canales, integraciones. Mínimo 3 meses de contrato.
+1. Auditoría gratis (reunión ~1h): mapeamos procesos, canales, herramientas y tono. Sin compromiso. Recomendamos completar la encuesta en /encuesta antes de la reunión.
+2. Propuesta e implementación (cuando asumen coste): agentes IA (1–2 semanas), integraciones con herramientas existentes (2–6 semanas), webs/apps según alcance. Mínimo 3 meses de contrato.
 3. Lanzamiento y mejora continua: métricas, ajustes, supervisión humana y soporte 24/7.
 ROI orientativo: suele verse en 4–6 semanas tras calibrar (no garantizado).
 
@@ -57,8 +57,12 @@ Precios sin IVA (España). IVA aplicable según normativa vigente. Mínimo 3 mes
 - Starter: 199 €/mes + IVA (anual 159 €/mes + IVA, -20%). 1 agente IA, chat web + 1 canal, 10.000 interacciones/mes, auditoría gratis, soporte 24/7.
 - Pro: 499 €/mes + IVA (anual 399 €/mes + IVA). Hasta 5 agentes IA, todos los canales, 100.000 interacciones/mes, integración con CRM/herramientas existentes, mejoras web con IA, auditoría gratis, soporte 24/7.
 - Enterprise: 2.499 €/mes + IVA (anual 1.999 €/mes + IVA). Hasta 10 agentes IA a medida, integración IA con CRM/ERP existente (no creamos CRM/ERP), webs y apps con IA, APIs custom, account manager + SLA, auditoría gratis, soporte 24/7.
-- Complemento webs/apps: presupuesto según proyecto (mejora web o app con IA conectada a sus herramientas).
+- Complemento webs/apps: presupuesto según alcance del proyecto (tras auditoría).
+Plazos orientativos: agentes 1–2 semanas · integraciones 2–6 semanas · webs/apps según demanda.
 Interacción = 1 mensaje entrante del cliente.
+
+## Encuesta madurez digital
+Formulario en /encuesta (10 preguntas). Al enviarlo, el equipo recibe un email con todas las respuestas para preparar la reunión. Enlace y QR en el email de guía de planes.
 
 ## Primera reunión / auditoría gratis
 - Sesión de 1 hora sin compromiso.

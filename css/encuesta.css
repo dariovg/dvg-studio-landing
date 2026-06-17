@@ -1,0 +1,216 @@
+/* Encuesta madurez digital — DVG Studio */
+:root {
+  --primary: #ff6b35;
+  --secondary: #004e89;
+  --accent: #f7931e;
+  --dark: #0a0e27;
+  --light: #f5f7fa;
+  --gray: #6c757d;
+  --success: #10b981;
+  --header-h: 64px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--light);
+  color: #1a2332;
+  line-height: 1.55;
+}
+
+.survey-header {
+  background: linear-gradient(180deg, var(--dark) 0%, #121830 100%);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+}
+
+.survey-header img {
+  max-width: 200px;
+  height: auto;
+}
+
+.survey-header p {
+  margin: 0.5rem 0 0;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.survey-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.survey-intro {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+}
+
+.survey-intro h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  color: var(--dark);
+}
+
+.survey-intro p {
+  margin: 0;
+  color: var(--gray);
+  font-size: 0.95rem;
+}
+
+.survey-block {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  border-left: 4px solid var(--primary);
+}
+
+.survey-block h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  color: var(--secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field label,
+.field legend {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.field .hint {
+  font-weight: 400;
+  color: var(--gray);
+  font-size: 0.85rem;
+  margin: -0.25rem 0 0.5rem;
+}
+
+.field input[type="text"],
+.field input[type="email"],
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #dde2ea;
+  border-radius: 10px;
+  font: inherit;
+}
+
+.field textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.check-grid,
+.radio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.check-grid label,
+.radio-list label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #eef0f4;
+}
+
+.check-grid label:hover,
+.radio-list label:hover {
+  background: #fff8f3;
+  border-color: rgba(255, 107, 53, 0.25);
+}
+
+.check-grid input,
+.radio-list input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.survey-submit {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.survey-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.survey-msg {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  display: none;
+}
+
+.survey-msg.ok {
+  display: block;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.survey-msg.err {
+  display: block;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  height: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+.survey-footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.survey-footer a {
+  color: var(--primary);
+}
+
+@media (max-width: 600px) {
+  .survey-wrap {
+    padding: 1.25rem 1rem 3rem;
+  }
+}

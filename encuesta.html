@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Encuesta de madurez digital — DVG Studio. Prepara tu reunión en 3 minutos.">
+  <title>Madurez digital — DVG Studio</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/encuesta.css">
+</head>
+<body data-site-key="dvg-studio-chat-2026">
+  <header class="survey-header">
+    <a href="/"><img src="/assets/logo-dvg-studio-footer.png" alt="DVG Studio" width="200" height="32"></a>
+    <p>hac<span style="color:#FF6B35">IA</span> lo imparable</p>
+  </header>
+
+  <main class="survey-wrap">
+    <div class="survey-intro">
+      <h1>Encuesta de madurez digital</h1>
+      <p>3–5 minutos. Tus respuestas nos llegan al instante y nos ayudan a preparar la reunión para que sea útil desde el primer minuto.</p>
+    </div>
+
+    <form id="surveyForm" novalidate>
+      <input type="text" class="hp-field" id="surveyHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <fieldset class="survey-block">
+        <h2>Tus datos</h2>
+        <div class="field">
+          <label for="name">Nombre *</label>
+          <input type="text" id="name" name="name" required maxlength="80" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" required maxlength="120" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="company">Empresa (opcional)</label>
+          <input type="text" id="company" name="company" maxlength="120" autocomplete="organization">
+        </div>
+      </fieldset>
+
+      <fieldset class="survey-block">
+        <h2>📡 Canales y atención</h2>
+        <div class="field">
+          <legend>1. ¿Por qué canales os entran la mayoría de las solicitudes? *</legend>
+          <p class="hint">Marca las que correspondan. Nos ayuda a saber dónde posicionar la primera línea automatizada.</p>
+          <div class="check-grid">
+            <label><input type="checkbox" name="q1_channels" value="whatsapp"> WhatsApp (personal o Business)</label>
+            <label><input type="checkbox" name="q1_channels" value="email"> Correo electrónico de la empresa</label>
+            <label><input type="checkbox" name="q1_channels" value="web_form"> Formulario de contacto de la web</label>
+            <label><input type="checkbox" name="q1_channels" value="phone"> Llamadas telefónicas o atención presencial</label>
+            <label><input type="checkbox" name="q1_channels" value="social_dm"> Mensajes directos en redes (Instagram, LinkedIn…)</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="q2">2. Si pudieras liberar a tu equipo de una tarea repetitiva para centrarse en lo que factura, ¿cuál sería?</label>
+          <textarea id="q2" name="q2_repetitive_task" maxlength="500"></textarea>
+        </div>
+        <div class="field">
+          <legend>3. ¿Cuánto tardáis en enviar un presupuesto formal a un cliente interesado? *</legend>
+          <div class="radio-list">
+            <label><input type="radio" name="q3_quote_time" value="under_1h" required> Menos de 1 hora</label>
+            <label><input type="radio" name="q3_quote_time" value="same_day"> Unas pocas horas el mismo día</label>
+            <label><input type="radio" name="q3_quote_time" value="24_48h"> Entre 24 y 48 horas</label>
+            <label><input type="radio" name="q3_quote_time" value="over_48h"> Más de 48 horas</label>
+          </div>
+        </div>
+        <div class="field">
+          <legend>4. ¿Cómo gestionáis la agenda de citas o reuniones? *</legend>
+          <div class="radio-list">
+            <label><input type="radio" name="q4_calendar" value="paper" required> Métodos físicos (agenda, notas…)</label>
+            <label><input type="radio" name="q4_calendar" value="excel"> Excel o Google Sheets</label>
+            <label><input type="radio" name="q4_calendar" value="cloud_calendar"> Calendarios en la nube (Google, Outlook…)</label>
+            <label><input type="radio" name="q4_calendar" value="sector_software"> Software del sector con calendario</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="survey-block">
+        <h2>⚙️ Infraestructura</h2>
+        <div class="field">
+          <legend>5. ¿Usáis IA en el día a día o es terreno por explorar? *</legend>
+          <div class="radio-list">
+            <label><input type="radio" name="q5_ai_maturity" value="none" required> Terreno virgen: no implementamos IA</label>
+            <label><input type="radio" name="q5_ai_maturity" value="basic_chatgpt"> Uso básico: ChatGPT puntual para textos</label>
+            <label><input type="radio" name="q5_ai_maturity" value="advanced"> Uso avanzado: procesos o software con IA</label>
+          </div>
+        </div>
+        <div class="field">
+          <legend>6. ¿Cuántas horas al día se pierden en tareas repetitivas (datos, mensajes, papeleo)? *</legend>
+          <div class="radio-list">
+            <label><input type="radio" name="q6_lost_hours" value="under_2h" required> Menos de 2 horas</label>
+            <label><input type="radio" name="q6_lost_hours" value="2_5h"> Entre 2 y 5 horas</label>
+            <label><input type="radio" name="q6_lost_hours" value="over_5h"> Más de 5 horas</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="q7">7. ¿Qué herramientas usáis para el día a día?</label>
+          <p class="hint">Ej: Holded, Notion, Drive, Trello, vuestro CRM… Si usáis Excel para todo, indícalo.</p>
+          <textarea id="q7" name="q7_tools" maxlength="500"></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset class="survey-block">
+        <h2>💼 Delegación</h2>
+        <div class="field">
+          <label for="q8">8. Si tuvierais un asistente digital 24/7, ¿qué responsabilidad le daríais primero?</label>
+          <textarea id="q8" name="q8_first_delegate" maxlength="500"></textarea>
+        </div>
+        <div class="field">
+          <legend>9. ¿Dónde generaría más impacto en 3 meses? *</legend>
+          <div class="radio-list">
+            <label><input type="radio" name="q9_priority_area" value="capture" required> Atención y captación (filtrar interesados y agendar)</label>
+            <label><input type="radio" name="q9_priority_area" value="operations"> Operaciones y finanzas (presupuestos, administración)</label>
+            <label><input type="radio" name="q9_priority_area" value="data_sync"> Sincronización de datos (facturas, bases de datos)</label>
+          </div>
+        </div>
+        <div class="field">
+          <legend>10. ¿Qué inversión mensual consideráis viable? *</legend>
+          <div class="radio-list">
+            <label><input type="radio" name="q10_investment" value="under_300" required> Menos de 300 €/mes — automatizar una tarea concreta</label>
+            <label><input type="radio" name="q10_investment" value="300_800"> Entre 300 € y 800 €/mes — delegar un área completa</label>
+            <label><input type="radio" name="q10_investment" value="over_800"> Más de 800 €/mes — ecosistema multi-agente</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <button type="submit" class="survey-submit" id="surveySubmit">Enviar encuesta</button>
+      <div id="surveyMsg" class="survey-msg" role="status" aria-live="polite"></div>
+    </form>
+
+    <p class="survey-footer">
+      DVG Studio · <a href="mailto:info@dvgsstudio.com">info@dvgsstudio.com</a> · <a href="/">Volver a la web</a>
+    </p>
+  </main>
+
+  <script src="/js/encuesta.js"></script>
+</body>
+</html>
