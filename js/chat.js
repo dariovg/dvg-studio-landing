@@ -89,16 +89,39 @@
   }
 
   function appendTyping() {
+    removeTyping();
     const div = document.createElement("div");
     div.className = "chat-msg assistant typing";
     div.id = "chatTyping";
-    div.textContent = "Un momento…";
+    div.setAttribute("aria-live", "polite");
+    div.innerHTML =
+      '<span class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></span>';
     messages.appendChild(div);
     messages.scrollTop = messages.scrollHeight;
   }
 
   function removeTyping() {
     document.getElementById("chatTyping")?.remove();
+  }
+
+  function wait(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async function showTypingFor(minMs = 550) {
+    const started = Date.now();
+    appendTyping();
+    return async function endTyping() {
+      const elapsed = Date.now() - started;
+      if (elapsed < minMs) await wait(minMs - elapsed);
+      removeTyping();
+    };
+  }
+
+  function ensureReply(text) {
+    const t = String(text || "").trim();
+    if (t && t !== "Sin respuesta.") return t;
+    return `Sigo aquí contigo. Pregúntame por precios, servicios o di «podemos quedar» para una reunión. También: ${CONTACT}`;
   }
 
   function advanceBookStep() {
@@ -198,12 +221,12 @@
   async function queryAvailability(text) {
     busy = true;
     sendBtn.disabled = true;
-    appendTyping();
+    const endTyping = await showTypingFor(400);
     try {
       const date = extractDateFromText(text);
       const time = extractTimeFromText(text) || "";
       if (!date) {
-        removeTyping();
+        await endTyping();
         appendMsg(
           "¿Para qué día quieres que mire? Puedes decir mañana, el martes, 15 de junio…",
           "assistant"
@@ -211,14 +234,14 @@
         return;
       }
       const data = await fetchAvailability(date, time, text);
-      removeTyping();
+      await endTyping();
       appendMsg(data.message || data.error || "Sin respuesta.", "assistant");
       if (!time && data.slots?.length) {
         appendMsg("Si alguno te va bien, dime «reservar a las 10» o similar.", "assistant");
       }
     } catch {
-      removeTyping();
-      appendMsg("No pude consultar el calendario ahora. Prueba en un rato.", "assistant");
+      await endTyping();
+      appendMsg("No pude consultar el calendario ahora. Prueba en un rato o escríbenos.", "assistant");
     } finally {
       busy = false;
       sendBtn.disabled = false;
@@ -245,10 +268,10 @@
 
     busy = true;
     sendBtn.disabled = true;
-    appendTyping();
+    const endTyping = await showTypingFor(450);
     try {
       const check = await checkTimeSlot(bookData.date, bookData.time);
-      removeTyping();
+      await endTyping();
       if (!check.ok) {
         timeValidated = false;
         delete bookData.time;
@@ -271,7 +294,7 @@
         promptCurrentStep();
       }
     } catch {
-      removeTyping();
+      await endTyping();
       appendMsg("No pude comprobar el calendario. ¿Repetimos la hora?", "assistant");
       bookStep = BOOK_STEPS.indexOf("time");
       delete bookData.time;
@@ -321,11 +344,11 @@
   async function submitBooking() {
     busy = true;
     sendBtn.disabled = true;
-    appendTyping();
+    const endTyping = await showTypingFor(500);
     let keepBooking = false;
     try {
       const { res, data } = await apiPost("/api/book", bookData);
-      removeTyping();
+      await endTyping();
       if (data.ok) {
         appendMsg(data.message, "assistant");
       } else if (res.status === 409 && data.alternatives?.length) {
@@ -340,8 +363,8 @@
         appendMsg(data.error || `Ups, no pude reservar. Escríbenos a ${CONTACT}`, "assistant");
       }
     } catch {
-      removeTyping();
-      appendMsg(`Problema de conexión. Escríbenos a ${CONTACT}`, "assistant");
+      await endTyping();
+      appendMsg(`Problema de conexión. Escríbenos a ${CONTACT} — seguimos contigo.`, "assistant");
     } finally {
       if (!keepBooking) {
         bookMode = false;
@@ -461,8 +484,14 @@
       return;
     }
     const now = Date.now();
-    if (now - lastSend < COOLDOWN_MS) return;
-    if (now - pageLoad < 3000) return;
+    if (now - lastSend < COOLDOWN_MS) {
+      appendMsg("Dame un segundo — ya te respondo.", "assistant");
+      return;
+    }
+    if (now - pageLoad < 3000) {
+      appendMsg("Un momento, ya estoy listo para ayudarte.", "assistant");
+      return;
+    }
 
     lastSend = now;
     msgCount += 1;
@@ -471,7 +500,7 @@
     appendMsg(text.trim(), "user");
     history.push({ role: "user", content: text.trim() });
     input.value = "";
-    appendTyping();
+    const endTyping = await showTypingFor(600);
 
     try {
       const res = await fetch("/api/chat", {
@@ -486,19 +515,23 @@
           _boot: pageLoad,
         }),
       });
-      const data = await res.json();
-      removeTyping();
-      const reply = data.reply || data.error || "Sin respuesta.";
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
+      await endTyping();
+      const reply = ensureReply(data.reply || data.error);
       appendMsg(reply, "assistant");
       history.push({ role: "assistant", content: reply });
       if (history.length > 12) history = history.slice(-12);
-
-      if (wantsBooking(reply) || wantsBooking(text)) {
-        /* no auto-start from assistant reply */
-      }
     } catch {
-      removeTyping();
-      appendMsg(`No pude conectar. ${CONTACT}`, "assistant");
+      await endTyping();
+      appendMsg(
+        `Tuve un fallo de conexión, pero sigo aquí. Prueba otra vez o escríbenos a ${CONTACT}.`,
+        "assistant"
+      );
     } finally {
       busy = false;
       sendBtn.disabled = false;
