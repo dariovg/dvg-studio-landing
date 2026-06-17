@@ -176,6 +176,7 @@ body.nav-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-
 .section-title{text-align:center;font-size:clamp(1.8rem,4vw,2.5rem);font-weight:900;margin-bottom:.75rem;color:var(--dark)}
 .section-title span{color:var(--primary)}
 .section-lead{text-align:center;color:var(--gray);max-width:680px;margin:0 auto 3rem;font-size:1.05rem}
+.pricing-intro{text-align:center;color:var(--dark);max-width:720px;margin:-1.5rem auto 2rem;font-size:.95rem;line-height:1.6;opacity:.9}
 
 /* Insight cards */
 .insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem}

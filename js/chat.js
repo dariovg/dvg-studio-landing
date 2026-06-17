@@ -305,7 +305,7 @@
     const endTyping = await showTypingFor(500);
     await endTyping();
     appendMsg(
-      "Trabajamos con planes flexibles desde 199 €/mes + IVA. Te envío la guía completa por email — son 30 segundos.",
+      "Trabajamos con agentes de IA desde 199 €/mes + IVA (mín. 3 meses). La auditoría es gratis. Te envío la guía completa por email — son 30 segundos.",
       "assistant"
     );
     appendLeadCard("pricing");

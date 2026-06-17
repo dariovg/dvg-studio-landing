@@ -18,7 +18,7 @@ Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
 - Agente IA que entiende lenguaje natural (no es un chatbot de botones).
 - Responde con el tono e información del negocio del cliente.
 - Atiende 24/7 en WhatsApp, Telegram, email, web e Instagram.
-- Puede cotizar, agendar citas, consultar catálogo y pasar leads al CRM.
+- Puede cotizar, agendar citas, consultar catálogo e integrarse con el CRM o herramientas que ya usa el cliente.
 - Se entrena con FAQs, documentos y reglas del negocio.
 - Supervisión humana y mejoras semanales.
 
@@ -35,21 +35,30 @@ Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
 4. Catálogo conectado (CSV, Shopify, WooCommerce).
 5. Aprende el negocio con documentos y conversaciones.
 6. Chat IA integrado en la web del cliente.
-7. Apps y webs con IA desde el primer día.
+7. Webs y apps con IA (complemento): mejora de web existente o creación nueva con chat y automatizaciones.
+
+## Qué vendemos (claro)
+- Producto principal: agentes de IA (empleados digitales).
+- Complemento: webs y apps con IA integrada.
+- No creamos CRM ni ERP desde cero; integramos IA con las herramientas que el cliente ya tiene.
+- Siempre empezamos con auditoría gratuita para entender el negocio y detectar necesidades.
+- La implementación con coste empieza cuando el cliente acepta el proyecto.
+- Soporte 24/7 en todos los planes.
+- Contratación mínima: 3 meses.
 
 ## Proceso de implantación (con el cliente)
-1. Auditoría gratis (~30 min): mapeamos procesos, canales y tono.
-2. Configuración (1–2 semanas): entrenamiento, FAQs, reglas, conexión de canales.
-3. Lanzamiento y mejora continua: métricas, ajustes y supervisión humana.
+1. Auditoría gratis (reunión ~1h): mapeamos procesos, canales, herramientas y tono. Sin compromiso.
+2. Propuesta e implementación (cuando asumen coste): agentes IA, canales, integraciones. Mínimo 3 meses de contrato.
+3. Lanzamiento y mejora continua: métricas, ajustes, supervisión humana y soporte 24/7.
 ROI orientativo: suele verse en 4–6 semanas tras calibrar (no garantizado).
 
 ## Planes y precios (2026)
-Precios sin IVA (España). IVA aplicable según normativa vigente.
-- Starter: 199 €/mes + IVA (anual 159 €/mes + IVA, -20%). 1 agente, chat web + 1 canal, 10.000 interacciones/mes.
-- Pro: 499 €/mes + IVA (anual 399 €/mes + IVA). 5 agentes, todos los canales, 100.000 interacciones/mes.
-- Enterprise: 2.499 €/mes + IVA (anual 1.999 €/mes + IVA). 20 agentes, integraciones CRM/ERP a medida.
+Precios sin IVA (España). IVA aplicable según normativa vigente. Mínimo 3 meses en todos los planes.
+- Starter: 199 €/mes + IVA (anual 159 €/mes + IVA, -20%). 1 agente IA, chat web + 1 canal, 10.000 interacciones/mes, auditoría gratis, soporte 24/7.
+- Pro: 499 €/mes + IVA (anual 399 €/mes + IVA). Hasta 5 agentes IA, todos los canales, 100.000 interacciones/mes, integración con CRM/herramientas existentes, mejoras web con IA, auditoría gratis, soporte 24/7.
+- Enterprise: 2.499 €/mes + IVA (anual 1.999 €/mes + IVA). Hasta 10 agentes IA a medida, integración IA con CRM/ERP existente (no creamos CRM/ERP), webs y apps con IA, APIs custom, account manager + SLA, auditoría gratis, soporte 24/7.
+- Complemento webs/apps: presupuesto según proyecto (mejora web o app con IA conectada a sus herramientas).
 Interacción = 1 mensaje entrante del cliente.
-Condiciones de contrato y permanencia: se acuerdan en la reunión inicial.
 
 ## Primera reunión / auditoría gratis
 - Sesión de 1 hora sin compromiso.
@@ -88,11 +97,11 @@ Condiciones de contrato y permanencia: se acuerdan en la reunión inicial.
 ## Casos de uso (orientativos, no clientes reales)
 - Leads 24/7 por WhatsApp fuera de horario.
 - Soporte multicanal con consulta de catálogo.
-- Citas y seguimiento CRM en automático.
+- Citas y leads en automático, integrados con sus herramientas.
 Cifras validadas en auditoría gratis con cada cliente.
 
-## Apps y webs con IA
-Diseño y desarrollo de landing, web corporativa y apps con chat IGNITE, automatizaciones y asistente desde el primer día. Proyecto llave en mano.
+## Apps y webs con IA (complemento)
+Mejora de web existente o desarrollo de landing, web corporativa y apps con chat IGNITE y automatizaciones. Conectado al CRM, agenda y herramientas que el cliente ya usa. No sustituye ni crea CRM/ERP desde cero.
 
 ## Sectores habituales
 E-commerce, B2B servicios, salud/belleza, asesorías, hostelería, inmobiliarias, academias.
@@ -135,7 +144,16 @@ P: ¿Puedo probar antes de contratar?
 R: Sí, primera reunión gratuita sin compromiso.
 
 P: ¿Cuánto tardáis en implantar?
-R: Configuración habitual 1–2 semanas según alcance. Lo concretamos en la auditoría.
+R: Tras la auditoría gratis, la implementación suele llevar 1–2 semanas según alcance. Contrato mínimo 3 meses.
+
+P: ¿Hay permanencia mínima?
+R: Sí, mínimo 3 meses de contratación en todos los planes.
+
+P: ¿La auditoría es gratis?
+R: Sí, siempre. Es la primera reunión de 1h sin compromiso para entender el negocio. La implementación empieza cuando asumís el coste.
+
+P: ¿Creáis un CRM o ERP para mi empresa?
+R: No. Integramos IA con el CRM, ERP o herramientas que ya usáis. Como complemento podemos mejorar tu web o crear apps con IA.
 
 P: ¿Temas legales, privacidad o garantías?
 R: Contacta a info@dvgsstudio.com. No puedo dar detalles aquí.
