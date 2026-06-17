@@ -456,7 +456,9 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 1rem)}
 .pricing-card.featured{border:2px solid var(--primary);transform:scale(1.03);box-shadow:0 12px 40px rgba(255,107,53,.15)}
 .pricing-amount{margin:.5rem 0 .15rem}
 .pricing-price-row{display:flex;align-items:baseline;justify-content:center;gap:.4rem;flex-wrap:wrap}
-.pricing-price{font-size:2.5rem;font-weight:900;color:var(--dark);line-height:1}
+.pricing-price{font-size:2.5rem;font-weight:900;color:var(--dark);line-height:1;display:flex;align-items:baseline;justify-content:center;gap:.35rem;flex-wrap:wrap}
+.pricing-was{font-size:1.15rem;font-weight:700;color:#aab0bc;text-decoration:line-through}
+.pricing-now{font-size:2.5rem;font-weight:900;color:var(--dark)}
 .pricing-vat{font-size:.9rem;font-weight:700;color:var(--gray);align-self:flex-end;margin-bottom:.35rem}
 .pricing-save{font-size:.8rem;color:var(--success);font-weight:700;min-height:1.2rem;margin-top:.25rem}
 .pricing-note{font-size:.78rem;color:var(--gray);margin-top:.5rem}
