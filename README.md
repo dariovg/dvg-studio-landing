@@ -55,12 +55,23 @@ En el proyecto → **Settings → Environment Variables**:
 | `CHAT_SITE_KEY` | Misma clave que `data-site-key` en `index.html` | Recomendado |
 | `CHAT_ALLOWED_ORIGINS` | `https://dvgsstudio.com,https://www.dvgsstudio.com,...` | Recomendado |
 | `BOOKING_NOTIFY_EMAIL` | `info@dvgsstudio.com` | Recomendado |
-| `BOOKING_FROM_EMAIL` | `info@dvgsstudio.com` (verificado en SES) | Recomendado |
+| `BOOKING_FROM_EMAIL` | `info@dvgsstudio.com` (verificado en SES) | Citas + leads |
+| `BOOKING_MEET_URL` | `https://meet.google.com/xxx-xxxx-xxx` | Citas (Meet) |
+| `ICLOUD_CALENDAR_EMAIL` | Tu Apple ID | Calendario |
+| `ICLOUD_APP_PASSWORD` | Contraseña de app Apple (16 letras) | Calendario |
+| `ICLOUD_CALENDAR_NAME` | `DVG Studio` | Calendario destino |
+| `DIAGNOSTIC_KEY` | Clave aleatoria | Probar `/api/status?key=...` |
+| `BOOKING_TIMEZONE` | `Europe/Madrid` | Opcional |
 | `CHAT_LIMIT_HOUR` | `6` | Opcional |
 | `CHAT_LIMIT_DAY` | `20` | Opcional |
 | `CHAT_BEDROCK_DAILY_MAX` | `100` | Opcional |
 
 Tras guardar → **Redeploy**.
+
+Guía paso a paso: **`scripts/vercel-configurar-todo.md`**  
+Plantilla de variables: **`.env.example`**
+
+Comprobar en producción: `https://www.dvgsstudio.com/api/status?key=TU_DIAGNOSTIC_KEY`
 
 ### 5. Probar
 

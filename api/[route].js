@@ -2,8 +2,9 @@ import chat from "../lib/handlers/chat.js";
 import book from "../lib/handlers/book.js";
 import availability from "../lib/handlers/availability.js";
 import lead from "../lib/handlers/lead.js";
+import status from "../lib/handlers/status.js";
 
-const routes = { chat, book, availability, lead };
+const routes = { chat, book, availability, lead, status };
 
 export default async function handler(req, res) {
   const route = String(req.query?.route || "").toLowerCase();
