@@ -482,11 +482,6 @@
     return { res, data: await res.json() };
   }
 
-  async function fetchAvailability(date, time, query) {
-    const { data } = await apiPost("/api/availability", { date, time, query });
-    return data;
-  }
-
   async function queryAvailability(text) {
     busy = true;
     sendBtn.disabled = true;
@@ -520,9 +515,27 @@
 
   async function fetchAvailability(date, time, query) {
     const slot = time ? normalizeTime(time) || time : "";
-    const { res, data } = await apiPost("/api/availability", { date, time: slot, query });
-    if (!res.ok) return { configured: false, error: data.error || "No disponible" };
-    return data;
+    try {
+      const { res, data } = await apiPost("/api/availability", { date, time: slot, query });
+      if (!res.ok) {
+        return {
+          configured: false,
+          degraded: true,
+          available: true,
+          error: data?.error || "No disponible",
+        };
+      }
+      return data;
+    } catch {
+      const slots = BUSINESS_SLOTS.filter((t) => t >= "09:00");
+      return {
+        configured: false,
+        degraded: true,
+        available: !!slot,
+        slots,
+        error: "No pude consultar el calendario",
+      };
+    }
   }
 
   function filterAlts(altStr) {
@@ -545,9 +558,20 @@
       return { ok: false, message: "No entendí la hora — prueba con «11:00» o «a las 11».", alts: "" };
     }
     const data = await fetchAvailability(date, slot);
-    if (data.error && data.configured === false) return { ok: true };
-    if (data.configured === false) return { ok: true };
+    if (data.degraded || data.configured === false) {
+      return { ok: true, degraded: true };
+    }
     if (data.available === true) return { ok: true };
+    if (data.reason === "pasado") {
+      return {
+        ok: false,
+        reason: "pasado",
+        message:
+          data.message ||
+          `Esa hora (${slot}) ya pasó. Prueba más tarde hoy, mañana u otra hora.`,
+        alts: filterAlts(data.alternatives?.join(", ") || data.slots?.slice(0, 5).join(", ") || ""),
+      };
+    }
     const alts = filterAlts(
       data.alternatives?.length
         ? data.alternatives.join(", ")
@@ -613,8 +637,11 @@
       }
       timeValidated = true;
       lastSuggestedAlts = "";
+      const degradedNote = check.degraded
+        ? " (no pude verificar iCloud — lo confirmamos al reservar)"
+        : "";
       appendMsg(
-        `Perfecto — ${bookData.date} a las ${bookData.time} (1h, hora España).`,
+        `Perfecto — ${bookData.date} a las ${bookData.time} (1h, hora España)${degradedNote}.`,
         "assistant"
       );
       advanceBookStep();
@@ -627,10 +654,26 @@
       }
     } catch {
       await endTyping();
-      appendMsg("No pude comprobar el calendario. ¿Repetimos la hora?", "assistant");
-      bookStep = BOOK_STEPS.indexOf("time");
-      delete bookData.time;
-      timeValidated = false;
+      if (bookData.date && bookData.time && isBusinessTime(bookData.time)) {
+        timeValidated = true;
+        appendMsg(
+          "No pude comprobar el calendario online ahora — seguimos con tu hora y lo validamos al confirmar la reserva.",
+          "assistant"
+        );
+        advanceBookStep();
+        if (BOOK_STEPS[bookStep] === "notes") {
+          appendMsg(NLP().humanPrompt?.("notes", bookData) || "", "assistant");
+        } else if (BOOK_STEPS[bookStep] === "confirm") {
+          showSummary();
+        } else {
+          promptCurrentStep();
+        }
+      } else {
+        appendMsg("No pude comprobar el calendario. ¿Repetimos la hora?", "assistant");
+        bookStep = BOOK_STEPS.indexOf("time");
+        delete bookData.time;
+        timeValidated = false;
+      }
     } finally {
       busy = false;
       sendBtn.disabled = false;

@@ -76,10 +76,24 @@
     return addDays(monday, isoWd - 1);
   }
 
+  function getSpainHour() {
+    try {
+      var parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Madrid",
+        hour: "numeric",
+        hour12: false,
+      }).formatToParts(new Date());
+      return Number(parts.find(function (p) { return p.type === "hour"; })?.value || 12);
+    } catch (e) {
+      return new Date().getHours();
+    }
+  }
+
   function nextWeekday(ref, isoWd, forceNext) {
     var current = isoWeekday(ref);
     var delta = (isoWd - current + 7) % 7;
     if (forceNext && delta === 0) delta = 7;
+    if (!forceNext && delta === 0 && getSpainHour() >= 17) delta = 7;
     return addDays(ref, delta);
   }
 
