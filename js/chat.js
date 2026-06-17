@@ -223,7 +223,16 @@
 
       if (!res.ok || data.error) {
         appendMsg(data.error || `No pude enviarlo ahora. Escríbenos a ${CONTACT}`, "assistant");
-        btn.disabled = false;
+        if (data.received) {
+          card.querySelector(".chat-card-fields")?.remove();
+          btn.remove();
+          const ok = document.createElement("p");
+          ok.className = "chat-card-note";
+          ok.textContent = "Datos recibidos. Te contactamos en breve.";
+          card.appendChild(ok);
+        } else {
+          btn.disabled = false;
+        }
         return;
       }
 
@@ -315,14 +324,50 @@
     }
   }
 
+  function mergeExtractedFields(extracted) {
+    for (let i = 0; i < BOOK_STEPS.length; i++) {
+      const key = BOOK_STEPS[i];
+      if (key === "confirm" || key === "notes") continue;
+      if (!bookData[key] && extracted[key]) {
+        bookData[key] = extracted[key];
+      }
+    }
+  }
+
+  function normalizeBookingForSubmit() {
+    const payload = { ...bookData };
+    const d = parseDateInput(payload.date) || payload.date;
+    const tm = parseTimeInput(payload.time) || payload.time;
+    if (d) payload.date = String(d).replace(/-/g, "/");
+    if (tm) payload.time = tm;
+    const ph = NLP().extractPhone?.(payload.phone || "");
+    if (ph) payload.phone = ph;
+    if (payload.notes == null) payload.notes = "";
+    return payload;
+  }
+
+  function bookingReadyForSummary() {
+    return !!(bookData.name && bookData.email && bookData.date && bookData.time);
+  }
+
   function showSummary() {
+    if (!bookingReadyForSummary()) {
+      bookStep = !bookData.date
+        ? BOOK_STEPS.indexOf("date")
+        : !bookData.time
+          ? BOOK_STEPS.indexOf("time")
+          : BOOK_STEPS.indexOf("name");
+      appendMsg("Me falta un dato para confirmar la cita.", "assistant");
+      promptCurrentStep();
+      return;
+    }
     bookStep = BOOK_STEPS.indexOf("confirm");
     const n = NLP().firstName?.(bookData.name) || bookData.name;
     const lines = [
       n ? `Resumen, ${n}:` : "Resumen:",
       `• ${bookData.name}`,
       `• ${bookData.email}`,
-      `• ${bookData.phone}`,
+      `• ${bookData.phone || "—"}`,
       `• ${bookData.date} a las ${bookData.time} (1h, España)`,
       bookData.notes ? `• Notas: ${bookData.notes}` : "",
       "",
@@ -552,22 +597,25 @@
   }
 
   function applyBulkFields(extracted, fromIndex) {
+    mergeExtractedFields(extracted);
     const willValidateSlot = extracted.date && extracted.time;
     const acked = [];
     for (let i = fromIndex; i < BOOK_STEPS.length; i++) {
       const key = BOOK_STEPS[i];
       if (key === "confirm" || key === "notes") continue;
-      if (bookData[key] || !extracted[key]) continue;
-      bookData[key] = extracted[key];
+      if (!extracted[key]) continue;
       if (willValidateSlot && (key === "date" || key === "time")) continue;
-      if (key !== "date") {
+      if (key !== "date" && bookData[key] === extracted[key]) {
         acked.push(NLP().humanAck?.(key, extracted[key], bookData));
       }
     }
     const unique = [...new Set(acked.filter(Boolean))];
     if (unique.length) appendMsg(unique.slice(0, 2).join(" "), "assistant");
-    if (extracted.date && !willValidateSlot && !unique.some((a) => a.includes(extracted.date))) {
-      appendMsg(NLP().humanAck?.("date", extracted.date, bookData) || "", "assistant");
+    if (extracted.date && !willValidateSlot && bookData.date === extracted.date) {
+      const ack = NLP().humanAck?.("date", extracted.date, bookData);
+      if (ack && !unique.some((a) => a.includes(extracted.date))) {
+        appendMsg(ack, "assistant");
+      }
     }
   }
 
@@ -577,7 +625,7 @@
     const endTyping = await showTypingFor(500);
     let keepBooking = false;
     try {
-      const { res, data } = await apiPost("/api/book", bookData);
+      const { res, data } = await apiPost("/api/book", normalizeBookingForSubmit());
       await endTyping();
       if (data.ok) {
         appendMsg(data.message, "assistant");
@@ -589,6 +637,18 @@
         timeValidated = false;
         keepBooking = true;
         appendMsg(NLP().humanPrompt?.("time", bookData) || "", "assistant");
+      } else if (res.status === 400) {
+        appendMsg(
+          data.error ||
+            "Faltan datos o el formato no es válido. Revisemos fecha y hora.",
+          "assistant"
+        );
+        keepBooking = true;
+        timeValidated = false;
+        if (!bookData.date) bookStep = BOOK_STEPS.indexOf("date");
+        else if (!bookData.time) bookStep = BOOK_STEPS.indexOf("time");
+        else bookStep = BOOK_STEPS.indexOf("confirm");
+        promptCurrentStep();
       } else {
         appendMsg(data.error || `Ups, no pude reservar. Escríbenos a ${CONTACT}`, "assistant");
       }
@@ -613,6 +673,15 @@
     const t = text.trim();
     if (NLP().wantsCancel?.(t)) {
       cancelBooking();
+      return;
+    }
+
+    const extracted = extractAll(t);
+    mergeExtractedFields(extracted);
+
+    if (extracted.date && extracted.time) {
+      timeValidated = false;
+      await validateTimeAndContinue();
       return;
     }
 
@@ -667,6 +736,11 @@
 
     if (step === "confirm") {
       if (NLP().isAffirmative?.(t)) {
+        if (!bookingReadyForSummary()) {
+          appendMsg("Falta la fecha u hora de la reunión. Vamos a completarlo.", "assistant");
+          promptCurrentStep();
+          return;
+        }
         await submitBooking();
         return;
       }
@@ -705,13 +779,14 @@
       return;
     }
 
-    const extracted = extractAll(t);
-    applyBulkFields(extracted, bookStep);
+    const extractedStep = extractAll(t);
+    mergeExtractedFields(extractedStep);
+    applyBulkFields(extractedStep, bookStep);
 
     const cur = BOOK_STEPS[bookStep];
     const willValidateSlot = bookData.date && bookData.time && !timeValidated;
     if (cur && cur !== "notes" && cur !== "confirm" && !bookData[cur]) {
-      const val = resolveFieldValue(cur, t, extracted);
+      const val = resolveFieldValue(cur, t, extractedStep);
       if (val) {
         bookData[cur] = val;
         if (!(willValidateSlot && (cur === "date" || cur === "time"))) {

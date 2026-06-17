@@ -129,7 +129,7 @@
     if (wdDay) return wdDay;
 
     if (/\bpasado\s+manana\b/.test(t)) return formatDateParts(addDays(ref, 2));
-    if (/\bmanana\b/.test(t) && !/\bmanana\s+(temprano|a las)/.test(t)) {
+    if (/\bmanana\b/.test(t) && !/\bmanana\s+temprano\b/.test(t) && !/\bpor la manana\b/.test(t)) {
       return formatDateParts(addDays(ref, 1));
     }
     if (/\bhoy\b/.test(t)) return formatDateParts(ref);

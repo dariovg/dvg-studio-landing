@@ -169,8 +169,12 @@
   }
 
   function detectCorrection(text) {
+    var date = parseDateExtended(text);
+    var time = parseTimeExtended(text);
+    if (date && time) return null;
+    if (date) return "date";
+    if (time || wantsTimeChange(text)) return "time";
     var t = normalize(text);
-    if (wantsTimeChange(text) || parseTimeExtended(text)) return "time";
     if (/\b(cambiar|corregir|modificar)\s+(el\s+)?nombre\b|\bmi nombre es\b/.test(t)) return "name";
     if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(correo|email|mail)\b|\bmi (correo|email|mail)\b/.test(t)) return "email";
     if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(telefono|teléfono|movil|móvil)\b/.test(t)) return "phone";
