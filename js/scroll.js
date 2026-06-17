@@ -79,13 +79,9 @@
   const buildDots = () => {
     if (!dotsRoot) return;
     dotsRoot.innerHTML = "";
-    if (mobileMq.matches) {
-      dotsRoot.setAttribute("aria-orientation", "vertical");
-      dotsRoot.setAttribute("aria-label", "Pasos del proceso — baja para avanzar");
-    } else {
-      dotsRoot.removeAttribute("aria-orientation");
-      dotsRoot.setAttribute("aria-label", "Pasos del proceso");
-    }
+    if (!mobileMq.matches) return;
+    dotsRoot.setAttribute("aria-orientation", "vertical");
+    dotsRoot.setAttribute("aria-label", "Pasos del proceso — baja para avanzar");
     steps.forEach((step, i) => {
       const dot = document.createElement("button");
       dot.type = "button";
