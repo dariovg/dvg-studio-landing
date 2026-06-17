@@ -668,17 +668,28 @@ footer{background:var(--dark);color:#888;padding:2rem;font-size:.9rem}
   .site-nav a{font-size:1.15rem;padding:.35rem 0}
   .site-nav .nav-cta{margin-top:.5rem;width:100%;max-width:280px}
   .hero{margin-top:var(--header-h);min-height:auto;padding:3.5rem 1.25rem 3rem}
-  .hero-title{font-size:clamp(1.85rem,7vw,2.5rem)}
+  .hero-content{width:min(100%,420px);margin-left:auto;margin-right:auto;padding:0 .15rem}
+  .hero-title{font-size:clamp(1.85rem,7vw,2.5rem);text-wrap:balance}
+  .hero-title .hero-highlight{white-space:nowrap}
   .hero-float{display:none}
   .hero-mesh{filter:blur(35px);opacity:.75}
   .trust-track{animation-duration:35s}
   .hero .subtitle{font-size:1rem;padding:0 .25rem}
-  .hero-audio{max-width:360px;padding:0 .25rem}
-  .hero-buttons{flex-direction:column;align-items:stretch;max-width:360px;margin-left:auto;margin-right:auto}
+  .hero-audio{max-width:100%;width:100%;padding:0;margin-left:auto;margin-right:auto}
+  .hero-buttons{flex-direction:column;align-items:stretch;max-width:100%;width:100%;margin-left:auto;margin-right:auto}
   .hero-buttons .cta-button,.hero-buttons .secondary-button{width:100%}
-  .stats{grid-template-columns:repeat(2,1fr);gap:1rem;padding:1.25rem}
+  .audio-intro-btn{width:100%}
+  .stats{grid-template-columns:repeat(2,1fr);gap:1rem;padding:1.25rem;width:100%;max-width:100%;margin:0 auto}
+  .stat{text-align:center}
+  .stat-label{line-height:1.35;margin-left:auto;margin-right:auto}
   .stat-number{font-size:1.6rem}
   .section{margin:3.5rem auto;padding:0 1.25rem}
+  .section-title{text-wrap:balance;padding:0 .15rem}
+  .section-lead{padding:0 .15rem}
+  .pricing-intro{padding:0 .15rem}
+  .pricing-container{width:100%}
+  .pricing-card{padding:1.5rem 1.25rem}
+  .pricing-toggle{gap:.65rem 1rem;padding:0 .25rem}
   .section-parallax{padding-left:1.25rem;padding-right:1.25rem;margin-top:2rem;margin-bottom:2rem}
   .hero-orb-4{display:none}
   .hero-grid{opacity:.2}
@@ -772,14 +783,22 @@ footer{background:var(--dark);color:#888;padding:2rem;font-size:.9rem}
   .product-banner-icon{margin:0 auto}
   .product-banner-features{grid-template-columns:1fr;text-align:left}
   .product-banner-action{width:100%;max-width:320px;margin:0 auto}
+  .product-banner-action .cta-button,.product-banner-action .secondary-button,.product-banner-chat{width:100%}
+  .table-scroll{margin:0;padding:0}
+  .compare-table{min-width:480px}
+  #pricing,.cta-section,.section-demo{padding-bottom:5.5rem}
+  .ignite-chat .chat-toggle{width:56px;height:56px;font-size:1.35rem}
   .table-scroll::after{display:block}
   .compare-table th,.compare-table td{padding:.75rem .9rem;font-size:.85rem}
   .cta-section{padding:3.5rem 1.25rem}
   .cta-section h2{font-size:clamp(1.5rem,5vw,2rem)}
   .cta-buttons{flex-direction:column;align-items:stretch;max-width:360px;margin:0 auto}
   .cta-buttons .cta-button,.cta-buttons .secondary-button{width:100%}
-  .footer-inner{flex-direction:column;text-align:center}
-  .footer-links a{margin:0 .5rem}
+  .footer-inner{flex-direction:column;text-align:center;gap:1.25rem}
+  .footer-brand{flex-direction:column;align-items:center;text-align:center;gap:.75rem}
+  .footer-logo{max-width:min(280px,78vw);height:auto}
+  .footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem .85rem}
+  .footer-links a{margin:0}
   .chat-panel.open{
     position:fixed;inset:0;bottom:0;right:0;left:0;width:100%;max-width:100%;
     height:100dvh;max-height:100dvh;border-radius:0;z-index:3001;
