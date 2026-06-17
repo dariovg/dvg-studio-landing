@@ -572,6 +572,54 @@ footer{background:var(--dark);color:#888;padding:2rem;font-size:.9rem}
 .chat-form button:disabled{opacity:.5}
 .hp-field{position:absolute;left:-9999px;opacity:0;height:0;width:0}
 
+/* Tarjetas visuales en el chat (captación discreta) */
+.chat-card{
+  align-self:flex-start;max-width:92%;width:100%;
+  background:linear-gradient(145deg,#fff 0%,#f8f9fc 100%);
+  border:1px solid #e8ecf2;border-radius:14px;padding:.85rem;
+  box-shadow:0 4px 16px rgba(10,14,39,.06);
+  animation:chatCardIn .35s ease;
+}
+@keyframes chatCardIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:none}
+}
+.chat-card-title{font-size:.82rem;font-weight:800;color:var(--dark);margin:0 0 .25rem}
+.chat-card-desc{font-size:.78rem;color:var(--gray);margin:0 0 .65rem;line-height:1.4}
+.chat-card-fields{display:flex;flex-direction:column;gap:.45rem}
+.chat-card-fields input{
+  width:100%;border:1px solid #dde2ea;border-radius:10px;padding:.5rem .7rem;
+  font-size:16px;outline:none;background:#fff;
+}
+.chat-card-fields input:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(255,107,53,.12)}
+.chat-card-submit{
+  margin-top:.55rem;width:100%;border:none;border-radius:10px;padding:.6rem .75rem;
+  background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;
+  font-weight:700;font-size:.82rem;cursor:pointer;transition:opacity .2s,transform .15s;
+}
+.chat-card-submit:hover{opacity:.95;transform:translateY(-1px)}
+.chat-card-submit:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.chat-card-note{font-size:.68rem;color:#9aa3b5;margin:.45rem 0 0;text-align:center}
+.chat-card-actions{display:flex;flex-wrap:wrap;gap:.4rem}
+.chat-card-btn{
+  flex:1 1 calc(50% - .2rem);min-width:8.5rem;border:1px solid #e0e4ec;background:#fff;
+  border-radius:10px;padding:.5rem .55rem;font-size:.75rem;font-weight:600;color:var(--dark);
+  cursor:pointer;transition:border-color .2s,background .2s;text-align:center;line-height:1.3;
+}
+.chat-card-btn:hover{border-color:var(--primary);background:#fff8f5;color:var(--primary)}
+.chat-card-btn.primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none}
+.chat-card-btn.primary:hover{opacity:.92}
+.chat-booking-bar{
+  align-self:stretch;display:flex;gap:4px;padding:0 .25rem .35rem;margin:-.2rem 0 .15rem;
+}
+.chat-booking-bar span{
+  flex:1;height:3px;border-radius:2px;background:#e2e6ee;transition:background .25s;
+}
+.chat-booking-bar span.on{background:linear-gradient(90deg,var(--primary),var(--accent))}
+.chat-card-success{
+  font-size:.8rem;color:var(--success);font-weight:600;text-align:center;padding:.35rem 0;
+}
+
 @media (prefers-reduced-motion: reduce){
   .hero-mesh,.hero-beam,.trust-track,.stats::after{animation:none}
   .hero-anim{opacity:1;transform:none;animation:none}

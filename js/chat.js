@@ -31,9 +31,11 @@
   let bookStep = 0;
   let bookData = {};
   let timeValidated = false;
+  let leadCardShown = { pricing: false, actions: false, meeting: false };
+  let bookingBarEl = null;
 
   const welcome =
-    "Hola, soy IGNITE. Pregúntame lo que quieras sobre DVG Studio.\n\nSi te apetece hablar con el equipo, dime algo como «podemos quedar mañana» o «me gustaría una demo».";
+    "Hola, soy IGNITE. Cuéntame qué buscas y te ayudo.\n\nSi prefieres ir al grano: guía de planes por email o reunión gratis de 1h.";
 
   function parseDateInput(text) {
     return NLP().parseDateExtended?.(text) || ND().parseDate?.(text) || null;
@@ -70,6 +72,7 @@
     if (!messages.dataset.init) {
       appendMsg(welcome, "assistant");
       messages.dataset.init = "1";
+      setTimeout(() => appendActionCard(), 600);
     }
     input.focus();
   }
@@ -80,12 +83,180 @@
     toggle.setAttribute("aria-expanded", "false");
   }
 
+  function wantsPricing(text) {
+    const t = String(text || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "");
+    return /precio|cuesta|coste|cuanto|tarifa|planes|presupuesto|cotiz|inversion|euros|mensual|starter|enterprise|cuanto sale|que cuesta/.test(
+      t
+    );
+  }
+
+  function scrollChat() {
+    messages.scrollTop = messages.scrollHeight;
+  }
+
   function appendMsg(text, role) {
     const div = document.createElement("div");
     div.className = `chat-msg ${role}`;
     div.textContent = text;
     messages.appendChild(div);
-    messages.scrollTop = messages.scrollHeight;
+    scrollChat();
+  }
+
+  function showBookingBar() {
+    removeBookingBar();
+    bookingBarEl = document.createElement("div");
+    bookingBarEl.className = "chat-booking-bar";
+    bookingBarEl.setAttribute("aria-hidden", "true");
+    for (let i = 0; i < 5; i++) {
+      const s = document.createElement("span");
+      bookingBarEl.appendChild(s);
+    }
+    messages.appendChild(bookingBarEl);
+    updateBookingBar();
+    scrollChat();
+  }
+
+  function updateBookingBar() {
+    if (!bookingBarEl) return;
+    const steps = ["name", "email", "phone", "date", "time"];
+    const idx = steps.indexOf(BOOK_STEPS[bookStep]);
+    bookingBarEl.querySelectorAll("span").forEach((el, i) => {
+      el.classList.toggle("on", i <= idx && bookStep < BOOK_STEPS.indexOf("confirm"));
+    });
+  }
+
+  function removeBookingBar() {
+    bookingBarEl?.remove();
+    bookingBarEl = null;
+  }
+
+  function appendLeadCard(interest = "pricing") {
+    if (leadCardShown[interest]) return;
+    leadCardShown[interest] = true;
+
+    const card = document.createElement("div");
+    card.className = "chat-card chat-card-lead";
+    card.innerHTML = `
+      <p class="chat-card-title">${interest === "pricing" ? "Guía de planes" : "Te mantenemos al día"}</p>
+      <p class="chat-card-desc">Nombre y email — te envío el detalle en 1 min. Sin spam.</p>
+      <div class="chat-card-fields">
+        <input type="text" name="leadName" placeholder="Tu nombre" maxlength="80" autocomplete="name">
+        <input type="email" name="leadEmail" placeholder="Tu email" maxlength="120" autocomplete="email">
+        <input type="text" name="leadCompany" placeholder="Empresa (opcional)" maxlength="120" autocomplete="organization">
+      </div>
+      <button type="button" class="chat-card-submit">Enviarme la guía</button>
+      <p class="chat-card-note">Solo usamos tus datos para responderte.</p>
+    `;
+
+    const btn = card.querySelector(".chat-card-submit");
+    btn.addEventListener("click", () => submitLeadCard(card, interest));
+    card.querySelectorAll("input").forEach((inp) => {
+      inp.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          submitLeadCard(card, interest);
+        }
+      });
+    });
+
+    messages.appendChild(card);
+    scrollChat();
+    card.querySelector('input[name="leadName"]')?.focus();
+  }
+
+  function appendActionCard() {
+    if (leadCardShown.actions || bookMode) return;
+    leadCardShown.actions = true;
+
+    const card = document.createElement("div");
+    card.className = "chat-card chat-card-actions-wrap";
+    card.innerHTML = `
+      <p class="chat-card-desc" style="margin-bottom:.5rem">¿Seguimos por aquí?</p>
+      <div class="chat-card-actions">
+        <button type="button" class="chat-card-btn" data-act="pricing">Guía por email</button>
+        <button type="button" class="chat-card-btn primary" data-act="meeting">Reunión 1h gratis</button>
+      </div>
+    `;
+
+    card.querySelector('[data-act="pricing"]').addEventListener("click", () => {
+      appendMsg("Quiero la guía de planes", "user");
+      appendMsg("Perfecto — déjame tus datos y te la envío al momento.", "assistant");
+      appendLeadCard("pricing");
+    });
+    card.querySelector('[data-act="meeting"]').addEventListener("click", () => {
+      appendMsg("Me gustaría una reunión", "user");
+      startBooking("me gustaría una reunión");
+    });
+
+    messages.appendChild(card);
+    scrollChat();
+  }
+
+  async function submitLeadCard(card, interest) {
+    if (busy) return;
+    const name = card.querySelector('[name="leadName"]')?.value.trim();
+    const email = card.querySelector('[name="leadEmail"]')?.value.trim();
+    const company = card.querySelector('[name="leadCompany"]')?.value.trim();
+    const btn = card.querySelector(".chat-card-submit");
+
+    if (!name || name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      appendMsg("Revisa nombre y email en el formulario — deben ser válidos.", "assistant");
+      return;
+    }
+
+    busy = true;
+    btn.disabled = true;
+    const endTyping = await showTypingFor(450);
+
+    try {
+      const { data } = await apiPost("/api/lead", {
+        name,
+        email,
+        company,
+        interest,
+      });
+      await endTyping();
+
+      card.querySelector(".chat-card-fields")?.remove();
+      btn.remove();
+      card.querySelector(".chat-card-note")?.remove();
+      const ok = document.createElement("p");
+      ok.className = "chat-card-success";
+      ok.textContent = data.message || "Guía enviada. Revisa tu email.";
+      card.appendChild(ok);
+
+      if (!leadCardShown.meeting) {
+        setTimeout(() => {
+          appendMsg("Si quieres, también podemos quedar 1h sin compromiso.", "assistant");
+          appendActionCard();
+          leadCardShown.actions = false;
+          leadCardShown.meeting = true;
+        }, 800);
+      }
+    } catch {
+      await endTyping();
+      appendMsg(`No pude enviarlo ahora. Escríbenos a ${CONTACT}`, "assistant");
+      btn.disabled = false;
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  async function handlePricingInterest(text) {
+    appendMsg(text.trim(), "user");
+    input.value = "";
+    const endTyping = await showTypingFor(500);
+    await endTyping();
+    appendMsg(
+      "Trabajamos con planes flexibles desde 199 €/mes + IVA. Te envío la guía completa por email — son 30 segundos.",
+      "assistant"
+    );
+    appendLeadCard("pricing");
   }
 
   function appendTyping() {
@@ -151,6 +322,7 @@
 
   function promptCurrentStep() {
     advanceBookStep();
+    updateBookingBar();
     const step = BOOK_STEPS[bookStep];
     if (step === "confirm") {
       showSummary();
@@ -164,6 +336,7 @@
     bookStep = 0;
     bookData = {};
     timeValidated = false;
+    showBookingBar();
 
     const ext = extractAll(fromText);
     Object.assign(bookData, Object.fromEntries(
@@ -195,6 +368,7 @@
     bookStep = 0;
     bookData = {};
     timeValidated = false;
+    removeBookingBar();
     appendMsg("Sin problema, lo dejamos aquí. Si quieres retomarlo, dímelo cuando quieras.", "assistant");
   }
 
@@ -371,6 +545,7 @@
         bookStep = 0;
         bookData = {};
         timeValidated = false;
+        removeBookingBar();
       }
       busy = false;
       sendBtn.disabled = false;
@@ -446,6 +621,7 @@
     }
 
     advanceBookStep();
+    updateBookingBar();
 
     if (bookData.date && bookData.time && !timeValidated) {
       await validateTimeAndContinue();
@@ -469,6 +645,11 @@
       appendMsg(text.trim(), "user");
       input.value = "";
       await queryAvailability(text);
+      return;
+    }
+
+    if (wantsPricing(text)) {
+      await handlePricingInterest(text);
       return;
     }
 
@@ -526,6 +707,12 @@
       appendMsg(reply, "assistant");
       history.push({ role: "assistant", content: reply });
       if (history.length > 12) history = history.slice(-12);
+
+      if (data.suggestLead === "pricing" || wantsPricing(text)) {
+        appendLeadCard("pricing");
+      } else if (msgCount >= 3 && !leadCardShown.actions && !leadCardShown.pricing) {
+        appendActionCard();
+      }
     } catch {
       await endTyping();
       appendMsg(
