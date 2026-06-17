@@ -208,17 +208,33 @@
       return;
     }
 
+    const elapsed = Date.now() - pageLoad;
+    if (elapsed < 500) {
+      await wait(500 - elapsed);
+    }
+
     busy = true;
     btn.disabled = true;
     const endTyping = await showTypingFor(450);
 
-    try {
-      const { res, data } = await apiPost("/api/lead", {
+    async function postLead() {
+      return apiPost("/api/lead", {
         name,
         email,
         company,
         interest,
       });
+    }
+
+    try {
+      let { res, data } = await postLead();
+      if (
+        res.status === 403 &&
+        /espera un segundo/i.test(String(data.error || ""))
+      ) {
+        await wait(600);
+        ({ res, data } = await postLead());
+      }
       await endTyping();
 
       if (!res.ok || data.error) {
