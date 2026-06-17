@@ -244,11 +244,11 @@
 
     try {
       let { res, data } = await postLead();
-      if (
+      const retry403 =
         res.status === 403 &&
-        /espera un segundo/i.test(String(data.error || ""))
-      ) {
-        await wait(600);
+        /espera un segundo|clave del chat|origen no autorizado/i.test(String(data.error || ""));
+      if (retry403) {
+        await wait(800);
         ({ res, data } = await postLead());
       }
       await endTyping();
