@@ -32,8 +32,24 @@
   let bookData = {};
   let timeValidated = false;
   let lastSuggestedAlts = "";
+  let rejectedTimes = new Set();
   let leadCardShown = { pricing: false, actions: false, meeting: false };
   let bookingBarEl = null;
+
+  const BUSINESS_SLOTS = [
+    "09:00", "10:00", "11:00", "12:00", "13:00",
+    "14:00", "15:00", "16:00", "17:00",
+  ];
+
+  function normalizeTime(time) {
+    const raw = String(time || "").trim();
+    const m = raw.match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return null;
+    const h = Number(m[1]);
+    const min = m[2];
+    if (h > 23) return null;
+    return `${String(h).padStart(2, "0")}:${min}`;
+  }
 
   const welcome =
     "Hola, soy IGNITE. Cuéntame qué buscas y te ayudo.\n\nSi prefieres ir al grano: guía de planes por email o reunión gratis de 1h.";
@@ -345,7 +361,7 @@
       const key = BOOK_STEPS[i];
       if (key === "confirm" || key === "notes") continue;
       if (!bookData[key] && extracted[key]) {
-        bookData[key] = extracted[key];
+        bookData[key] = key === "time" ? normalizeTime(extracted[key]) || extracted[key] : extracted[key];
       }
     }
   }
@@ -355,7 +371,7 @@
     const d = parseDateInput(payload.date) || payload.date;
     const tm = parseTimeInput(payload.time) || payload.time;
     if (d) payload.date = String(d).replace(/-/g, "/");
-    if (tm) payload.time = tm;
+    if (tm) payload.time = normalizeTime(tm) || tm;
     const ph = NLP().extractPhone?.(payload.phone || "");
     if (ph) payload.phone = ph;
     if (payload.notes == null) payload.notes = "";
@@ -409,6 +425,7 @@
     bookData = {};
     timeValidated = false;
     lastSuggestedAlts = "";
+    rejectedTimes = new Set();
     showBookingBar();
 
     const ext = extractAll(fromText);
@@ -445,6 +462,7 @@
     bookData = {};
     timeValidated = false;
     lastSuggestedAlts = "";
+    rejectedTimes = new Set();
     removeBookingBar();
     appendMsg("Sin problema, lo dejamos aquí. Si quieres retomarlo, dímelo cuando quieras.", "assistant");
   }
@@ -500,27 +518,50 @@
     }
   }
 
+  async function fetchAvailability(date, time, query) {
+    const slot = time ? normalizeTime(time) || time : "";
+    const { res, data } = await apiPost("/api/availability", { date, time: slot, query });
+    if (!res.ok) return { configured: false, error: data.error || "No disponible" };
+    return data;
+  }
+
+  function filterAlts(altStr) {
+    if (!altStr) return "";
+    return altStr
+      .split(",")
+      .map((s) => s.trim())
+      .filter((t) => t && !rejectedTimes.has(t))
+      .join(", ");
+  }
+
   function isBusinessTime(time) {
-    const slots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
-    return slots.includes(time);
+    const t = normalizeTime(time);
+    return t ? BUSINESS_SLOTS.includes(t) : false;
   }
 
   async function checkTimeSlot(date, time) {
-    const data = await fetchAvailability(date, time);
+    const slot = normalizeTime(time);
+    if (!slot) {
+      return { ok: false, message: "No entendí la hora — prueba con «11:00» o «a las 11».", alts: "" };
+    }
+    const data = await fetchAvailability(date, slot);
+    if (data.error && data.configured === false) return { ok: true };
     if (data.configured === false) return { ok: true };
-    if (data.available) return { ok: true };
-    const alts = data.alternatives?.length
-      ? data.alternatives.join(", ")
-      : data.slots?.slice(0, 5).join(", ") || "";
+    if (data.available === true) return { ok: true };
+    const alts = filterAlts(
+      data.alternatives?.length
+        ? data.alternatives.join(", ")
+        : data.slots?.slice(0, 5).join(", ") || ""
+    );
     let message = data.message;
     if (!message) {
-      if (data.reason === "fuera_horario" || !isBusinessTime(time)) {
-        message = `Esa hora (${time}) está fuera del horario laboral (9:00–18:00, citas de 1h).`;
+      if (data.reason === "fuera_horario") {
+        message = `Esa hora (${slot}) está fuera del horario laboral (9:00–18:00, citas de 1h).`;
       } else {
-        message = `Ese hueco no está libre en tu calendario.`;
+        message = `El ${date} a las ${slot} no está libre en tu calendario.`;
       }
     }
-    return { ok: false, message, alts };
+    return { ok: false, message, alts, reason: data.reason };
   }
 
   async function validateTimeAndContinue() {
@@ -550,7 +591,8 @@
       await endTyping();
       if (!check.ok) {
         timeValidated = false;
-        const rejectedTime = bookData.time;
+        const rejectedTime = normalizeTime(bookData.time) || bookData.time;
+        rejectedTimes.add(rejectedTime);
         delete bookData.time;
         bookStep = BOOK_STEPS.indexOf("time");
         appendMsg(
@@ -562,8 +604,10 @@
         if (altKey && altKey !== lastSuggestedAlts) {
           appendMsg(`Huecos libres ese día: ${altKey}`, "assistant");
           lastSuggestedAlts = altKey;
-        } else {
+        } else if (check.reason !== "fuera_horario") {
           appendMsg("Dime otra hora que te venga bien (por ejemplo: 11:00 o «a las 11»).", "assistant");
+        } else {
+          appendMsg("¿Qué otra hora te iría bien?", "assistant");
         }
         return;
       }
@@ -709,7 +753,7 @@
         timeValidated = false;
         bookStep = BOOK_STEPS.indexOf("time");
         if (val) {
-          bookData.time = val;
+          bookData.time = normalizeTime(val) || val;
           appendMsg(NLP().humanAck?.("time", val, bookData) || "Entendido.", "assistant");
           if (bookData.date) {
             await validateTimeAndContinue();
@@ -723,7 +767,8 @@
         return;
       }
       if (val) {
-        bookData[correction] = val;
+        bookData[correction] =
+          correction === "time" ? normalizeTime(val) || val : val;
         if (correction === "time") timeValidated = false;
         appendMsg(NLP().humanAck?.(correction, val, bookData) || "Actualizado.", "assistant");
         bookStep = BOOK_STEPS.indexOf(correction);
@@ -770,7 +815,7 @@
         timeValidated = false;
         bookStep = BOOK_STEPS.indexOf("time");
         if (newTime) {
-          bookData.time = newTime;
+          bookData.time = normalizeTime(newTime) || newTime;
           await validateTimeAndContinue();
         } else {
           delete bookData.time;
@@ -804,7 +849,7 @@
     if (cur && cur !== "notes" && cur !== "confirm" && !bookData[cur]) {
       const val = resolveFieldValue(cur, t, extractedStep);
       if (val) {
-        bookData[cur] = val;
+        bookData[cur] = cur === "time" ? normalizeTime(val) || val : val;
         if (!(willValidateSlot && (cur === "date" || cur === "time"))) {
           appendMsg(NLP().humanAck?.(cur, val, bookData) || "Perfecto.", "assistant");
         }
