@@ -52,7 +52,7 @@
   }
 
   const welcome =
-    "Hola, soy IGNITE. Cuéntame qué buscas y te ayudo.\n\nSi prefieres ir al grano: guía de planes por email o reunión gratis de 1h.";
+    "Hola, soy IGNITE Demo — el asistente de esta web (no el bot personal de Telegram). Cuéntame qué buscas y te ayudo.\n\nSi prefieres ir al grano: guía de planes por email o reunión gratis de 1h.";
 
   function parseDateInput(text) {
     return NLP().parseDateExtended?.(text) || ND().parseDate?.(text) || null;

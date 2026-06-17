@@ -138,6 +138,26 @@ body.nav-open .menu-toggle span:nth-child(3){transform:translateY(-7px) rotate(-
 }
 .hero-tagline{font-size:1rem;color:var(--accent);font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:1rem}
 .hero .subtitle{font-size:1.15rem;color:#ccc;max-width:720px;margin:0 auto 2rem}
+.hero-audio{margin:0 auto 1.75rem;max-width:420px}
+.audio-intro-btn{
+  display:flex;align-items:center;gap:1rem;width:100%;padding:.85rem 1.25rem;
+  border-radius:16px;border:1px solid rgba(255,107,53,.45);
+  background:linear-gradient(135deg,rgba(255,107,53,.12),rgba(247,147,30,.08));
+  color:#fff;cursor:pointer;text-align:left;transition:border-color .2s,box-shadow .2s,transform .2s;
+  min-height:56px;
+}
+.audio-intro-btn:hover,.audio-intro-btn:focus-visible{
+  border-color:var(--primary);box-shadow:0 8px 28px rgba(255,107,53,.22);transform:translateY(-1px);outline:none;
+}
+.audio-intro-btn.is-playing{border-color:var(--accent);box-shadow:0 0 0 1px rgba(247,147,30,.35)}
+.audio-intro-icon{
+  flex-shrink:0;width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--primary),var(--accent));font-size:.95rem;font-weight:700;
+}
+.audio-intro-text{display:flex;flex-direction:column;gap:.15rem;line-height:1.25}
+.audio-intro-text strong{font-size:1rem;font-weight:700}
+.audio-intro-hint{font-size:.85rem;color:#b8c0d4;font-weight:500}
 .hero-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem}
 .stats{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.5rem;padding:1.5rem;
@@ -653,6 +673,7 @@ footer{background:var(--dark);color:#888;padding:2rem;font-size:.9rem}
   .hero-mesh{filter:blur(35px);opacity:.75}
   .trust-track{animation-duration:35s}
   .hero .subtitle{font-size:1rem;padding:0 .25rem}
+  .hero-audio{max-width:360px;padding:0 .25rem}
   .hero-buttons{flex-direction:column;align-items:stretch;max-width:360px;margin-left:auto;margin-right:auto}
   .hero-buttons .cta-button,.hero-buttons .secondary-button{width:100%}
   .stats{grid-template-columns:repeat(2,1fr);gap:1rem;padding:1.25rem}

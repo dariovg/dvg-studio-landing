@@ -1,4 +1,7 @@
-# DVG Studio — Base de conocimiento IGNITE (chat web)
+# DVG Studio — Base de conocimiento IGNITE Demo (chat web)
+
+> **IGNITE Demo** = chat público en dvgsstudio.com para visitantes y ventas.
+> **IGNITE personal** = asistente privado de Dario en Telegram (OpenClaw + AWS). No es este chat.
 
 ## Quiénes somos
 DVG Studio es un estudio español de empleados digitales (agentes IA) para PYMEs.
@@ -8,8 +11,8 @@ Ubicación: España, servicio remoto.
 Web: https://www.dvgsstudio.com
 Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
 
-## IGNITE — el asistente de esta web
-- IGNITE es el asistente IA de demostración en dvgsstudio.com.
+## IGNITE Demo — el asistente de esta web
+- IGNITE Demo es el asistente IA de demostración en dvgsstudio.com.
 - Misma tecnología que instalamos en la web de cada cliente, adaptada a su marca y contenidos.
 - Puede responder dudas sobre servicios, planes y proceso, y agendar reuniones.
 - No sustituye asesoramiento legal ni fiscal.

@@ -71,6 +71,16 @@
                 <span class="hero-chunk hero-anim" style="--i:3">sin contratar más</span>
             </h1>
             <p class="subtitle hero-anim" style="--i:4">Empleados digitales con IA agéntica: captan leads, responden al instante y agendan citas — mientras tu equipo se centra en cerrar.</p>
+            <div class="hero-audio hero-anim" style="--i:4.5">
+                <button type="button" class="audio-intro-btn" id="audioIntroBtn" aria-controls="audioIntro" aria-pressed="false" aria-label="Reproducir audio: quiénes somos">
+                    <span class="audio-intro-icon" aria-hidden="true">▶</span>
+                    <span class="audio-intro-text">
+                        <strong>¿Quiénes somos?</strong>
+                        <span class="audio-intro-hint">Escucha en un minuto</span>
+                    </span>
+                </button>
+                <audio id="audioIntro" src="/assets/audio/quienes-somos.mp3" preload="metadata"></audio>
+            </div>
             <div class="hero-buttons hero-anim" style="--i:5">
                 <button type="button" class="cta-button" data-open-chat>Agendar auditoría gratis</button>
                 <button type="button" class="secondary-button" data-open-chat>Hablar con IGNITE</button>
@@ -317,7 +327,7 @@
             <div class="demo-phone" aria-hidden="true">
                 <div class="demo-phone-bar">
                     <span class="demo-phone-dot"></span>
-                    <span class="demo-phone-title">IGNITE</span>
+                    <span class="demo-phone-title">IGNITE Demo</span>
                     <span class="demo-phone-status">En línea</span>
                 </div>
                 <div class="demo-chat">
@@ -557,10 +567,10 @@
     </footer>
 
     <div class="ignite-chat" id="igniteChat" data-site-key="dvg-studio-chat-2026">
-        <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat con IGNITE">
+        <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat con IGNITE Demo">
             <div class="chat-panel-header">
                 <div>
-                    <h4>🔥 IGNITE — IA 24/7</h4>
+                    <h4>🔥 IGNITE Demo — IA 24/7</h4>
                     <p>hac<span class="brand-ia">IA</span> lo imparable</p>
                 </div>
                 <button class="chat-close" id="chatClose" aria-label="Cerrar">×</button>
@@ -576,6 +586,7 @@
     </div>
 
     <script>window.DVG_SITE={contact:"info@dvgsstudio.com",url:"https://www.dvgsstudio.com",instagram:"https://www.instagram.com/dvgsstudio/"};</script>
+    <script src="/js/audio-intro.js"></script>
     <script src="/js/scroll.js"></script>
     <script src="/js/parallax.js"></script>
     <script src="/js/mobile.js"></script>
