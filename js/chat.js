@@ -212,7 +212,7 @@
     const endTyping = await showTypingFor(450);
 
     try {
-      const { data } = await apiPost("/api/lead", {
+      const { res, data } = await apiPost("/api/lead", {
         name,
         email,
         company,
@@ -220,12 +220,22 @@
       });
       await endTyping();
 
+      if (!res.ok || data.error) {
+        appendMsg(data.error || `No pude enviarlo ahora. Escríbenos a ${CONTACT}`, "assistant");
+        btn.disabled = false;
+        return;
+      }
+
       card.querySelector(".chat-card-fields")?.remove();
       btn.remove();
       card.querySelector(".chat-card-note")?.remove();
       const ok = document.createElement("p");
-      ok.className = "chat-card-success";
-      ok.textContent = data.message || "Guía enviada. Revisa tu email.";
+      ok.className = data.emailed === false ? "chat-card-note" : "chat-card-success";
+      ok.textContent =
+        data.message ||
+        (data.emailed === false
+          ? `Recibido. Te contactamos en ${email} o escríbenos a ${CONTACT}.`
+          : "Guía enviada. Revisa tu email (y la carpeta spam).");
       card.appendChild(ok);
 
       if (!leadCardShown.meeting) {
@@ -339,6 +349,9 @@
     showBookingBar();
 
     const ext = extractAll(fromText);
+    if (wantsBooking(fromText)) {
+      delete ext.name;
+    }
     Object.assign(bookData, Object.fromEntries(
       Object.entries(ext).filter(([, v]) => v)
     ));
@@ -423,20 +436,45 @@
     }
   }
 
+  function isBusinessTime(time) {
+    const slots = ["09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+    return slots.includes(time);
+  }
+
   async function checkTimeSlot(date, time) {
     const data = await fetchAvailability(date, time);
     if (data.configured === false) return { ok: true };
     if (data.available) return { ok: true };
-    const alts =
-      data.alternatives?.join(", ") ||
-      data.slots?.slice(0, 5).join(", ") ||
-      "ninguno ese día";
-    return { ok: false, message: data.message, alts };
+    const alts = data.alternatives?.length
+      ? data.alternatives.join(", ")
+      : data.slots?.slice(0, 5).join(", ") || "";
+    let message = data.message;
+    if (!message) {
+      if (data.reason === "fuera_horario" || !isBusinessTime(time)) {
+        message = `Esa hora (${time}) está fuera del horario laboral (9:00–18:00, citas de 1h).`;
+      } else {
+        message = `Ese hueco no está libre en tu calendario.`;
+      }
+    }
+    return { ok: false, message, alts };
   }
 
   async function validateTimeAndContinue() {
     if (!bookData.date || !bookData.time) {
       promptCurrentStep();
+      return;
+    }
+
+    if (!isBusinessTime(bookData.time)) {
+      const bad = bookData.time;
+      delete bookData.time;
+      timeValidated = false;
+      bookStep = BOOK_STEPS.indexOf("time");
+      appendMsg(
+        `La hora ${bad} no encaja con nuestro horario (9:00–18:00, citas de 1h). La última hora posible es las 17:00.`,
+        "assistant"
+      );
+      appendMsg("¿Qué otra hora te iría bien?", "assistant");
       return;
     }
 
@@ -448,17 +486,26 @@
       await endTyping();
       if (!check.ok) {
         timeValidated = false;
+        const rejectedTime = bookData.time;
         delete bookData.time;
         bookStep = BOOK_STEPS.indexOf("time");
         appendMsg(
-          check.message || `Ese hueco no está libre. Alternativas: ${check.alts}`,
+          check.message ||
+            `El ${bookData.date} a las ${rejectedTime} no está libre (calendario ocupado).`,
           "assistant"
         );
-        appendMsg(NLP().humanPrompt?.("time", bookData) || "¿Otra hora?", "assistant");
+        if (check.alts) {
+          appendMsg(`Huecos libres ese día: ${check.alts}`, "assistant");
+        } else {
+          appendMsg("¿Probamos otro día u otra hora?", "assistant");
+        }
         return;
       }
       timeValidated = true;
-      appendMsg(NLP().humanAck?.("time", bookData.time, bookData) || "Perfecto.", "assistant");
+      appendMsg(
+        `Perfecto — ${bookData.date} a las ${bookData.time} (1h, hora España).`,
+        "assistant"
+      );
       advanceBookStep();
       if (BOOK_STEPS[bookStep] === "notes") {
         appendMsg(NLP().humanPrompt?.("notes", bookData) || "", "assistant");
@@ -483,12 +530,13 @@
   function resolveFieldValue(step, text, extracted) {
     const t = text.trim();
     if (step === "name") {
-      return (
+      if (NLP().isBookingIntentText?.(t)) return null;
+      const candidate =
         extracted.name ||
         (t.length >= 2 && !extracted.email && !extracted.phone && !extracted.date && !extracted.time
           ? t.split(/\s+/).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")
-          : null)
-      );
+          : null);
+      return candidate && NLP().looksLikePersonName?.(candidate) ? candidate : null;
     }
     if (step === "email") return extracted.email || NLP().extractEmail?.(t) || null;
     if (step === "phone") return extracted.phone || NLP().extractPhone?.(t) || null;
@@ -498,19 +546,21 @@
   }
 
   function applyBulkFields(extracted, fromIndex) {
+    const willValidateSlot = extracted.date && extracted.time;
     const acked = [];
     for (let i = fromIndex; i < BOOK_STEPS.length; i++) {
       const key = BOOK_STEPS[i];
       if (key === "confirm" || key === "notes") continue;
       if (bookData[key] || !extracted[key]) continue;
       bookData[key] = extracted[key];
+      if (willValidateSlot && (key === "date" || key === "time")) continue;
       if (key !== "date") {
         acked.push(NLP().humanAck?.(key, extracted[key], bookData));
       }
     }
     const unique = [...new Set(acked.filter(Boolean))];
     if (unique.length) appendMsg(unique.slice(0, 2).join(" "), "assistant");
-    if (extracted.date && !unique.some((a) => a.includes(extracted.date))) {
+    if (extracted.date && !willValidateSlot && !unique.some((a) => a.includes(extracted.date))) {
       appendMsg(NLP().humanAck?.("date", extracted.date, bookData) || "", "assistant");
     }
   }
@@ -608,11 +658,14 @@
     applyBulkFields(extracted, bookStep);
 
     const cur = BOOK_STEPS[bookStep];
+    const willValidateSlot = bookData.date && bookData.time && !timeValidated;
     if (cur && cur !== "notes" && cur !== "confirm" && !bookData[cur]) {
       const val = resolveFieldValue(cur, t, extracted);
       if (val) {
         bookData[cur] = val;
-        appendMsg(NLP().humanAck?.(cur, val, bookData) || "Perfecto.", "assistant");
+        if (!(willValidateSlot && (cur === "date" || cur === "time"))) {
+          appendMsg(NLP().humanAck?.(cur, val, bookData) || "Perfecto.", "assistant");
+        }
       } else {
         appendMsg("No lo pillé del todo — ¿me lo dices de otra forma?", "assistant");
         appendMsg(NLP().humanPrompt?.(cur, bookData) || "", "assistant");

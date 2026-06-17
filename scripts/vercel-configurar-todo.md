@@ -74,13 +74,56 @@ BOOKING_DURATION_MINUTES=60
 
 ---
 
-## Google Meet (mismo enlace para ti y el cliente)
+## Google Meet — un enlace distinto por cada cliente
 
-1. Entra en [meet.google.com](https://meet.google.com) con la cuenta de empresa
-2. **Nueva reunión** → **Crear enlace permanente**
-3. Copia la URL → `BOOKING_MEET_URL` en Vercel
+Cada reserva genera su **propio Google Meet** vía Google Calendar API.
 
-Ese enlace aparece en: tu calendario, email a info@, email al cliente y archivo .ics.
+### Configuración (cuenta Google de empresa)
+
+1. [console.cloud.google.com](https://console.cloud.google.com) → activar **Google Calendar API**
+2. Credenciales OAuth 2.0 (aplicación de escritorio)
+3. En tu Mac, genera el refresh token:
+   ```bash
+   cd ~/Documents/dvg-studio-landing
+   GOOGLE_CLIENT_ID=xxx GOOGLE_CLIENT_SECRET=yyy node scripts/get-google-refresh-token.mjs
+   ```
+4. En **Vercel**, añade:
+   ```
+   GOOGLE_CLIENT_ID=...
+   GOOGLE_CLIENT_SECRET=...
+   GOOGLE_REFRESH_TOKEN=...
+   GOOGLE_CALENDAR_ID=primary
+   ```
+
+**No hace falta** `BOOKING_MEET_URL` si Google está configurado.
+
+### iCloud + Meet único (recomendado)
+
+Puedes usar **ambos**:
+
+| Rol | Servicio |
+|-----|----------|
+| Disponibilidad y eventos en iPhone | iCloud (`ICLOUD_*`) |
+| Enlace Meet único por cita | Google (`GOOGLE_*`) |
+
+Al reservar: Google crea el Meet → el evento se guarda en Apple con ese enlace → emails y `.ics` llevan el Meet de esa cita.
+
+### Respaldo: enlace fijo
+
+Si no configuras Google, puedes usar `BOOKING_MEET_URL` con un enlace permanente de [meet.google.com](https://meet.google.com) (misma sala para todas las citas).
+
+---
+
+## Sin solapamientos (ya implementado)
+
+Al reservar o consultar huecos, el sistema **lee todos tus calendarios iCloud** del día (Trabajo, Quedada, Personal, DVG Studio, etc.) — no solo el calendario donde se crea la cita.
+
+Si a las 10:00 tienes una quedada apuntada en Apple, **ningún cliente** podrá reservar las 10:00.
+
+- Las citas de clientes se **crean** en el calendario `ICLOUD_CALENDAR_NAME` (por defecto **DVG Studio**).
+- La **disponibilidad** se calcula con **todos** los calendarios visibles por iCloud.
+
+Prueba: apunta una quedada manual a las 15:00 → en el chat pregunta «¿hay hueco hoy a las 15?» → debe decir que no está libre.
 
 ---
 
@@ -92,7 +135,7 @@ Tras **Redeploy**, abre en el navegador (sustituye `TU_CLAVE` por `DIAGNOSTIC_KE
 https://www.dvgsstudio.com/api/status?key=TU_CLAVE
 ```
 
-Deberías ver `"readyForBooking": true` y `"meetUrl": true`.
+Deberías ver `"readyForBooking": true` y `"meetMode": "per_event"` (si Google está configurado).
 
 ---
 
@@ -114,6 +157,6 @@ Deberías ver `"readyForBooking": true` y `"meetUrl": true`.
 |---------|----------|
 | Cita OK, sin emails | SES no verificado o IAM sin permiso SES |
 | Email solo a info@, no al lead | SES en sandbox — salir de sandbox |
-| Sin Meet en el correo | Falta `BOOKING_MEET_URL` en Vercel |
+| Sin Meet en el correo | Configura Google Calendar (`GOOGLE_*`) o `BOOKING_MEET_URL` como respaldo |
 | Sin evento en calendario | Revisa iCloud: email + contraseña de app |
 | Chat «Acceso no permitido» | `CHAT_SITE_KEY` no coincide con `index.html` |

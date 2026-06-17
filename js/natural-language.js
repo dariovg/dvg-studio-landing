@@ -16,9 +16,36 @@
       .trim();
   }
 
+  var NAME_STOP =
+    /^(me|te|yo|un|una|el|la|los|las|quiero|quisiera|gustaria|gustaría|podemos|nos|para|con|por|reunion|reunión|cita|demo|agendar|reservar|organicemos|perfecto)$/i;
+
+  function isBookingIntentText(text) {
+    var t = normalize(text);
+    return (
+      /\b(quedar|reunion|reunión|cita|demo|agendar|reservar|concertar|gustaria|gustaría|encuentro|llamada|videollamada|hablar|reunirnos|podemos|organicemos)\b/.test(
+        t
+      ) || /^(me gustaria|me gustaría|quisiera|quiero)\b/.test(t)
+    );
+  }
+
+  function looksLikePersonName(name) {
+    var parts = String(name || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (!parts.length || parts[0].length < 2) return false;
+    if (parts.some(function (p) {
+      return NAME_STOP.test(p);
+    })) {
+      return false;
+    }
+    return true;
+  }
+
   function firstName(name) {
     var n = String(name || "").trim().split(/\s+/)[0];
-    return n || "";
+    if (!n || n.length < 2 || NAME_STOP.test(n)) return "";
+    return n.charAt(0).toUpperCase() + n.slice(1).toLowerCase();
   }
 
   function extractEmail(text) {
@@ -44,6 +71,7 @@
 
   function extractName(text) {
     var raw = String(text || "").trim();
+    if (!raw || isBookingIntentText(raw)) return null;
     var t = normalize(raw);
     var patterns = [
       /(?:me llamo|soy|mi nombre es|nombre:?)\s+([a-záéíóúñ][a-záéíóúñ\s'.-]{1,60})/i,
@@ -55,14 +83,19 @@
       if (m) {
         name = m[1].trim().replace(/[,.]$/, "");
         name = name.replace(/\s+(y|mi|correo|email|mail|telefono|teléfono|movil|móvil)\b.*/i, "");
-        if (name.length >= 2 && name.length <= 80 && !/@/.test(name)) {
+        if (name.length >= 2 && name.length <= 80 && !/@/.test(name) && looksLikePersonName(name)) {
           return name.split(/\s+/).map(function (w) {
             return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
           }).join(" ");
         }
       }
     }
-    if (/^[a-záéíóúñ]{2,}(?:\s+[a-záéíóúñ]{2,}){0,3}$/i.test(t) && !extractEmail(raw) && !extractPhone(raw)) {
+    if (
+      /^[a-záéíóúñ]{2,}(?:\s+[a-záéíóúñ]{2,}){0,3}$/i.test(t) &&
+      !extractEmail(raw) &&
+      !extractPhone(raw) &&
+      looksLikePersonName(raw)
+    ) {
       return raw.split(/\s+/).map(function (w) {
         return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
       }).join(" ");
@@ -217,5 +250,7 @@
     humanPrompt: humanPrompt,
     humanBookingIntro: humanBookingIntro,
     firstName: firstName,
+    isBookingIntentText: isBookingIntentText,
+    looksLikePersonName: looksLikePersonName,
   };
 })();

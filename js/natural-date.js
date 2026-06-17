@@ -12,6 +12,12 @@
     sábado: 6,
   };
 
+  var MONTHS = {
+    enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6,
+    julio: 7, agosto: 8, septiembre: 9, setiembre: 9, octubre: 10,
+    noviembre: 11, diciembre: 12,
+  };
+
   function normalize(text) {
     return String(text || "")
       .toLowerCase()
@@ -82,6 +88,33 @@
     return m ? WEEKDAYS[m[1]] : null;
   }
 
+  /** «el jueves 18», «jueves 18 de junio» */
+  function parseWeekdayWithDay(text, ref) {
+    var m = text.match(
+      /\b(?:el\s+)?(domingo|lunes|martes|miercoles|jueves|viernes|sabado)\s+(\d{1,2})(?:\s+de\s+([a-z]+))?(?:\s+de\s+(\d{4}))?\b/
+    );
+    if (!m) return null;
+    var isoWd = WEEKDAYS[m[1]];
+    var day = Number(m[2]);
+    var month = m[3] ? MONTHS[m[3]] : ref.month;
+    var year = m[4] ? Number(m[4]) : ref.year;
+    if (m[3] && !month) return null;
+    if (!m[3]) {
+      month = ref.month;
+      year = ref.year;
+      if (day < ref.day) {
+        month += 1;
+        if (month > 12) {
+          month = 1;
+          year += 1;
+        }
+      }
+    }
+    var candidate = { year: year, month: month, day: day };
+    if (isoWeekday(candidate) !== isoWd) return null;
+    return formatDateParts(candidate);
+  }
+
   function parseNaturalDate(text, ref) {
     ref = ref || getSpainToday();
     var t = normalize(text);
@@ -91,6 +124,9 @@
     if (explicit) {
       return pad2(Number(explicit[1])) + "/" + pad2(Number(explicit[2])) + "/" + explicit[3];
     }
+
+    var wdDay = parseWeekdayWithDay(t, ref);
+    if (wdDay) return wdDay;
 
     if (/\bpasado\s+manana\b/.test(t)) return formatDateParts(addDays(ref, 2));
     if (/\bmanana\b/.test(t) && !/\bmanana\s+(temprano|a las)/.test(t)) {

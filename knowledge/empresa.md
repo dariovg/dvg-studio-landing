@@ -64,17 +64,17 @@ Condiciones de contrato y permanencia: se acuerdan en la reunión inicial.
    - Datos mezclados: «Soy Laura, laura@email.com, 612345678, mañana a las 10».
    - Correcciones: «cambiar el email», «otra hora».
 3. IGNITE solo pide lo que falte, con tono humano. Confirma antes de reservar.
-3. Comprueba disponibilidad en el calendario del equipo (si está configurado).
+3. Comprueba disponibilidad en **todos** los calendarios Apple del equipo (citas de clientes, quedadas personales, compromisos). Si un hueco está ocupado, no se ofrece a otro cliente.
 4. Tras confirmar:
    - Se crea la cita en el calendario del equipo (iCloud o Google Calendar).
    - Llega aviso a info@dvgsstudio.com con archivo .ics adjunto.
-   - El cliente recibe email de confirmación con enlace Google Meet (si está configurado), botón «Añadir a Google Calendar» y archivo .ics para su calendario.
+   - El cliente recibe email de confirmación con enlace Google Meet **único para esa cita** (generado vía Google Calendar API), botón «Añadir a Google Calendar» y archivo .ics para su calendario.
 5. Si el correo no llega en 2 minutos, revisar carpeta spam o escribir a info@dvgsstudio.com.
 
 ## Consultar disponibilidad en el chat
 - «¿hay hueco mañana?» o «disponibilidad el martes» → fechas en lenguaje natural.
-- «disponibilidad 15/06/2026» → muestra huecos libres ese día.
-- «¿hay hueco el 15/06/2026 a las 10:00?» → comprueba un horario concreto.
+- «disponibilidad 15/06/2026» → muestra huecos libres ese día (revisando todos los calendarios Apple).
+- «¿hay hueco el 15/06/2026 a las 10:00?» → comprueba un horario concreto; si hay quedada o cita a esa hora, propone alternativas.
 - Horario laboral por defecto: 9:00 a 18:00, citas de 1 hora.
 
 ## Empleado humano vs empleado digital (resumen)
@@ -118,6 +118,12 @@ R: Escribe «agendar cita» aquí. Reunión de 1h, gratis y sin compromiso.
 
 P: ¿Recibiré confirmación por email?
 R: Sí. Email con fecha, hora, enlace Meet si aplica y archivo para tu calendario.
+
+P: ¿Cada reunión tiene su propio enlace de Meet?
+R: Sí. Cada cita genera un enlace Google Meet distinto para ese cliente y esa hora.
+
+P: ¿Puedo reservar si ya tenéis otra cita a esa hora?
+R: No. El sistema consulta el calendario Apple del equipo (incluidas quedadas y compromisos personales) y solo ofrece huecos realmente libres.
 
 P: ¿Funciona en otros idiomas?
 R: Español por defecto. Otros idiomas según proyecto.

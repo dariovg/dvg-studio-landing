@@ -9,8 +9,9 @@ ICLOUD_CALENDAR_NAME=DVG Studio
 BOOKING_TIMEZONE=Europe/Madrid
 ```
 
-`ICLOUD_CALENDAR_NAME` elige dónde se **crean** las citas (por defecto **DVG Studio**).
-La **disponibilidad** se comprueba en **todos** tus calendarios iCloud (si tienes cita en Quedada, ese hueco no se ofrece).
+`ICLOUD_CALENDAR_NAME` elige dónde se **crean** las citas de clientes (por defecto **DVG Studio**).
+
+La **disponibilidad** se comprueba en **todos** tus calendarios iCloud del día: si tienes una quedada, cita personal o compromiso a las 10:00, ese hueco **no se ofrece** a ningún cliente.
 
 Horario laboral (opcional):
 ```
