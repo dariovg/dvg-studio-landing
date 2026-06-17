@@ -31,6 +31,7 @@
   let bookStep = 0;
   let bookData = {};
   let timeValidated = false;
+  let lastSuggestedAlts = "";
   let leadCardShown = { pricing: false, actions: false, meeting: false };
   let bookingBarEl = null;
 
@@ -346,6 +347,7 @@
     bookStep = 0;
     bookData = {};
     timeValidated = false;
+    lastSuggestedAlts = "";
     showBookingBar();
 
     const ext = extractAll(fromText);
@@ -381,6 +383,7 @@
     bookStep = 0;
     bookData = {};
     timeValidated = false;
+    lastSuggestedAlts = "";
     removeBookingBar();
     appendMsg("Sin problema, lo dejamos aquí. Si quieres retomarlo, dímelo cuando quieras.", "assistant");
   }
@@ -494,14 +497,17 @@
             `El ${bookData.date} a las ${rejectedTime} no está libre (calendario ocupado).`,
           "assistant"
         );
-        if (check.alts) {
-          appendMsg(`Huecos libres ese día: ${check.alts}`, "assistant");
+        const altKey = check.alts || "";
+        if (altKey && altKey !== lastSuggestedAlts) {
+          appendMsg(`Huecos libres ese día: ${altKey}`, "assistant");
+          lastSuggestedAlts = altKey;
         } else {
-          appendMsg("¿Probamos otro día u otra hora?", "assistant");
+          appendMsg("Dime otra hora que te venga bien (por ejemplo: 11:00 o «a las 11»).", "assistant");
         }
         return;
       }
       timeValidated = true;
+      lastSuggestedAlts = "";
       appendMsg(
         `Perfecto — ${bookData.date} a las ${bookData.time} (1h, hora España).`,
         "assistant"
@@ -614,6 +620,23 @@
     if (correction) {
       const ext = extractAll(t);
       const val = resolveFieldValue(correction, t, ext);
+      if (correction === "time") {
+        timeValidated = false;
+        bookStep = BOOK_STEPS.indexOf("time");
+        if (val) {
+          bookData.time = val;
+          appendMsg(NLP().humanAck?.("time", val, bookData) || "Entendido.", "assistant");
+          if (bookData.date) {
+            await validateTimeAndContinue();
+          } else {
+            appendMsg(NLP().humanPrompt?.("date", bookData) || "", "assistant");
+          }
+        } else {
+          delete bookData.time;
+          appendMsg("¿Qué hora prefieres? (ej. 11:00, a las 11, por la tarde)", "assistant");
+        }
+        return;
+      }
       if (val) {
         bookData[correction] = val;
         if (correction === "time") timeValidated = false;
@@ -635,13 +658,41 @@
 
     const step = BOOK_STEPS[bookStep];
 
+    if (step === "time" && NLP().isNegative?.(t) && !parseTimeInput(t)) {
+      delete bookData.time;
+      timeValidated = false;
+      appendMsg("¿Qué hora te vendría mejor?", "assistant");
+      return;
+    }
+
     if (step === "confirm") {
       if (NLP().isAffirmative?.(t)) {
         await submitBooking();
         return;
       }
-      if (NLP().isNegative?.(t)) {
+      if (NLP().wantsCancel?.(t)) {
         cancelBooking();
+        return;
+      }
+      if (NLP().wantsTimeChange?.(t)) {
+        const ext = extractAll(t);
+        const newTime = resolveFieldValue("time", t, ext);
+        timeValidated = false;
+        bookStep = BOOK_STEPS.indexOf("time");
+        if (newTime) {
+          bookData.time = newTime;
+          await validateTimeAndContinue();
+        } else {
+          delete bookData.time;
+          appendMsg("Vale — ¿qué hora te iría mejor?", "assistant");
+        }
+        return;
+      }
+      if (NLP().isNegative?.(t)) {
+        timeValidated = false;
+        delete bookData.time;
+        bookStep = BOOK_STEPS.indexOf("time");
+        appendMsg("Sin problema — probemos otra hora. ¿Cuál prefieres?", "assistant");
         return;
       }
       appendMsg("¿Confirmamos? Dime «sí» o «cancelar».", "assistant");

@@ -133,14 +133,48 @@
     var t = normalize(text);
     var base = ND && ND.parseTime(text);
     if (base) return base;
+    if (/^\d{1,2}$/.test(t)) {
+      var h = Number(t);
+      if (h >= 0 && h <= 23) return String(h).padStart(2, "0") + ":00";
+    }
+    if (/^\d{1,2}:\d{2}$/.test(t)) {
+      var parts = t.split(":");
+      return String(Number(parts[0])).padStart(2, "0") + ":" + parts[1];
+    }
+    var lasHour = t.match(/\b(?:a las|las|sobre las|mejor a las|prefiero las|quiero las)\s+(\d{1,2})(?:\s*y\s+media)?\b/);
+    if (lasHour) {
+      var hh = Number(lasHour[1]);
+      if (hh >= 0 && hh <= 23) {
+        return String(hh).padStart(2, "0") + (/\by\s+media\b/.test(t) ? ":30" : ":00");
+      }
+    }
     if (/\b(esta tarde|por la tarde)\b/.test(t)) return "16:00";
-    if (/\b(esta manana|por la manana|temprano)\b/.test(t)) return "10:00";
+    if (/\b(esta manana|por la manana|temprano)\b/.test(t) && !/\b\d/.test(t)) return "10:00";
     if (/\b(antes del mediodia|media manana)\b/.test(t)) return "11:00";
     if (/\b(despues de comer|tras comer)\b/.test(t)) return "15:00";
     var andHalf = t.match(/\b(\d{1,2})\s+y\s+media\b/);
     if (andHalf) return String(Number(andHalf[1])).padStart(2, "0") + ":30";
     var enPunto = t.match(/\b(\d{1,2})\s+en\s+punto\b/);
     if (enPunto) return String(Number(enPunto[1])).padStart(2, "0") + ":00";
+    return null;
+  }
+
+  function wantsTimeChange(text) {
+    var t = normalize(text);
+    if (parseTimeExtended(text)) return true;
+    return (
+      /\b(otra hora|cambiar hora|cambiar la hora|diferente hora|distinta hora|no esa hora|no a esa hora|no a las|mejor otro|otro horario)\b/.test(t) ||
+      (/\bno\b/.test(t) && /\b(las|hora|a las)\b/.test(t))
+    );
+  }
+
+  function detectCorrection(text) {
+    var t = normalize(text);
+    if (wantsTimeChange(text) || parseTimeExtended(text)) return "time";
+    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?nombre\b|\bmi nombre es\b/.test(t)) return "name";
+    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(correo|email|mail)\b|\bmi (correo|email|mail)\b/.test(t)) return "email";
+    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(telefono|teléfono|movil|móvil)\b/.test(t)) return "phone";
+    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(dia|día|fecha)\b|\botro dia\b/.test(t)) return "date";
     return null;
   }
 
@@ -182,16 +216,6 @@
     var t = normalize(text);
     return /^(cancelar|anular|parar|salir|dejalo|déjalo|mejor no)$/.test(t)
       || /\b(cancelar cita|olvidalo|olvídalo)\b/.test(t);
-  }
-
-  function detectCorrection(text) {
-    var t = normalize(text);
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?nombre\b|\bmi nombre es\b/.test(t)) return "name";
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(correo|email|mail)\b|\bmi (correo|email|mail)\b/.test(t)) return "email";
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(telefono|teléfono|movil|móvil)\b/.test(t)) return "phone";
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(dia|día|fecha)\b|\botro dia\b/.test(t)) return "date";
-    if (/\b(cambiar|corregir|modificar)\s+(la\s+)?hora\b|\botra hora\b/.test(t)) return "time";
-    return null;
   }
 
   var ACK = {
@@ -252,5 +276,6 @@
     firstName: firstName,
     isBookingIntentText: isBookingIntentText,
     looksLikePersonName: looksLikePersonName,
+    wantsTimeChange: wantsTimeChange,
   };
 })();
