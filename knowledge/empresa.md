@@ -54,9 +54,10 @@ ROI orientativo: suele verse en 4–6 semanas tras calibrar (no garantizado).
 
 ## Planes y precios (2026)
 Precios sin IVA (España). IVA aplicable según normativa vigente. Mínimo 3 meses en todos los planes.
-- Starter: 199 €/mes + IVA (anual 159 €/mes + IVA, -20%). 1 agente IA, chat web + 1 canal, auditoría gratis, soporte 24/7.
-- Pro: 499 €/mes + IVA (anual 399 €/mes + IVA). Hasta 5 agentes IA, todos los canales, integración con CRM/herramientas existentes, mejoras web con IA, auditoría gratis, soporte 24/7.
-- Enterprise: 2.499 €/mes + IVA (anual 1.999 €/mes + IVA). Hasta 10 agentes IA a medida, integración IA con CRM/ERP existente, account manager + SLA, auditoría gratis, soporte 24/7.
+- Starter: 349 €/mes + IVA (anual 279 €/mes + IVA, -20%). 1 agente IA, todos los canales (WA, TG, email, web…), auditoría gratis, soporte 24/7 y mejoras continuas.
+- Pro: 949 €/mes + IVA (anual 759 €/mes + IVA). Hasta 5 agentes IA, todos los canales, integración con CRM/herramientas existentes, mejoras web con IA, auditoría gratis, soporte 24/7.
+- Enterprise: 1.749 €/mes + IVA (anual 1.399 €/mes + IVA). Hasta 10 agentes IA a medida, todos los canales, integración IA con CRM/ERP existente, account manager + SLA, auditoría gratis, soporte 24/7.
+- Implementación inicial (canales, integraciones, reglas): presupuesto aparte tras auditoría — no incluida en el fee mensual.
 - Complemento webs/apps: presupuesto según alcance del proyecto (tras auditoría).
 Plazos orientativos: agentes 1–2 semanas · integraciones 2–6 semanas · webs/apps según demanda.
 
@@ -91,7 +92,7 @@ Formulario en /encuesta (10 preguntas). Al enviarlo, el equipo recibe un email c
 
 ## Empleado humano vs empleado digital (resumen)
 | Aspecto | Humano | Empleado digital DVG |
-| Coste mensual | Nómina + SS | Desde 199 €/mes + IVA |
+| Coste mensual | Nómina + SS | Desde 349 €/mes + IVA (mantenimiento) |
 | Disponibilidad | Horario laboral | 24/7 |
 | Tiempo de respuesta | Minutos/horas | Segundos |
 | Escalabilidad | Contratar más | Añadir agentes/canales |
