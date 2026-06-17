@@ -449,6 +449,8 @@
       appendMsg(`He pillado: ${bits.join(" · ")}`, "assistant");
     }
 
+    if (bookData.date && rejectPastDate(bookData.date)) return;
+
     if (bookData.date && bookData.time) {
       validateTimeAndContinue();
       return;
@@ -527,15 +529,57 @@
       }
       return data;
     } catch {
-      const slots = BUSINESS_SLOTS.filter((t) => t >= "09:00");
+      const slots = futureSlotsForDate(date).filter((t) => t >= "09:00");
       return {
         configured: false,
         degraded: true,
-        available: !!slot,
+        available: !!slot && !isSlotInPast(date, slot),
         slots,
         error: "No pude consultar el calendario",
       };
     }
+  }
+
+  function isDateBeforeToday(dateStr) {
+    return ND().isDateBeforeToday?.(dateStr) || false;
+  }
+
+  function isSlotInPast(dateStr, timeStr) {
+    return ND().isInPast?.(dateStr, timeStr) || false;
+  }
+
+  function futureSlotsForDate(dateStr) {
+    return ND().futureBusinessSlots?.(dateStr) || BUSINESS_SLOTS;
+  }
+
+  function rejectPastDate(dateStr) {
+    if (!dateStr || !isDateBeforeToday(dateStr)) return false;
+    delete bookData.date;
+    delete bookData.time;
+    timeValidated = false;
+    bookStep = BOOK_STEPS.indexOf("date");
+    appendMsg(
+      `La fecha ${dateStr} ya pasó. ¿Qué día te viene bien? (mañana, el martes, 20/06/2026…)`,
+      "assistant"
+    );
+    return true;
+  }
+
+  function rejectPastSlot(dateStr, timeStr) {
+    const slot = normalizeTime(timeStr) || timeStr;
+    if (!dateStr || !slot || !isSlotInPast(dateStr, slot)) return false;
+    timeValidated = false;
+    rejectedTimes.add(slot);
+    delete bookData.time;
+    bookStep = BOOK_STEPS.indexOf("time");
+    const alts = futureSlotsForDate(dateStr).slice(0, 5).join(", ");
+    appendMsg(
+      `Esa fecha u hora (${dateStr} a las ${slot}) ya pasó. Elige un hueco futuro.`,
+      "assistant"
+    );
+    if (alts) appendMsg(`Huecos libres ese día: ${alts}`, "assistant");
+    else appendMsg("¿Qué otra hora te iría bien?", "assistant");
+    return true;
   }
 
   function filterAlts(altStr) {
@@ -557,8 +601,32 @@
     if (!slot) {
       return { ok: false, message: "No entendí la hora — prueba con «11:00» o «a las 11».", alts: "" };
     }
+    if (isDateBeforeToday(date)) {
+      return {
+        ok: false,
+        reason: "pasado",
+        message: `La fecha ${date} ya pasó. Elige hoy o un día futuro.`,
+        alts: "",
+      };
+    }
+    if (isSlotInPast(date, slot)) {
+      return {
+        ok: false,
+        reason: "pasado",
+        message: `Esa fecha u hora (${date} a las ${slot}) ya pasó. Elige un hueco futuro.`,
+        alts: futureSlotsForDate(date).slice(0, 5).join(", "),
+      };
+    }
     const data = await fetchAvailability(date, slot);
     if (data.degraded || data.configured === false) {
+      if (data.reason === "pasado" || data.available === false && isSlotInPast(date, slot)) {
+        return {
+          ok: false,
+          reason: "pasado",
+          message: data.message || `Esa fecha u hora (${date} a las ${slot}) ya pasó. Elige un hueco futuro.`,
+          alts: filterAlts(data.alternatives?.join(", ") || data.slots?.slice(0, 5).join(", ") || ""),
+        };
+      }
       return { ok: true, degraded: true };
     }
     if (data.available === true) return { ok: true };
@@ -593,6 +661,9 @@
       promptCurrentStep();
       return;
     }
+
+    if (rejectPastDate(bookData.date)) return;
+    if (rejectPastSlot(bookData.date, bookData.time)) return;
 
     if (!isBusinessTime(bookData.time)) {
       const bad = bookData.time;
@@ -654,7 +725,7 @@
       }
     } catch {
       await endTyping();
-      if (bookData.date && bookData.time && isBusinessTime(bookData.time)) {
+      if (bookData.date && bookData.time && isBusinessTime(bookData.time) && !isSlotInPast(bookData.date, bookData.time)) {
         timeValidated = true;
         appendMsg(
           "No pude comprobar el calendario online ahora — seguimos con tu hora y lo validamos al confirmar la reserva.",
@@ -727,8 +798,17 @@
     sendBtn.disabled = true;
     const endTyping = await showTypingFor(500);
     let keepBooking = false;
+    const payload = normalizeBookingForSubmit();
+    if (rejectPastDate(payload.date) || rejectPastSlot(payload.date, payload.time)) {
+      await endTyping();
+      keepBooking = true;
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+      return;
+    }
     try {
-      const { res, data } = await apiPost("/api/book", normalizeBookingForSubmit());
+      const { res, data } = await apiPost("/api/book", payload);
       await endTyping();
       if (data.ok) {
         appendMsg(data.message, "assistant");
@@ -781,6 +861,8 @@
 
     const extracted = extractAll(t);
     mergeExtractedFields(extracted);
+
+    if (extracted.date && rejectPastDate(extracted.date)) return;
 
     if (extracted.date && extracted.time) {
       timeValidated = false;
@@ -892,7 +974,9 @@
     if (cur && cur !== "notes" && cur !== "confirm" && !bookData[cur]) {
       const val = resolveFieldValue(cur, t, extractedStep);
       if (val) {
+        if (cur === "date" && rejectPastDate(val)) return;
         bookData[cur] = cur === "time" ? normalizeTime(val) || val : val;
+        if (cur === "time" && bookData.date && rejectPastSlot(bookData.date, bookData.time)) return;
         if (!(willValidateSlot && (cur === "date" || cur === "time"))) {
           appendMsg(NLP().humanAck?.(cur, val, bookData) || "Perfecto.", "assistant");
         }

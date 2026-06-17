@@ -129,6 +129,63 @@
     return formatDateParts(candidate);
   }
 
+  function parseDateParts(dateStr) {
+    var m = String(dateStr || "").match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) return null;
+    return { day: Number(m[1]), month: Number(m[2]), year: Number(m[3]) };
+  }
+
+  function madridOffsetMinutes(when) {
+    try {
+      var parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Europe/Madrid",
+        timeZoneName: "shortOffset",
+      }).formatToParts(when || new Date());
+      var name = parts.find(function (p) { return p.type === "timeZoneName"; })?.value || "GMT+1";
+      var m = name.match(/(?:GMT|UTC)([+-])(\d{1,2})(?::?(\d{2}))?/i);
+      if (!m) return 60;
+      var sign = m[1] === "+" ? 1 : -1;
+      return sign * (Number(m[2]) * 60 + Number(m[3] || 0));
+    } catch (e) {
+      return 60;
+    }
+  }
+
+  function wallClockToUtcMs(year, month, day, hour, minute) {
+    var anchor = new Date(Date.UTC(year, month - 1, day, 12, 0));
+    var off = madridOffsetMinutes(anchor);
+    return Date.UTC(year, month - 1, day, hour, minute) - off * 60 * 1000;
+  }
+
+  function isDateBeforeToday(dateStr) {
+    var d = parseDateParts(dateStr);
+    if (!d) return true;
+    var today = getSpainToday();
+    if (d.year < today.year) return true;
+    if (d.year > today.year) return false;
+    if (d.month < today.month) return true;
+    if (d.month > today.month) return false;
+    return d.day < today.day;
+  }
+
+  function isInPast(dateStr, timeStr) {
+    var d = parseDateParts(dateStr);
+    var tm = String(timeStr || "").match(/^(\d{1,2}):(\d{2})$/);
+    if (!d || !tm) return true;
+    return wallClockToUtcMs(d.year, d.month, d.day, Number(tm[1]), Number(tm[2])) < Date.now();
+  }
+
+  var BUSINESS_SLOTS = [
+    "09:00", "10:00", "11:00", "12:00", "13:00",
+    "14:00", "15:00", "16:00", "17:00",
+  ];
+
+  function futureBusinessSlots(dateStr) {
+    return BUSINESS_SLOTS.filter(function (t) {
+      return !isInPast(dateStr, t);
+    });
+  }
+
   function parseNaturalDate(text, ref) {
     ref = ref || getSpainToday();
     var t = normalize(text);
@@ -226,6 +283,9 @@
     parseTime: parseNaturalTime,
     wantsBooking: wantsBooking,
     wantsAvailability: wantsAvailability,
+    isDateBeforeToday: isDateBeforeToday,
+    isInPast: isInPast,
+    futureBusinessSlots: futureBusinessSlots,
     formatHint: "Puedes decir «mañana», «el martes» o «la semana que viene el jueves».",
   };
 })();
