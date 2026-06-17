@@ -25,7 +25,10 @@ const oauth2 = new google.auth.OAuth2(
 const url = oauth2.generateAuthUrl({
   access_type: "offline",
   prompt: "consent",
-  scope: ["https://www.googleapis.com/auth/calendar.events"],
+  scope: [
+    "https://www.googleapis.com/auth/calendar.events",
+    "https://www.googleapis.com/auth/gmail.send",
+  ],
 });
 
 console.log("\n1. Abre esta URL e inicia sesión con la cuenta GOOGLE DEL NEGOCIO:\n");
@@ -46,7 +49,8 @@ const server = createServer(async (req, res) => {
   console.log("\n✅ Añade esto a Vercel:\n");
   console.log(`GOOGLE_REFRESH_TOKEN=${tokens.refresh_token}`);
   console.log("\nGOOGLE_CALENDAR_ID=primary");
-  console.log("BOOKING_TIMEZONE=Europe/Madrid\n");
+  console.log("BOOKING_TIMEZONE=Europe/Madrid");
+  console.log("\nScopes: calendar.events + gmail.send (citas + guía por email)\n");
 });
 
 server.listen(port, () => {
