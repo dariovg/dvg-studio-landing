@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Genera favicons cuadrados con padding desde logo-dvg-icon.png."""
 
+from __future__ import annotations
+
+import base64
+import io
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -22,12 +26,12 @@ def build_icon(size: int) -> Image.Image:
     logo = Image.open(SRC).convert("RGBA")
     canvas = Image.new("RGBA", (size, size), BG)
 
-    pad = int(size * 0.11)
+    pad = int(size * 0.1)
     max_w = size - pad * 2
-    max_h = int(size * 0.5)
+    max_h = int(size * 0.52)
     scale = min(max_w / logo.width, max_h / logo.height)
-    w = int(logo.width * scale)
-    h = int(logo.height * scale)
+    w = max(1, int(logo.width * scale))
+    h = max(1, int(logo.height * scale))
     logo = logo.resize((w, h), Image.Resampling.LANCZOS)
     x = (size - w) // 2
     y = (size - h) // 2
@@ -40,17 +44,51 @@ def build_icon(size: int) -> Image.Image:
     return out
 
 
+def render_sharp(size: int) -> Image.Image:
+    base = 512 if size <= 180 else size
+    return build_icon(base).resize((size, size), Image.Resampling.LANCZOS)
+
+
+def write_embedded_svg(icon: Image.Image, path: Path) -> None:
+    buf = io.BytesIO()
+    icon.save(buf, format="PNG", optimize=True)
+    encoded = base64.b64encode(buf.getvalue()).decode("ascii")
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" '
+        'role="img" aria-label="DVG Studio">'
+        f'<image width="64" height="64" href="data:image/png;base64,{encoded}"/>'
+        "</svg>"
+    )
+    path.write_text(svg, encoding="utf-8")
+
+
 def main() -> None:
-    outputs = {
-        "favicon-16.png": 16,
-        "favicon-32.png": 32,
-        "favicon.png": 180,
-        "apple-touch-icon.png": 180,
+    sizes = {
+        ASSETS / "favicon-16.png": 16,
+        ASSETS / "favicon-32.png": 32,
+        ASSETS / "favicon.png": 180,
+        ASSETS / "apple-touch-icon.png": 180,
     }
-    for name, size in outputs.items():
-        icon = build_icon(size)
-        icon.save(ASSETS / name, format="PNG", optimize=True)
-        print(f"✓ {name} ({size}x{size})")
+
+    icons: dict[int, Image.Image] = {}
+    for path, size in sizes.items():
+        icon = render_sharp(size)
+        icons[size] = icon
+        icon.save(path, format="PNG", optimize=True)
+        print(f"✓ {path.relative_to(ROOT)} ({size}x{size})")
+
+    ico_path = ROOT / "favicon.ico"
+    master = render_sharp(48)
+    master.save(
+        ico_path,
+        format="ICO",
+        sizes=[(16, 16), (32, 32), (48, 48)],
+        append_images=[icons[16], icons[32]],
+    )
+    print(f"✓ {ico_path.relative_to(ROOT)}")
+
+    write_embedded_svg(render_sharp(64), ASSETS / "favicon.svg")
+    print("✓ assets/favicon.svg (base64 embebido)")
 
 
 if __name__ == "__main__":
