@@ -49,7 +49,6 @@
   const progress = document.querySelector(".scrolly-progress");
   const dotsRoot = document.getElementById("scrollyDots");
   const hint = document.getElementById("scrollyHint");
-  const visualWrap = document.getElementById("scrollyVisual");
   if (!steps.length) return;
 
   let activeIndex = 0;
@@ -80,6 +79,13 @@
   const buildDots = () => {
     if (!dotsRoot) return;
     dotsRoot.innerHTML = "";
+    if (mobileMq.matches) {
+      dotsRoot.setAttribute("aria-orientation", "vertical");
+      dotsRoot.setAttribute("aria-label", "Pasos del proceso — baja para avanzar");
+    } else {
+      dotsRoot.removeAttribute("aria-orientation");
+      dotsRoot.setAttribute("aria-label", "Pasos del proceso");
+    }
     steps.forEach((step, i) => {
       const dot = document.createElement("button");
       dot.type = "button";
@@ -113,29 +119,6 @@
 
   window.addEventListener("scroll", onScrollyScroll, { passive: true });
   onScrollyScroll();
-
-  if (visualWrap && mobileMq.matches) {
-    let touchX = 0;
-    let touchY = 0;
-    visualWrap.addEventListener(
-      "touchstart",
-      (e) => {
-        touchX = e.changedTouches[0].clientX;
-        touchY = e.changedTouches[0].clientY;
-      },
-      { passive: true }
-    );
-    visualWrap.addEventListener(
-      "touchend",
-      (e) => {
-        const dx = e.changedTouches[0].clientX - touchX;
-        const dy = e.changedTouches[0].clientY - touchY;
-        if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
-        setStep(activeIndex + (dx < 0 ? 1 : -1), { scroll: true });
-      },
-      { passive: true }
-    );
-  }
 
   mobileMq.addEventListener("change", () => window.location.reload());
 

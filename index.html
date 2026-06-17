@@ -157,19 +157,21 @@
             <div class="scrolly-panel">
                 <div class="scrolly-visual-col">
                 <h2 class="scrolly-mobile-title">Cómo <span>funciona</span></h2>
-                <div class="scrolly-visual" id="scrollyVisual">
-                    <div class="scrolly-visual-inner" data-step="1">
-                        <div class="agent-avatar">🤖</div>
-                        <strong style="color:#fff;font-size:1.2rem">IGNITE</strong>
-                        <p class="agent-status" id="agentStatus">En espera…</p>
-                        <div class="chat-mockup" style="margin-top:1rem;width:100%;min-height:120px;font-size:.8rem">
-                            <div class="chat-message user-msg" style="font-size:.75rem">¿Tenéis disponibilidad?</div>
-                            <div class="chat-message ai-msg" style="font-size:.75rem" id="previewReply">…</div>
+                <div class="scrolly-visual-row">
+                    <div class="scrolly-dots" id="scrollyDots" role="tablist" aria-label="Pasos del proceso" aria-orientation="vertical"></div>
+                    <div class="scrolly-visual" id="scrollyVisual">
+                        <div class="scrolly-visual-inner" data-step="1">
+                            <div class="agent-avatar">🤖</div>
+                            <strong style="color:#fff;font-size:1.2rem">IGNITE</strong>
+                            <p class="agent-status" id="agentStatus">En espera…</p>
+                            <div class="chat-mockup" style="margin-top:1rem;width:100%;min-height:120px;font-size:.8rem">
+                                <div class="chat-message user-msg" style="font-size:.75rem">¿Tenéis disponibilidad?</div>
+                                <div class="chat-message ai-msg" style="font-size:.75rem" id="previewReply">…</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="scrolly-dots" id="scrollyDots" role="tablist" aria-label="Pasos del proceso"></div>
-                <p class="scrolly-swipe-hint" id="scrollyHint">Desliza para ver cómo responde IGNITE en cada paso</p>
+                <p class="scrolly-scroll-hint" id="scrollyHint">Baja para ver el siguiente paso</p>
                 </div>
                 <div class="scrolly-text" id="scrollyText">
                     <div class="scrolly-step active" data-step="1">
