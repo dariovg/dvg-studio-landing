@@ -35,6 +35,8 @@
   let rejectedTimes = new Set();
   let leadCardShown = { pricing: false, actions: false, meeting: false };
   let bookingBarEl = null;
+  /** Datos ya facilitados (p. ej. al pedir la guía) — se reutilizan al agendar. */
+  let savedContact = null;
 
   const BUSINESS_SLOTS = [
     "09:00", "10:00", "11:00", "12:00", "13:00",
@@ -162,10 +164,46 @@
   function updateBookingBar() {
     if (!bookingBarEl) return;
     const steps = ["name", "email", "phone", "date", "time"];
-    const idx = steps.indexOf(BOOK_STEPS[bookStep]);
+    const stepIdx = steps.indexOf(BOOK_STEPS[bookStep]);
+    let filledThrough = -1;
+    for (let i = 0; i < steps.length; i++) {
+      if (bookData[steps[i]]) filledThrough = i;
+    }
+    const idx =
+      bookStep >= BOOK_STEPS.indexOf("confirm")
+        ? steps.length - 1
+        : Math.max(stepIdx, filledThrough);
     bookingBarEl.querySelectorAll("span").forEach((el, i) => {
       el.classList.toggle("on", i <= idx && bookStep < BOOK_STEPS.indexOf("confirm"));
     });
+  }
+
+  function rememberContact({ name, email, company, phone } = {}) {
+    if (!name && !email) return;
+    savedContact = {
+      name: name || savedContact?.name || "",
+      email: email || savedContact?.email || "",
+      company: company || savedContact?.company || "",
+      phone: phone || savedContact?.phone || "",
+    };
+  }
+
+  function applySavedContactToBooking() {
+    if (!savedContact) return false;
+    let applied = false;
+    if (savedContact.name && !bookData.name) {
+      bookData.name = savedContact.name;
+      applied = true;
+    }
+    if (savedContact.email && !bookData.email) {
+      bookData.email = savedContact.email;
+      applied = true;
+    }
+    if (savedContact.phone && !bookData.phone) {
+      bookData.phone = savedContact.phone;
+      applied = true;
+    }
+    return applied;
   }
 
   function removeBookingBar() {
@@ -326,6 +364,8 @@
           : "Guía enviada. Revisa tu email (y la carpeta spam).");
       card.appendChild(ok);
 
+      rememberContact({ name, email, company });
+
       if (!leadCardShown.meeting) {
         setTimeout(() => {
           appendMsg("Si quieres, también podemos quedar 1h sin compromiso.", "assistant");
@@ -410,6 +450,13 @@
         bookData[key] = key === "time" ? normalizeTime(extracted[key]) || extracted[key] : extracted[key];
       }
     }
+    if (extracted.name || extracted.email) {
+      rememberContact({
+        name: extracted.name,
+        email: extracted.email,
+        phone: extracted.phone,
+      });
+    }
   }
 
   function normalizeBookingForSubmit() {
@@ -482,10 +529,18 @@
       Object.entries(ext).filter(([, v]) => v)
     ));
 
+    const hadSavedContact = applySavedContactToBooking();
+
     advanceBookStep();
     appendMsg(NLP().humanBookingIntro?.(bookData) || "Organicemos la reunión.", "assistant");
 
-    if (bookData.name) {
+    if (hadSavedContact && bookData.name && bookData.email) {
+      const n = NLP().firstName?.(bookData.name) || bookData.name;
+      appendMsg(
+        `Ya tengo tus datos de la guía (${n} · ${bookData.email}). Solo te pido lo que falte para la cita.`,
+        "assistant"
+      );
+    } else if (bookData.name) {
       appendMsg(NLP().humanAck?.("name", bookData.name, bookData) || "", "assistant");
     }
     if (bookData.date || bookData.time) {
