@@ -463,6 +463,8 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 1rem)}
 .compare-table th{background:var(--dark);color:#fff}
 .compare-table tr:last-child td{border-bottom:none}
 .compare-table .win{color:var(--success);font-weight:700}
+.compare-price-link{background:none;border:none;padding:0;margin:0;color:var(--primary);font:inherit;font-weight:800;text-decoration:underline;cursor:pointer}
+.compare-price-link:hover{color:#e85a28}
 
 /* Pricing */
 .pricing-toggle{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:2rem}
