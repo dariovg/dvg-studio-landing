@@ -41,6 +41,29 @@
     "14:00", "15:00", "16:00", "17:00",
   ];
 
+  const PACK_LEADS = {
+    pack_starter: {
+      title: "Plan Starter",
+      desc: "Déjame tu email y te envío la guía con precios e infografía del plan Starter.",
+      userLine: "Me interesa el plan Starter",
+    },
+    pack_pro: {
+      title: "Plan Pro",
+      desc: "Déjame tu email y te envío la guía con precios e infografía del plan Pro.",
+      userLine: "Me interesa el plan Pro",
+    },
+    pack_enterprise: {
+      title: "Plan Enterprise",
+      desc: "Déjame tu email y te envío la guía con precios e infografía del plan Enterprise.",
+      userLine: "Me interesa el plan Enterprise",
+    },
+    pricing: {
+      title: "Guía de planes",
+      desc: "Nombre y email — te envío el detalle en 1 min. Sin spam.",
+      userLine: "Quiero la guía de planes",
+    },
+  };
+
   function normalizeTime(time) {
     const raw = String(time || "").trim();
     const m = raw.match(/^(\d{1,2}):(\d{2})$/);
@@ -151,14 +174,17 @@
   }
 
   function appendLeadCard(interest = "pricing") {
-    if (leadCardShown[interest]) return;
-    leadCardShown[interest] = true;
+    const pack = PACK_LEADS[interest] ? interest : "pricing";
+    if (leadCardShown[pack]) return;
+    leadCardShown[pack] = true;
 
+    const meta = PACK_LEADS[pack] || PACK_LEADS.pricing;
     const card = document.createElement("div");
     card.className = "chat-card chat-card-lead";
+    card.dataset.leadInterest = pack;
     card.innerHTML = `
-      <p class="chat-card-title">${interest === "pricing" ? "Guía de planes" : "Te mantenemos al día"}</p>
-      <p class="chat-card-desc">Nombre y email — te envío el detalle en 1 min. Sin spam.</p>
+      <p class="chat-card-title">${meta.title}</p>
+      <p class="chat-card-desc">${meta.desc}</p>
       <div class="chat-card-fields">
         <input type="text" name="leadName" placeholder="Tu nombre" maxlength="80" autocomplete="name">
         <input type="email" name="leadEmail" placeholder="Tu email" maxlength="120" autocomplete="email">
@@ -169,12 +195,12 @@
     `;
 
     const btn = card.querySelector(".chat-card-submit");
-    btn.addEventListener("click", () => submitLeadCard(card, interest));
+    btn.addEventListener("click", () => submitLeadCard(card, pack));
     card.querySelectorAll("input").forEach((inp) => {
       inp.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          submitLeadCard(card, interest);
+          submitLeadCard(card, pack);
         }
       });
     });
@@ -183,6 +209,26 @@
     scrollChat();
     card.querySelector('input[name="leadName"]')?.focus();
   }
+
+  function openChatWithPack(pack) {
+    const meta = PACK_LEADS[pack];
+    if (!meta) return;
+
+    const chatEl = document.getElementById("igniteChat");
+    if (chatEl) {
+      chatEl.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+    openChat();
+
+    appendMsg(meta.userLine, "user");
+    appendMsg(
+      `Perfecto — te preparo la guía del ${meta.title.replace(/^Plan /, "plan ")} con precios e infografía. Solo necesito tu email.`,
+      "assistant"
+    );
+    appendLeadCard(pack);
+  }
+
+  window.DVGOpenChatPack = openChatWithPack;
 
   function appendActionCard() {
     if (leadCardShown.actions || bookMode) return;
@@ -1100,6 +1146,13 @@
   form?.addEventListener("submit", (e) => {
     e.preventDefault();
     sendMessage(input.value);
+  });
+
+  document.querySelectorAll("[data-open-chat-pack]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      openChatWithPack(el.dataset.openChatPack);
+    });
   });
 
   document.querySelectorAll("[data-open-chat]").forEach((el) =>
