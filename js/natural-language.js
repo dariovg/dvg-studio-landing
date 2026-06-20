@@ -17,7 +17,28 @@
   }
 
   var NAME_STOP =
-    /^(me|te|yo|un|una|el|la|los|las|quiero|quisiera|gustaria|gustaría|podemos|nos|para|con|por|reunion|reunión|cita|demo|agendar|reservar|organicemos|perfecto)$/i;
+    /^(me|te|yo|un|una|el|la|los|las|quiero|quisiera|gustaria|gustaría|podemos|nos|para|con|por|reunion|reunión|cita|demo|agendar|reservar|organicemos|perfecto|si|sí|ok|vale|yes|yep|claro|genial|dale|confirmo|adelante|listo|hecho|nada|nop|no)$/i;
+
+  function isAffirmative(text) {
+    var t = normalize(text);
+    return /^(si|sí|ok|vale|perfecto|confirmo|adelante|dale|de acuerdo|correcto|exacto|claro|genial|listo|hecho|yes|yep|afirmativo|por supuesto|venga|marchando)$/.test(t)
+      || /\b(me parece bien|esta bien|está bien|sin problema|confirmado)\b/.test(t);
+  }
+
+  function isNegative(text) {
+    var t = normalize(text);
+    return /^(no|nop|cancelar|anular|mejor no)$/.test(t) || /\b(no confirmo|dejalo|déjalo)\b/.test(t);
+  }
+
+  function isSkipNotes(text) {
+    var t = normalize(text);
+    return /^(no|nada|ninguna?|ninguno|na|todo bien|sin notas|no hay|n\/a|-|no gracias)$/.test(t)
+      || /\b(nada especial|sin comentarios)\b/.test(t);
+  }
+
+  function isConfirmationReply(text) {
+    return isAffirmative(text) || isNegative(text) || isSkipNotes(text);
+  }
 
   function isBookingIntentText(text) {
     var t = normalize(text);
@@ -71,7 +92,7 @@
 
   function extractName(text) {
     var raw = String(text || "").trim();
-    if (!raw || isBookingIntentText(raw)) return null;
+    if (!raw || isBookingIntentText(raw) || isConfirmationReply(raw)) return null;
     var t = normalize(raw);
     var patterns = [
       /(?:me llamo|soy|mi nombre es|nombre:?)\s+([a-záéíóúñ][a-záéíóúñ\s'.-]{1,60})/i,
@@ -169,17 +190,70 @@
   }
 
   function detectCorrection(text) {
+    var edit = detectFieldEdit(text);
+    if (edit) return edit;
+
     var date = parseDateExtended(text);
     var time = parseTimeExtended(text);
     if (date && time) return null;
     if (date) return "date";
     if (time || wantsTimeChange(text)) return "time";
     var t = normalize(text);
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?nombre\b|\bmi nombre es\b/.test(t)) return "name";
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(correo|email|mail)\b|\bmi (correo|email|mail)\b/.test(t)) return "email";
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(telefono|teléfono|movil|móvil)\b/.test(t)) return "phone";
-    if (/\b(cambiar|corregir|modificar)\s+(el\s+)?(dia|día|fecha)\b|\botro dia\b/.test(t)) return "date";
+    if (/\b(cambiar|corregir|modificar|editar)\s+(el\s+)?nombre\b|\bmi nombre es\b/.test(t)) return "name";
+    if (/\b(cambiar|corregir|modificar|editar)\s+(el\s+)?(correo|email|mail)\b|\bmi (correo|email|mail)\b/.test(t)) return "email";
+    if (/\b(cambiar|corregir|modificar|editar)\s+(el\s+)?(telefono|teléfono|movil|móvil|phone)\b/.test(t)) return "phone";
+    if (/\b(cambiar|corregir|modificar|editar)\s+(el\s+)?(dia|día|fecha)\b|\botro dia\b|\botro día\b/.test(t)) return "date";
     return null;
+  }
+
+  function detectFieldEdit(text) {
+    var t = normalize(text);
+    if (/^(volver|atras|atrás|anterior|atrasar|back)$/.test(t) || /\bvolver atras\b|\bvolver atrás\b/.test(t)) {
+      return "back";
+    }
+    var m = t.match(/^(editar|modificar|corregir|cambiar)\s+(\w+)/);
+    if (m) {
+      var word = m[2] || "";
+      if (/nombre/.test(word)) return "name";
+      if (/mail|email|correo/.test(word)) return "email";
+      if (/telefono|teléfono|movil|móvil|phone/.test(word)) return "phone";
+      if (/fecha|dia|día/.test(word)) return "date";
+      if (/hora/.test(word)) return "time";
+    }
+    if (/^(nombre|email|correo|telefono|teléfono|movil|móvil|fecha|hora)$/.test(t)) {
+      if (/nombre/.test(t)) return "name";
+      if (/mail|email|correo/.test(t)) return "email";
+      if (/telefono|teléfono|movil|móvil/.test(t)) return "phone";
+      if (/fecha|dia|día/.test(t)) return "date";
+      if (/hora/.test(t)) return "time";
+    }
+    return null;
+  }
+
+  function wantsManageBooking(text) {
+    var t = normalize(text);
+    return (
+      /\b(cancelar|anular)\b.*\b(cita|reunion|reunión|reserva)\b/.test(t) ||
+      /\b(cancelar cita|cancelar reunion|cancelar reunión|cancelar mi cita)\b/.test(t) ||
+      /\b(modificar|cambiar|mover|reprogramar|aplazar)\b.*\b(cita|reunion|reunión|fecha|hora|reserva)\b/.test(t) ||
+      /\b(editar mis datos|editar datos|actualizar mis datos)\b/.test(t) ||
+      /\b(mi cita|mi reunion|mi reunión|gestionar cita)\b/.test(t)
+    );
+  }
+
+  function wantsNewMeeting(text) {
+    var t = normalize(text);
+    if (wantsManageBooking(text)) return false;
+    return (
+      /\b(nueva reunion|nueva reunión|otra reunion|otra reunión|otra cita|segunda reunion|segunda reunión)\b/.test(t) ||
+      (/\b(otra|nueva|segunda)\b/.test(t) && /\b(reunion|reunión|cita)\b/.test(t))
+    );
+  }
+
+  function previousBookField(current) {
+    var order = ["name", "email", "phone", "date", "time", "notes"];
+    var idx = order.indexOf(current);
+    return idx > 0 ? order[idx - 1] : null;
   }
 
   function extractBookingFields(text) {
@@ -197,23 +271,6 @@
       }
     }
     return { name: name, email: email, phone: phone, date: date, time: time };
-  }
-
-  function isAffirmative(text) {
-    var t = normalize(text);
-    return /^(si|sí|ok|vale|perfecto|confirmo|adelante|dale|de acuerdo|correcto|exacto|claro|genial|listo|hecho|yes|yep|afirmativo|por supuesto|venga|marchando)$/.test(t)
-      || /\b(me parece bien|esta bien|está bien|sin problema|confirmado)\b/.test(t);
-  }
-
-  function isNegative(text) {
-    var t = normalize(text);
-    return /^(no|nop|cancelar|anular|mejor no)$/.test(t) || /\b(no confirmo|dejalo|déjalo)\b/.test(t);
-  }
-
-  function isSkipNotes(text) {
-    var t = normalize(text);
-    return /^(no|nada|ninguna?|ninguno|na|todo bien|sin notas|no hay|n\/a|-|no gracias)$/.test(t)
-      || /\b(nada especial|sin comentarios)\b/.test(t);
   }
 
   function wantsCancel(text) {
@@ -272,8 +329,13 @@
     isAffirmative: isAffirmative,
     isNegative: isNegative,
     isSkipNotes: isSkipNotes,
+    isConfirmationReply: isConfirmationReply,
     wantsCancel: wantsCancel,
     detectCorrection: detectCorrection,
+    detectFieldEdit: detectFieldEdit,
+    wantsManageBooking: wantsManageBooking,
+    wantsNewMeeting: wantsNewMeeting,
+    previousBookField: previousBookField,
     humanAck: humanAck,
     humanPrompt: humanPrompt,
     humanBookingIntro: humanBookingIntro,

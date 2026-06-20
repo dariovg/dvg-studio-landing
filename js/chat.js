@@ -24,6 +24,7 @@
   const COOLDOWN_MS = 3000;
 
   const BOOK_STEPS = ["name", "email", "phone", "date", "time", "notes", "confirm"];
+  const REQUIRED_BOOK_FIELDS = ["name", "email", "phone", "date", "time"];
   const NLP = () => window.DVGNlp || {};
   const ND = () => window.DVGNaturalDate || {};
 
@@ -37,6 +38,15 @@
   let bookingBarEl = null;
   /** Datos ya facilitados (p. ej. al pedir la guía) — se reutilizan al agendar. */
   let savedContact = null;
+  const BOOKING_STORAGE_KEY = "dvg_active_booking";
+  /** Reserva activa del usuario (localStorage + memoria). */
+  let activeBooking = null;
+  /** Gestión post-reserva: null | menu | cancel_confirm | reschedule | edit_field */
+  let manageMode = null;
+  let manageStep = null;
+  let manageEditField = null;
+  /** Tras ofrecer reunión tras la guía — «sí» inicia agendado sin capturar nombre. */
+  let pendingMeetingOffer = false;
 
   const BUSINESS_SLOTS = [
     "09:00", "10:00", "11:00", "12:00", "13:00",
@@ -188,6 +198,66 @@
     };
   }
 
+  function loadActiveBooking() {
+    try {
+      const raw = localStorage.getItem(BOOKING_STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed?.token || !parsed?.email || !parsed?.date || !parsed?.time) return null;
+      return parsed;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveActiveBooking(data) {
+    if (!data?.token) return;
+    activeBooking = data;
+    try {
+      localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(data));
+    } catch {
+      /* quota / private mode */
+    }
+  }
+
+  function clearActiveBooking() {
+    activeBooking = null;
+    try {
+      localStorage.removeItem(BOOKING_STORAGE_KEY);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  activeBooking = loadActiveBooking();
+
+  function showPostBookingMenu() {
+    manageMode = "menu";
+    manageStep = null;
+    appendMsg(
+      "¿Necesitas algo más con tu cita?\n• cancelar cita\n• modificar fecha u hora\n• editar mis datos\n• nueva reunión",
+      "assistant"
+    );
+  }
+
+  function showConfirmEditHelp() {
+    return "Puedes decir «editar teléfono», «editar nombre», «editar email», «editar fecha/hora» o «volver atrás».";
+  }
+
+  function goToEditField(field) {
+    if (!field || field === "back") {
+      const prev = NLP().previousBookField?.(BOOK_STEPS[bookStep]) || "time";
+      bookStep = BOOK_STEPS.indexOf(prev === "notes" ? "time" : prev);
+      if (bookStep < 0) bookStep = 0;
+    } else {
+      bookStep = BOOK_STEPS.indexOf(field);
+      if (bookStep < 0) bookStep = 0;
+      if (field === "time") timeValidated = false;
+    }
+    updateBookingBar();
+    appendMsg(NLP().humanPrompt?.(BOOK_STEPS[bookStep], bookData) || "", "assistant");
+  }
+
   function applySavedContactToBooking() {
     if (!savedContact) return false;
     let applied = false;
@@ -200,8 +270,9 @@
       applied = true;
     }
     if (savedContact.phone && !bookData.phone) {
-      bookData.phone = savedContact.phone;
-      applied = true;
+      const ph = normalizePhone(savedContact.phone);
+      if (ph) bookData.phone = ph;
+      applied = !!ph;
     }
     return applied;
   }
@@ -226,6 +297,7 @@
       <div class="chat-card-fields">
         <input type="text" name="leadName" placeholder="Tu nombre" maxlength="80" autocomplete="name">
         <input type="email" name="leadEmail" placeholder="Tu email" maxlength="120" autocomplete="email">
+        <input type="tel" name="leadPhone" placeholder="Teléfono (opcional)" maxlength="20" autocomplete="tel">
         <input type="text" name="leadCompany" placeholder="Empresa (opcional)" maxlength="120" autocomplete="organization">
       </div>
       <button type="button" class="chat-card-submit">Enviarme la guía</button>
@@ -300,6 +372,7 @@
     if (busy) return;
     const name = card.querySelector('[name="leadName"]')?.value.trim();
     const email = card.querySelector('[name="leadEmail"]')?.value.trim();
+    const phone = normalizePhone(card.querySelector('[name="leadPhone"]')?.value.trim() || "");
     const company = card.querySelector('[name="leadCompany"]')?.value.trim();
     const btn = card.querySelector(".chat-card-submit");
 
@@ -321,6 +394,7 @@
       return apiPost("/api/lead", {
         name,
         email,
+        phone,
         company,
         interest,
       });
@@ -364,11 +438,12 @@
           : "Guía enviada. Revisa tu email (y la carpeta spam).");
       card.appendChild(ok);
 
-      rememberContact({ name, email, company });
+      rememberContact({ name, email, company, phone });
 
       if (!leadCardShown.meeting) {
         setTimeout(() => {
           appendMsg("Si quieres, también podemos quedar 1h sin compromiso.", "assistant");
+          pendingMeetingOffer = true;
           appendActionCard();
           leadCardShown.actions = false;
           leadCardShown.meeting = true;
@@ -433,13 +508,29 @@
     return `Sigo aquí contigo. Pregúntame por precios, servicios o di «podemos quedar» para una reunión. También: ${CONTACT}`;
   }
 
+  function normalizePhone(value) {
+    const raw = String(value || "").trim();
+    const ph = NLP().extractPhone?.(raw) || raw.replace(/\s/g, "");
+    return ph && ph.length >= 6 && ph.length <= 20 ? ph : "";
+  }
+
+  function hasValidPhone() {
+    return !!normalizePhone(bookData.phone);
+  }
+
+  function bookingFieldMissing(key) {
+    if (key === "phone") return !hasValidPhone();
+    return !bookData[key];
+  }
+
   function advanceBookStep() {
-    while (bookStep < BOOK_STEPS.length) {
-      const key = BOOK_STEPS[bookStep];
-      if (key === "confirm") break;
-      if (!bookData[key]) break;
-      bookStep++;
+    for (const key of REQUIRED_BOOK_FIELDS) {
+      if (bookingFieldMissing(key)) {
+        bookStep = BOOK_STEPS.indexOf(key);
+        return;
+      }
     }
+    bookStep = BOOK_STEPS.indexOf("notes");
   }
 
   function mergeExtractedFields(extracted) {
@@ -447,7 +538,12 @@
       const key = BOOK_STEPS[i];
       if (key === "confirm" || key === "notes") continue;
       if (!bookData[key] && extracted[key]) {
-        bookData[key] = key === "time" ? normalizeTime(extracted[key]) || extracted[key] : extracted[key];
+        bookData[key] =
+          key === "time"
+            ? normalizeTime(extracted[key]) || extracted[key]
+            : key === "phone"
+              ? normalizePhone(extracted[key]) || extracted[key]
+              : extracted[key];
       }
     }
     if (extracted.name || extracted.email) {
@@ -465,18 +561,24 @@
     const tm = parseTimeInput(payload.time) || payload.time;
     if (d) payload.date = String(d).replace(/-/g, "/");
     if (tm) payload.time = normalizeTime(tm) || tm;
-    const ph = NLP().extractPhone?.(payload.phone || "");
-    if (ph) payload.phone = ph;
+    const ph = normalizePhone(payload.phone || "");
+    payload.phone = ph || payload.phone || "";
     if (payload.notes == null) payload.notes = "";
     return payload;
   }
 
   function bookingReadyForSummary() {
-    return !!(bookData.name && bookData.email && bookData.date && bookData.time);
+    return REQUIRED_BOOK_FIELDS.every((key) => !bookingFieldMissing(key));
   }
 
   function showSummary() {
     if (!bookingReadyForSummary()) {
+      if (bookingFieldMissing("phone")) {
+        bookStep = BOOK_STEPS.indexOf("phone");
+        appendMsg("Antes de confirmar necesito un teléfono de contacto.", "assistant");
+        promptCurrentStep();
+        return;
+      }
       bookStep = !bookData.date
         ? BOOK_STEPS.indexOf("date")
         : !bookData.time
@@ -486,6 +588,8 @@
       promptCurrentStep();
       return;
     }
+    const phone = normalizePhone(bookData.phone);
+    if (phone) bookData.phone = phone;
     bookStep = BOOK_STEPS.indexOf("confirm");
     const n = NLP().firstName?.(bookData.name) || bookData.name;
     const lines = [
@@ -497,6 +601,7 @@
       bookData.notes ? `• Notas: ${bookData.notes}` : "",
       "",
       "¿Te encaja? (sí / cancelar)",
+      showConfirmEditHelp(),
     ].filter(Boolean);
     appendMsg(lines.join("\n"), "assistant");
   }
@@ -522,7 +627,7 @@
     showBookingBar();
 
     const ext = extractAll(fromText);
-    if (wantsBooking(fromText)) {
+    if (wantsBooking(fromText) || NLP().isConfirmationReply?.(fromText)) {
       delete ext.name;
     }
     Object.assign(bookData, Object.fromEntries(
@@ -856,7 +961,7 @@
   function resolveFieldValue(step, text, extracted) {
     const t = text.trim();
     if (step === "name") {
-      if (NLP().isBookingIntentText?.(t)) return null;
+      if (NLP().isBookingIntentText?.(t) || NLP().isConfirmationReply?.(t)) return null;
       const candidate =
         extracted.name ||
         (t.length >= 2 && !extracted.email && !extracted.phone && !extracted.date && !extracted.time
@@ -865,7 +970,7 @@
       return candidate && NLP().looksLikePersonName?.(candidate) ? candidate : null;
     }
     if (step === "email") return extracted.email || NLP().extractEmail?.(t) || null;
-    if (step === "phone") return extracted.phone || NLP().extractPhone?.(t) || null;
+    if (step === "phone") return normalizePhone(extracted.phone || t) || null;
     if (step === "date") return extracted.date || parseDateInput(t);
     if (step === "time") return extracted.time || parseTimeInput(t);
     return null;
@@ -900,6 +1005,18 @@
     const endTyping = await showTypingFor(500);
     let keepBooking = false;
     const payload = normalizeBookingForSubmit();
+    if (!normalizePhone(payload.phone)) {
+      await endTyping();
+      appendMsg("Necesito un teléfono válido (mínimo 6 dígitos) para confirmar la cita.", "assistant");
+      bookStep = BOOK_STEPS.indexOf("phone");
+      keepBooking = true;
+      busy = false;
+      sendBtn.disabled = false;
+      promptCurrentStep();
+      input.focus();
+      return;
+    }
+    payload.phone = normalizePhone(payload.phone);
     if (rejectPastDate(payload.date) || rejectPastSlot(payload.date, payload.time)) {
       await endTyping();
       keepBooking = true;
@@ -913,6 +1030,15 @@
       await endTyping();
       if (data.ok) {
         appendMsg(data.message, "assistant");
+        if (data.token && data.booking) {
+          saveActiveBooking({ ...data.booking, token: data.token });
+          rememberContact({
+            name: data.booking.name,
+            email: data.booking.email,
+            phone: data.booking.phone,
+          });
+        }
+        setTimeout(showPostBookingMenu, 600);
       } else if (res.status === 409 && data.alternatives?.length) {
         appendMsg(data.error, "assistant");
         appendMsg(`¿Te iría alguna de estas? ${data.alternatives.join(", ")}`, "assistant");
@@ -953,6 +1079,213 @@
     }
   }
 
+  async function apiManageBooking(action, payload) {
+    return apiPost("/api/manage-booking", {
+      action,
+      token: activeBooking?.token,
+      email: activeBooking?.email,
+      phone: activeBooking?.phone,
+      ...payload,
+    });
+  }
+
+  async function submitManageCancel() {
+    busy = true;
+    sendBtn.disabled = true;
+    const endTyping = await showTypingFor(450);
+    try {
+      const { res, data } = await apiManageBooking("cancel");
+      await endTyping();
+      if (data.ok) {
+        appendMsg(data.message, "assistant");
+        clearActiveBooking();
+        manageMode = null;
+      } else {
+        appendMsg(data.error || `No pude cancelar. Escríbenos a ${CONTACT}`, "assistant");
+      }
+    } catch {
+      await endTyping();
+      appendMsg(`Problema de conexión. Escríbenos a ${CONTACT}`, "assistant");
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  async function submitManageReschedule(date, time) {
+    busy = true;
+    sendBtn.disabled = true;
+    const endTyping = await showTypingFor(500);
+    try {
+      const { res, data } = await apiManageBooking("reschedule", { date, time });
+      await endTyping();
+      if (data.ok) {
+        appendMsg(data.message, "assistant");
+        saveActiveBooking({ ...data.booking, token: data.token });
+        manageMode = null;
+        setTimeout(showPostBookingMenu, 600);
+      } else if (res.status === 409 && data.alternatives?.length) {
+        appendMsg(data.error, "assistant");
+        appendMsg(`¿Te iría alguna de estas? ${data.alternatives.join(", ")}`, "assistant");
+        manageStep = "reschedule_time";
+      } else {
+        appendMsg(data.error || `No pude cambiar la cita. Escríbenos a ${CONTACT}`, "assistant");
+      }
+    } catch {
+      await endTyping();
+      appendMsg(`Problema de conexión. Escríbenos a ${CONTACT}`, "assistant");
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  async function submitManageUpdate(fields) {
+    busy = true;
+    sendBtn.disabled = true;
+    const endTyping = await showTypingFor(450);
+    try {
+      const { res, data } = await apiManageBooking("update", fields);
+      await endTyping();
+      if (data.ok) {
+        appendMsg(data.message, "assistant");
+        saveActiveBooking({ ...data.booking, token: data.token });
+        rememberContact({
+          name: data.booking.name,
+          email: data.booking.email,
+          phone: data.booking.phone,
+        });
+        manageMode = null;
+        setTimeout(showPostBookingMenu, 600);
+      } else {
+        appendMsg(data.error || `No pude actualizar los datos. Escríbenos a ${CONTACT}`, "assistant");
+      }
+    } catch {
+      await endTyping();
+      appendMsg(`Problema de conexión. Escríbenos a ${CONTACT}`, "assistant");
+    } finally {
+      busy = false;
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  async function handleManageInput(text) {
+    const t = text.trim();
+    if (NLP().wantsCancel?.(t) && manageMode !== "cancel_confirm") {
+      manageMode = null;
+      manageStep = null;
+      appendMsg("De acuerdo, seguimos en lo que necesites.", "assistant");
+      return;
+    }
+
+    if (manageMode === "menu") {
+      const tl = t.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "");
+      if (/cancelar/.test(tl)) {
+        manageMode = "cancel_confirm";
+        appendMsg(
+          `¿Seguro que quieres cancelar tu cita del ${activeBooking?.date} a las ${activeBooking?.time}? (sí / no)`,
+          "assistant"
+        );
+        return;
+      }
+      if (/modificar|fecha|hora|reprogramar|mover|aplazar/.test(tl)) {
+        manageMode = "reschedule";
+        manageStep = "reschedule_date";
+        appendMsg("¿Qué día prefieres? (mañana, el martes, 20/06/2026…)", "assistant");
+        return;
+      }
+      if (/editar|datos|nombre|email|correo|telefono|teléfono/.test(tl)) {
+        manageMode = "edit_field";
+        manageStep = "pick_field";
+        appendMsg(
+          "¿Qué quieres cambiar?\n• editar nombre\n• editar email\n• editar teléfono",
+          "assistant"
+        );
+        return;
+      }
+      if (/nueva|otra|segunda/.test(tl) && /reunion|reunión|cita/.test(tl)) {
+        manageMode = null;
+        startBooking("nueva reunión");
+        return;
+      }
+      appendMsg(
+        "No lo pillé — prueba «cancelar cita», «modificar fecha», «editar mis datos» o «nueva reunión».",
+        "assistant"
+      );
+      return;
+    }
+
+    if (manageMode === "cancel_confirm") {
+      if (NLP().isAffirmative?.(t)) {
+        await submitManageCancel();
+        return;
+      }
+      if (NLP().isNegative?.(t)) {
+        manageMode = "menu";
+        appendMsg("Perfecto, tu cita sigue confirmada.", "assistant");
+        return;
+      }
+      appendMsg("¿Cancelamos la cita? Dime «sí» o «no».", "assistant");
+      return;
+    }
+
+    if (manageMode === "reschedule") {
+      const ext = extractAll(t);
+      if (manageStep === "reschedule_date") {
+        const date = ext.date || parseDateInput(t);
+        if (!date || isDateBeforeToday(date)) {
+          appendMsg("No entendí el día — prueba con «mañana» o una fecha futura.", "assistant");
+          return;
+        }
+        activeBooking = { ...activeBooking, pendingDate: date };
+        manageStep = "reschedule_time";
+        appendMsg(`Vale, el ${date}. ¿A qué hora?`, "assistant");
+        return;
+      }
+      if (manageStep === "reschedule_time") {
+        const time = ext.time || parseTimeInput(t);
+        if (!time) {
+          appendMsg("¿Qué hora te va bien? (ej. 10:00, a las 11)", "assistant");
+          return;
+        }
+        const date = activeBooking.pendingDate || activeBooking.date;
+        await submitManageReschedule(date, normalizeTime(time) || time);
+        return;
+      }
+    }
+
+    if (manageMode === "edit_field") {
+      const edit = NLP().detectFieldEdit?.(t) || NLP().detectCorrection?.(t);
+      if (manageStep === "pick_field") {
+        if (edit === "name" || edit === "email" || edit === "phone") {
+          manageEditField = edit;
+          manageStep = "edit_value";
+          appendMsg(NLP().humanPrompt?.(edit, activeBooking) || "", "assistant");
+          return;
+        }
+        appendMsg("Dime «editar nombre», «editar email» o «editar teléfono».", "assistant");
+        return;
+      }
+      if (manageStep === "edit_value" && manageEditField) {
+        const ext = extractAll(t);
+        const val = resolveFieldValue(manageEditField, t, ext);
+        if (!val) {
+          appendMsg("No lo pillé — ¿me lo repites?", "assistant");
+          appendMsg(NLP().humanPrompt?.(manageEditField, activeBooking) || "", "assistant");
+          return;
+        }
+        const patch = { [manageEditField]: val };
+        manageEditField = null;
+        manageStep = null;
+        await submitManageUpdate(patch);
+        return;
+      }
+    }
+  }
+
   async function handleBookingInput(text) {
     const t = text.trim();
     if (NLP().wantsCancel?.(t)) {
@@ -973,6 +1306,10 @@
 
     const correction = NLP().detectCorrection?.(t);
     if (correction) {
+      if (correction === "back") {
+        goToEditField("back");
+        return;
+      }
       const ext = extractAll(t);
       const val = resolveFieldValue(correction, t, ext);
       if (correction === "time") {
@@ -1022,9 +1359,21 @@
     }
 
     if (step === "confirm") {
+      const fieldEdit = NLP().detectFieldEdit?.(t);
+      if (fieldEdit) {
+        if (fieldEdit === "back") {
+          goToEditField("back");
+          return;
+        }
+        delete bookData[fieldEdit];
+        if (fieldEdit === "time") timeValidated = false;
+        goToEditField(fieldEdit);
+        return;
+      }
+
       if (NLP().isAffirmative?.(t)) {
         if (!bookingReadyForSummary()) {
-          appendMsg("Falta la fecha u hora de la reunión. Vamos a completarlo.", "assistant");
+          appendMsg("Falta algún dato (teléfono, fecha u hora). Vamos a completarlo.", "assistant");
           promptCurrentStep();
           return;
         }
@@ -1056,7 +1405,12 @@
         appendMsg("Sin problema — probemos otra hora. ¿Cuál prefieres?", "assistant");
         return;
       }
-      appendMsg("¿Confirmamos? Dime «sí» o «cancelar».", "assistant");
+      appendMsg(`¿Confirmamos? Dime «sí» o «cancelar». ${showConfirmEditHelp()}`, "assistant");
+      return;
+    }
+
+    if (step === "name" && NLP().isConfirmationReply?.(t)) {
+      appendMsg("¿Cómo te llamas? (no hace falta confirmar con «sí»)", "assistant");
       return;
     }
 
@@ -1102,10 +1456,36 @@
   async function sendMessage(text) {
     if (busy || !text.trim()) return;
 
+    if (manageMode) {
+      appendMsg(text.trim(), "user");
+      input.value = "";
+      await handleManageInput(text);
+      return;
+    }
+
     if (bookMode) {
       appendMsg(text.trim(), "user");
       input.value = "";
       await handleBookingInput(text);
+      return;
+    }
+
+    if (pendingMeetingOffer && NLP().isAffirmative?.(text)) {
+      pendingMeetingOffer = false;
+      appendMsg(text.trim(), "user");
+      input.value = "";
+      startBooking("");
+      return;
+    }
+
+    if (activeBooking && (NLP().wantsManageBooking?.(text) || NLP().wantsNewMeeting?.(text))) {
+      appendMsg(text.trim(), "user");
+      input.value = "";
+      if (NLP().wantsNewMeeting?.(text)) {
+        startBooking(text);
+      } else {
+        showPostBookingMenu();
+      }
       return;
     }
 

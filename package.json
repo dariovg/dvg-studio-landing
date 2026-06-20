@@ -7,5 +7,8 @@
     "@neondatabase/serverless": "^1.1.0",
     "googleapis": "^144.0.0",
     "tsdav": "^2.2.2"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs"
   }
 }
