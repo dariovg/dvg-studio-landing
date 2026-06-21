@@ -466,7 +466,7 @@
     const endTyping = await showTypingFor(500);
     await endTyping();
     appendMsg(
-      "Trabajamos con agentes de IA desde 349 €/mes + IVA (mín. 3 meses). La auditoría es gratis; la implementación se cotiza aparte. Te envío la guía completa por email — son 30 segundos.",
+      "Trabajamos con agentes de IA desde 349 €/mes + IVA (mín. 3 meses). Promo confianza mutua: −40% mantenimiento mes 1 (nuevos clientes IA). La auditoría es gratis; la implementación se cotiza aparte. Te envío la guía completa por email — son 30 segundos.",
       "assistant"
     );
     appendLeadCard("pricing");

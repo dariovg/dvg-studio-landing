@@ -57,7 +57,8 @@ ROI orientativo: suele verse en 4–6 semanas tras calibrar (no garantizado).
 
 ## Planes y precios (2026)
 Precios sin IVA (España). IVA aplicable según normativa vigente. Mínimo 3 meses en todos los planes.
-- Starter: 349 €/mes + IVA (anual 297 €/mes + IVA, -15%). 1 agente IA, todos los canales (WA, TG, email, web…), auditoría gratis, soporte 24/7 y mejoras continuas.
+Promo confianza mutua (nuevos clientes IA): −40% en el mantenimiento del mes 1 (Starter/Pro/Enterprise). No aplica a implementación, web ni consultoría. Facturación anual: pago único 12 meses — 11 meses a −15%, mes 1 con −40% adicional sobre esa tarifa (Starter: mes 1 ~209 € mensual / ~178 € anual; pago único anual ~3.445 € + IVA).
+- Starter: 349 €/mes + IVA (mes 1 mant.: 209 €/mes + IVA; anual 297 €/mes + IVA, -15%). 1 agente IA, todos los canales (WA, TG, email, web…), auditoría gratis, soporte 24/7 y mejoras continuas.
 - Pro: 949 €/mes + IVA (anual 807 €/mes + IVA, -15%). Hasta 5 agentes IA, todos los canales, integración con CRM/herramientas existentes, mejoras web con IA, auditoría gratis, soporte 24/7.
 - Enterprise: 1.749 €/mes + IVA (anual 1.487 €/mes + IVA, -15%). Hasta 10 agentes IA a medida, todos los canales, integración IA con CRM/ERP existente, account manager + SLA, auditoría gratis, soporte 24/7.
 - Implementación inicial (canales, integraciones, reglas): presupuesto aparte tras auditoría — no incluida en el fee mensual.
