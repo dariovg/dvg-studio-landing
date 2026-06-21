@@ -1,2 +1,13 @@
 .github/
-scripts/
+scripts/*.md
+scripts/*.py
+scripts/*.sh
+scripts/debug-*
+scripts/test-*
+scripts/list-*
+scripts/get-google-*
+scripts/generate-*
+scripts/arreglar-*
+scripts/configurar-*
+scripts/setup-*
+scripts/vercel-configurar-todo.md
