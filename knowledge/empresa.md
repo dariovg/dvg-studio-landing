@@ -9,7 +9,7 @@ Slogan: hacIA lo imparable.
 Fundador: Dario Villarreal Guillo.
 Ubicación: España, servicio remoto.
 Web: https://www.dvgsstudio.com
-Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
+Redes: Instagram, TikTok, X, LinkedIn y YouTube — @dvgsstudio (LinkedIn: company/dvgsstudio). Enlaces en el footer de la web.
 
 ## IGNITE Demo — el asistente de esta web
 - IGNITE Demo es el asistente IA de demostración en dvgsstudio.com.
@@ -169,6 +169,10 @@ R: Contacta a info@dvgsstudio.com. No puedo dar detalles aquí.
 ## Contacto
 - Email: info@dvgsstudio.com
 - Instagram: https://www.instagram.com/dvgsstudio/ (@dvgsstudio)
+- TikTok: https://www.tiktok.com/@dvgsstudio (@dvgsstudio)
+- X: https://x.com/dvgsstudio (@dvgsstudio)
+- LinkedIn: https://www.linkedin.com/company/dvgsstudio
+- YouTube: https://www.youtube.com/@dvgsstudio (@dvgsstudio)
 - Web: https://www.dvgsstudio.com
 - Cita: «agendar cita» en este chat
 
